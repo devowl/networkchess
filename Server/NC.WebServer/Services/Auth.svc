@@ -1,0 +1,3 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" 
+    Service="Sms.vBook.Server.WcfServices.ClientsBroadcaster, NC.ChessServer" 
+    Factory="Sms.vCore.Server.Wcf.WebServiceHostFactory" %>
