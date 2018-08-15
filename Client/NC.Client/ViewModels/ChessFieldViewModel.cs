@@ -13,7 +13,8 @@ namespace NC.Client.ViewModels
         /// </summary>
         public ChessFieldViewModel()
         {
-            _gameField = new VirtualField();
+            var chessDefaultField = VirtualFieldUtils.CreateDefaultField();
+            _gameField = new VirtualField(chessDefaultField);
         }
 
         private VirtualField _gameField;

@@ -1,5 +1,7 @@
 ﻿using System.Windows;
 
+using NC.Client.ViewModels;
+
 namespace NC.Client.Views
 {
     /// <summary>
@@ -12,7 +14,7 @@ namespace NC.Client.Views
         /// </summary>
         public MainWindow()
         {
-            DataContext = this;
+            DataContext = new MainWindowViewModel();
             InitializeComponent();
         }
     }

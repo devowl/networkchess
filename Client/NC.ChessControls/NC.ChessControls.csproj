@@ -47,6 +47,8 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\IIconsProvider.cs" />
+    <Compile Include="Data\SimpleChessIconsProvider.cs" />
     <Compile Include="GameFields\FlatGameField.cs" />
     <Compile Include="Prism\DelegateCommand.cs" />
     <Compile Include="Prism\NotificationObject.cs" />
@@ -74,15 +76,15 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModels\" />
-    <Folder Include="Views\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\NC.Shared\NC.Shared.csproj">
       <Project>{91995041-EE8C-4077-85D2-7FD0895D7CEB}</Project>
       <Name>NC.Shared</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\simple-chess-pieces.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
