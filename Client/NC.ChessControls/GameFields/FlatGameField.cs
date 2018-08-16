@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -167,7 +168,7 @@ namespace NC.ChessControls.GameFields
                     return 0;
                 }
 
-                return ActualWidth / FieldFrame.Width;
+                return ActualWidth / (FieldFrame.Width + 1);
             }
         }
 
@@ -180,11 +181,21 @@ namespace NC.ChessControls.GameFields
                     return 0;
                 }
 
-                return ActualHeight / FieldFrame.Height;
+                return ActualHeight / (FieldFrame.Height + 1);
             }
         }
 
         private Canvas CanvasRef { get; }
+
+        /// <summary>
+        /// a,b,c,d... border x offset.
+        /// </summary>
+        private double NamedX => CellX / 2;
+
+        /// <summary>
+        /// 1,2,3,4... border y offset.
+        /// </summary>
+        private double NamedY => CellY / 2;
 
         /// <inheritdoc/>
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
@@ -193,9 +204,16 @@ namespace NC.ChessControls.GameFields
             FieldFrameChanged();
         }
 
-        private static Line CreateLine(double x1, double y1, double x2, double y2)
+        private Line CreateLine(double x1, double y1, double x2, double y2)
         {
-            return new Line { X1 = x1, Y1 = y1, X2 = x2, Y2 = y2, StrokeThickness = 1 };
+            return new Line
+            {
+                X1 = x1 + NamedX,
+                Y1 = y1 + NamedY,
+                X2 = x2 + NamedX,
+                Y2 = y2 + NamedY,
+                StrokeThickness = 1
+            };
         }
 
         private void FieldFrameChanged()
@@ -216,27 +234,86 @@ namespace NC.ChessControls.GameFields
             // Draw square grid.
             DrawGrid(field);
 
-            for (int x = 0; x < field.Width; x++)
+            // + 2 for this: a,b,c,d.... & 1,2,3,4...
+            for (int x = 0; x < field.Width + 2; x++)
             {
-                for (int y = 0; y < field.Height; y++)
+                for (int y = 0; y < field.Height + 2; y++)
                 {
-                    if (x % 2 == 0)
+                    if (y == 0 || x == 0 || x == field.Width + 1 || y == field.Height + 1)
                     {
-                        if (y % 2 == 0)
+                        DrawNamedCell(x, y, field);
+                        continue;
+                    }
+
+                    var realX = x - 1;
+                    var realY = y - 1;
+
+                    // Black and white grid
+                    if (realX % 2 == 0)
+                    {
+                        if (realY % 2 == 0)
                         {
-                            DrawBlackRectagle(x, y);
+                            DrawBlackRectagle(realX, realY);
                         }
                     }
                     else
                     {
-                        if (y % 2 != 0)
+                        if (realY % 2 != 0)
                         {
-                            DrawBlackRectagle(x, y);
+                            DrawBlackRectagle(realX, realY);
                         }
                     }
 
-                    DrawIcon(x, y, field[x, y]);
+                    // Draw piece icon
+                    DrawIcon(realX, realY, field[realX, realY]);
                 }
+            }
+        }
+
+        private void DrawNamedCell(int x, int y, VirtualField field)
+        {
+            var grid = new Grid();
+
+            bool isCorner = x == 0 && y == 0 || x == field.Width + 1 && y == field.Height + 1 ||
+                            x == 0 && y == field.Height + 1 || x == field.Width + 1 && y == 0;
+
+            var width = isCorner ? NamedX : CellX;
+            var height = isCorner ? NamedY : CellY;
+            var rectangle = new Rectangle { Fill = Brushes.Transparent, Width = width, Height = height };
+            grid.Children.Add(rectangle);
+
+            var leftOffset = x == 0 ? 0 : NamedX;
+            var topOffset = y == 0 ? 0 : NamedY;
+
+            CanvasRef.Children.Add(grid);
+            Canvas.SetLeft(grid, x * CellX - leftOffset);
+            Canvas.SetTop(grid, y * CellY - topOffset);
+            Panel.SetZIndex(grid, -1);
+
+            if (isCorner)
+            {
+                // No chars in the corners
+                return;
+            }
+
+            var textBlock = new TextBlock()
+            {
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                FontWeight = FontWeights.Bold
+            };
+            
+            grid.Children.Add(textBlock);
+
+            if (x == 0 || x == field.Width + 1)
+            {
+                textBlock.Text = ((char)(field.Width + Convert.ToInt32('1') - y)).ToString();
+                rectangle.Width = NamedX;
+            }
+            else
+            {
+                textBlock.Text = ((char)(Convert.ToInt32('a') - 1 + x)).ToString();
+                rectangle.Height = NamedY;
             }
         }
 
@@ -248,8 +325,8 @@ namespace NC.ChessControls.GameFields
                 image.Width = CellX;
                 image.Height = CellY;
                 CanvasRef.Children.Add(image);
-                Canvas.SetLeft(image, x * CellX);
-                Canvas.SetTop(image, y * CellY);
+                Canvas.SetLeft(image, x * CellX + NamedX);
+                Canvas.SetTop(image, y * CellY + NamedY);
                 Panel.SetZIndex(image, 1);
             }
         }
@@ -259,8 +336,8 @@ namespace NC.ChessControls.GameFields
             var rectangle = new Rectangle { Fill = BlackCellBrush, Width = CellX, Height = CellY };
 
             CanvasRef.Children.Add(rectangle);
-            Canvas.SetLeft(rectangle, x * CellX);
-            Canvas.SetTop(rectangle, y * CellY);
+            Canvas.SetLeft(rectangle, x * CellX + NamedX);
+            Canvas.SetTop(rectangle, y * CellY + NamedY);
             Panel.SetZIndex(rectangle, -1);
         }
 

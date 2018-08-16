@@ -15,7 +15,7 @@ namespace NC.Shared.Data
         /// </summary>
         public VirtualField()
         {
-            _sourceArray = VirtualFieldUtils.CreateEmptyField();
+            _sourceArray = VirtualChessFieldUtils.CreateEmptyField();
         }
          
         /// <summary>
@@ -46,6 +46,13 @@ namespace NC.Shared.Data
         {
             get
             {
+                /* ********** X ***********
+                 * [0, 0] | .... | [8, 0]
+                 * ************************
+                 Y          ....
+                 * ************************
+                 * [0, 8] | .... | [8, 8]
+                 * ************************/
                 CheckBounds(x, y);
                 return _sourceArray[x, y];
             }
@@ -59,9 +66,9 @@ namespace NC.Shared.Data
 
         
         
-        private static void CheckBounds(int x, int y)
+        private void CheckBounds(int x, int y)
         {
-            if (0 <= x && x < 8 && 0 <= y && y < 8)
+            if (0 <= x && x < Width && 0 <= y && y < Height)
             {
                 return;
             }

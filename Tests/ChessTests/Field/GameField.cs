@@ -22,13 +22,29 @@ namespace ChessTests.Field
         [TestMethod]
         public void CheckRooks()
         {
-            var field = new VirtualField();
+            var defaultField = VirtualChessFieldUtils.CreateDefaultField();
+            var field = new VirtualField(defaultField);
 
+            // First line
             Assert.AreEqual(field[0, 0], ChessPiece.BlackRook);
-            Assert.AreEqual(field[0, 7], ChessPiece.BlackRook);
-
+            Assert.AreEqual(field[7, 0], ChessPiece.BlackRook);
+            
+            // Last line
+            Assert.AreEqual(field[0, 7], ChessPiece.WhiteRook);
             Assert.AreEqual(field[7, 7], ChessPiece.WhiteRook);
-            Assert.AreEqual(field[7, 0], ChessPiece.WhiteRook);
+        }
+
+        [TestMethod]
+        public void CheckQueens()
+        {
+            var defaultField = VirtualChessFieldUtils.CreateDefaultField();
+            var field = new VirtualField(defaultField);
+
+            // First line
+            Assert.AreEqual(field[3, 0], ChessPiece.BlackQueen);
+
+            // Last line
+            Assert.AreEqual(field[3, 7], ChessPiece.WhiteQueen);
         }
 
         [TestMethod]

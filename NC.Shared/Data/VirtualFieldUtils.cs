@@ -3,9 +3,9 @@
 namespace NC.Shared.Data
 {
     /// <summary>
-    /// <see cref="VirtualField"/> utilities.
+    /// <see cref="VirtualField"/> chess utilities.
     /// </summary>
-    public class VirtualFieldUtils
+    public class VirtualChessFieldUtils
     {
         private const int FieldSize = 8;
 
@@ -15,7 +15,7 @@ namespace NC.Shared.Data
         /// <returns></returns>
         public static ChessPiece[,] CreateDefaultField()
         {
-            return new[,]
+            var field = new[,]
             {
                 {
                     ChessPiece.BlackRook,
@@ -98,6 +98,19 @@ namespace NC.Shared.Data
                     ChessPiece.WhiteRook
                 },
             };
+
+            // Rotate on 90 (because of beautiful input above ^ )
+            var newField = new ChessPiece[field.GetLength(0), field.GetLength(1)];
+            for (int x = 0; x < field.GetLength(0); x ++)
+            {
+                for (int y = x; y < field.GetLength(1); y++)
+                {
+                    newField[x, y] = field[y, x];
+                    newField[y, x] = field[x, y];
+                }
+            }
+
+            return newField;
         }
 
         /// <summary>
