@@ -63,8 +63,6 @@ namespace NC.Shared.Data
                 _sourceArray[x, y] = value;
             }
         }
-
-        
         
         private void CheckBounds(int x, int y)
         {

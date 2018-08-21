@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
 using NC.ChessControls.Data;
 using NC.Shared.Contracts;
 using NC.Shared.Data;
+using NC.Shared.GameField;
 
 namespace NC.ChessControls.GameFields
 {
@@ -15,6 +19,8 @@ namespace NC.ChessControls.GameFields
     /// </summary>
     public class FlatGameField : StackPanel
     {
+        private readonly static Point DefaultCell = new Point(-1, -1);
+
         /// <summary>
         /// Dependency property for <see cref="IsReadOnly"/> property.
         /// </summary>
@@ -40,8 +46,25 @@ namespace NC.ChessControls.GameFields
         /// </summary>
         public static readonly DependencyProperty IconsProviderProperty;
 
+        /// <summary>
+        /// Dependency property for <see cref="MovableCellsBrush"/> property.
+        /// </summary>
+        public static readonly DependencyProperty MovableCellsBrushProperty;
+
+        private readonly List<Rectangle> _selectedPoints = new List<Rectangle>();
+
+        private Point _selectedCell = DefaultCell;
+
+        private PieceMasterFactory _masterFactory = new PieceMasterFactory(new VirtualField());
+        
         static FlatGameField()
         {
+            MovableCellsBrushProperty = DependencyProperty.Register(
+                nameof(MovableCellsBrush),
+                typeof(Brush),
+                typeof(FlatGameField),
+                new PropertyMetadata(Brushes.LightGreen));
+
             IconsProviderProperty = DependencyProperty.Register(
                 nameof(IconsProvider),
                 typeof(IIconsProvider),
@@ -80,6 +103,22 @@ namespace NC.ChessControls.GameFields
         {
             CanvasRef = new Canvas();
             Children.Add(CanvasRef);
+        }
+
+        /// <summary>
+        /// Movable cells brush color.
+        /// </summary>
+        public Brush MovableCellsBrush
+        {
+            get
+            {
+                return (Brush)GetValue(MovableCellsBrushProperty);
+            }
+
+            set
+            {
+                SetValue(MovableCellsBrushProperty, value);
+            }
         }
 
         /// <summary>
@@ -212,7 +251,7 @@ namespace NC.ChessControls.GameFields
                 Y1 = y1 + NamedY,
                 X2 = x2 + NamedX,
                 Y2 = y2 + NamedY,
-                StrokeThickness = 1
+                StrokeThickness = 1.5
             };
         }
 
@@ -222,12 +261,14 @@ namespace NC.ChessControls.GameFields
             {
                 return;
             }
-
+            
             DrawField(FieldFrame ?? new VirtualField());
         }
 
         private void DrawField(VirtualField field)
         {
+            _masterFactory = new PieceMasterFactory(field);
+
             // Clear old field frame
             ClearGrid();
 
@@ -253,14 +294,14 @@ namespace NC.ChessControls.GameFields
                     {
                         if (realY % 2 == 0)
                         {
-                            DrawBlackRectagle(realX, realY);
+                            DrawRectagle(realX, realY, BlackCellBrush, -1);
                         }
                     }
                     else
                     {
                         if (realY % 2 != 0)
                         {
-                            DrawBlackRectagle(realX, realY);
+                            DrawRectagle(realX, realY, BlackCellBrush, - 1);
                         }
                     }
 
@@ -288,7 +329,7 @@ namespace NC.ChessControls.GameFields
             CanvasRef.Children.Add(grid);
             Canvas.SetLeft(grid, x * CellX - leftOffset);
             Canvas.SetTop(grid, y * CellY - topOffset);
-            Panel.SetZIndex(grid, -1);
+            SetZIndex(grid, -1);
 
             if (isCorner)
             {
@@ -302,7 +343,7 @@ namespace NC.ChessControls.GameFields
                 VerticalAlignment = VerticalAlignment.Center,
                 FontWeight = FontWeights.Bold
             };
-            
+
             grid.Children.Add(textBlock);
 
             if (x == 0 || x == field.Width + 1)
@@ -328,17 +369,59 @@ namespace NC.ChessControls.GameFields
                 Canvas.SetLeft(image, x * CellX + NamedX);
                 Canvas.SetTop(image, y * CellY + NamedY);
                 Panel.SetZIndex(image, 1);
+                image.MouseDown += OnIconMouseDown;
+                image.Tag = new Point(x, y);
             }
         }
 
-        private void DrawBlackRectagle(int x, int y)
+        private void OnIconMouseDown(object sender, MouseButtonEventArgs args)
         {
-            var rectangle = new Rectangle { Fill = BlackCellBrush, Width = CellX, Height = CellY };
+            var selectedCell = (Point)((Image)sender).Tag;
+            if (args.LeftButton == MouseButtonState.Pressed)
+            {
+                var selectedCellTemp = _selectedCell;
+                ClearSelection();
+
+                if (selectedCellTemp != selectedCell)
+                {
+                    PieceMasterBase master;
+                    if (_masterFactory.TryGetMaster((int)selectedCell.X, (int)selectedCell.Y, out master))
+                    {
+                        SetSelection(selectedCell, master.GetMovements());
+                        _selectedCell = selectedCell;
+                    }
+                }
+                else
+                {
+                    _selectedCell = DefaultCell;
+                }
+            }
+        }
+
+        private void SetSelection(Point selectedCell, IEnumerable<Point> movableCells)
+        {
+            var markedCells = movableCells.Union(
+                new[]
+                {
+                    selectedCell
+                });
+
+            foreach (var markedCell in markedCells)
+            {
+                var rectangle = DrawRectagle((int)markedCell.X, (int)markedCell.Y, MovableCellsBrush, 0);
+                _selectedPoints.Add(rectangle);
+            }
+        }
+
+        private Rectangle DrawRectagle(int x, int y, Brush color, int zIndex)
+        {
+            var rectangle = new Rectangle { Fill = color, Width = CellX, Height = CellY };
 
             CanvasRef.Children.Add(rectangle);
             Canvas.SetLeft(rectangle, x * CellX + NamedX);
             Canvas.SetTop(rectangle, y * CellY + NamedY);
-            Panel.SetZIndex(rectangle, -1);
+            Panel.SetZIndex(rectangle, zIndex);
+            return rectangle;
         }
 
         private void DrawGrid(VirtualField field)
@@ -351,6 +434,7 @@ namespace NC.ChessControls.GameFields
                 var horizontalLine = CreateLine(0, j * CellY, field.Width * CellX, j * CellY);
                 horizontalLine.Stroke = lineColor;
                 CanvasRef.Children.Add(horizontalLine);
+                SetZIndex(horizontalLine, 1);
             }
 
             // Columns
@@ -359,11 +443,29 @@ namespace NC.ChessControls.GameFields
                 var verticalLine = CreateLine(i * CellX, 0, i * CellX, field.Height * CellY);
                 verticalLine.Stroke = lineColor;
                 CanvasRef.Children.Add(verticalLine);
+                SetZIndex(verticalLine, 1);
             }
+        }
+        
+        private void ClearSelection()
+        {
+            foreach (var selectedPoint in _selectedPoints)
+            {
+                CanvasRef.Children.Remove(selectedPoint);
+            }
+
+            _selectedPoints.Clear();
+            _selectedCell = DefaultCell;
         }
 
         private void ClearGrid()
         {
+            foreach (var image in CanvasRef.Children.OfType<Image>())
+            {
+                image.MouseDown -= OnIconMouseDown;
+            }
+
+            ClearSelection();
             CanvasRef.Children.Clear();
         }
     }
