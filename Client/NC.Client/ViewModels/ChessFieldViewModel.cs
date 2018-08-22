@@ -1,4 +1,6 @@
-﻿using NC.ChessControls.Prism;
+﻿using NC.ChessControls.Data;
+using NC.ChessControls.Prism;
+using NC.Shared.Contracts;
 using NC.Shared.Data;
 
 namespace NC.Client.ViewModels
@@ -8,6 +10,10 @@ namespace NC.Client.ViewModels
     /// </summary>
     public class ChessFieldViewModel : NotificationObject
     {
+        private VirtualField _gameField;
+
+        private GameController _controller;
+
         /// <summary>
         /// Constructor for <see cref="ChessFieldViewModel"/>.
         /// </summary>
@@ -15,9 +21,9 @@ namespace NC.Client.ViewModels
         {
             var chessDefaultField = VirtualChessFieldUtils.CreateDefaultField();
             _gameField = new VirtualField(chessDefaultField);
+            _controller = new GameController();
+            _controller.Movement += OnChessPieceMovement;
         }
-
-        private VirtualField _gameField;
 
         /// <summary>
         /// Chess game field.
@@ -31,9 +37,34 @@ namespace NC.Client.ViewModels
 
             private set
             {
-                RaisePropertyChanged(() => GameField);
                 _gameField = value;
+                RaisePropertyChanged(() => GameField);
             }
+        }
+
+        /// <summary>
+        /// Game controller.
+        /// </summary>
+        public GameController Controller
+        {
+            get
+            {
+                return _controller;
+            }
+
+            private set
+            {
+                _controller = value;
+            }
+        }
+
+        private void OnChessPieceMovement(object sender, MovementArgs args)
+        {
+            var piece = _gameField[(int)args.From.X, (int)args.From.Y];
+            _gameField[(int)args.To.X, (int)args.To.Y] = piece;
+            _gameField[(int)args.From.X, (int)args.From.Y] = ChessPiece.Empty;
+
+            GameField = new VirtualField(_gameField.CloneMatrix());
         }
     }
 }

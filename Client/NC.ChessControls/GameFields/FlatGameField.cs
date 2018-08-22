@@ -19,8 +19,6 @@ namespace NC.ChessControls.GameFields
     /// </summary>
     public class FlatGameField : StackPanel
     {
-        private readonly static Point DefaultCell = new Point(-1, -1);
-
         /// <summary>
         /// Dependency property for <see cref="IsReadOnly"/> property.
         /// </summary>
@@ -51,14 +49,27 @@ namespace NC.ChessControls.GameFields
         /// </summary>
         public static readonly DependencyProperty MovableCellsBrushProperty;
 
-        private readonly List<Rectangle> _selectedPoints = new List<Rectangle>();
+        /// <summary>
+        /// Dependency property for <see cref="Controller"/> property.
+        /// </summary>
+        public static readonly DependencyProperty ControllerProperty;
+
+        private static readonly Point DefaultCell = new Point(-1, -1);
+
+        private readonly List<Rectangle> _selectedCells = new List<Rectangle>();
 
         private Point _selectedCell = DefaultCell;
 
         private PieceMasterFactory _masterFactory = new PieceMasterFactory(new VirtualField());
-        
+
         static FlatGameField()
         {
+            ControllerProperty = DependencyProperty.Register(
+                nameof(Controller),
+                typeof(GameController),
+                typeof(FlatGameField),
+                new PropertyMetadata(new GameController()));
+
             MovableCellsBrushProperty = DependencyProperty.Register(
                 nameof(MovableCellsBrush),
                 typeof(Brush),
@@ -103,6 +114,21 @@ namespace NC.ChessControls.GameFields
         {
             CanvasRef = new Canvas();
             Children.Add(CanvasRef);
+        }
+
+        /// <summary>
+        /// Game controller.
+        /// </summary>
+        public GameController Controller
+        {
+            get
+            {
+                return (GameController)GetValue(ControllerProperty);
+            }
+            set
+            {
+                SetValue(ControllerProperty, value);
+            }
         }
 
         /// <summary>
@@ -261,7 +287,7 @@ namespace NC.ChessControls.GameFields
             {
                 return;
             }
-            
+
             DrawField(FieldFrame ?? new VirtualField());
         }
 
@@ -301,7 +327,7 @@ namespace NC.ChessControls.GameFields
                     {
                         if (realY % 2 != 0)
                         {
-                            DrawRectagle(realX, realY, BlackCellBrush, - 1);
+                            DrawRectagle(realX, realY, BlackCellBrush, -1);
                         }
                     }
 
@@ -376,19 +402,26 @@ namespace NC.ChessControls.GameFields
 
         private void OnIconMouseDown(object sender, MouseButtonEventArgs args)
         {
-            var selectedCell = (Point)((Image)sender).Tag;
+            var selectedImage = (Point)((Image)sender).Tag;
             if (args.LeftButton == MouseButtonState.Pressed)
             {
                 var selectedCellTemp = _selectedCell;
+                if (IsGreenSelectedPoint(selectedImage))
+                {
+                    Controller?.RaiseMovementEvent(selectedCellTemp, selectedImage);
+
+                    return;
+                }
+
                 ClearSelection();
 
-                if (selectedCellTemp != selectedCell)
+                if (selectedCellTemp != selectedImage)
                 {
                     PieceMasterBase master;
-                    if (_masterFactory.TryGetMaster((int)selectedCell.X, (int)selectedCell.Y, out master))
+                    if (_masterFactory.TryGetMaster((int)selectedImage.X, (int)selectedImage.Y, out master))
                     {
-                        SetSelection(selectedCell, master.GetMovements());
-                        _selectedCell = selectedCell;
+                        SetSelection(selectedImage, master.GetMovements());
+                        _selectedCell = selectedImage;
                     }
                 }
                 else
@@ -396,6 +429,11 @@ namespace NC.ChessControls.GameFields
                     _selectedCell = DefaultCell;
                 }
             }
+        }
+
+        private bool IsGreenSelectedPoint(Point selectedCell)
+        {
+            return _selectedCells.Select(rectangle => (Point)rectangle.Tag).Any(cell => cell == selectedCell);
         }
 
         private void SetSelection(Point selectedCell, IEnumerable<Point> movableCells)
@@ -409,13 +447,23 @@ namespace NC.ChessControls.GameFields
             foreach (var markedCell in markedCells)
             {
                 var rectangle = DrawRectagle((int)markedCell.X, (int)markedCell.Y, MovableCellsBrush, 0);
-                _selectedPoints.Add(rectangle);
+                rectangle.MouseDown += OnSelectedCellMouseDown;
+                _selectedCells.Add(rectangle);
             }
+        }
+
+        private void OnSelectedCellMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            // Click on movable cells
+            var rectangle = (Rectangle)sender;
+            var clickedCell = (Point)rectangle.Tag;
+
+            Controller?.RaiseMovementEvent(_selectedCell, clickedCell);
         }
 
         private Rectangle DrawRectagle(int x, int y, Brush color, int zIndex)
         {
-            var rectangle = new Rectangle { Fill = color, Width = CellX, Height = CellY };
+            var rectangle = new Rectangle { Fill = color, Width = CellX, Height = CellY, Tag = new Point(x, y)};
 
             CanvasRef.Children.Add(rectangle);
             Canvas.SetLeft(rectangle, x * CellX + NamedX);
@@ -446,15 +494,16 @@ namespace NC.ChessControls.GameFields
                 SetZIndex(verticalLine, 1);
             }
         }
-        
+
         private void ClearSelection()
         {
-            foreach (var selectedPoint in _selectedPoints)
+            foreach (var selectedCell in _selectedCells)
             {
-                CanvasRef.Children.Remove(selectedPoint);
+                selectedCell.MouseDown -= OnSelectedCellMouseDown;
+                CanvasRef.Children.Remove(selectedCell);
             }
 
-            _selectedPoints.Clear();
+            _selectedCells.Clear();
             _selectedCell = DefaultCell;
         }
 

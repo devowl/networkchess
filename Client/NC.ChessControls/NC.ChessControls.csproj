@@ -47,7 +47,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\GameController.cs" />
     <Compile Include="Data\IIconsProvider.cs" />
+    <Compile Include="Data\MovementArgs.cs" />
     <Compile Include="Data\SimpleChessIconsProvider.cs" />
     <Compile Include="GameFields\FlatGameField.cs" />
     <Compile Include="Prism\DelegateCommand.cs" />

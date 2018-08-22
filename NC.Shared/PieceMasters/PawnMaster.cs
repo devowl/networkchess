@@ -84,7 +84,7 @@ namespace NC.Shared.PieceMasters
                 };
 
                 // If we do first one move as black
-                if (Position.Y == 6)
+                if (Position.Y == 1)
                 {
                     movementsVectors = movementsVectors.Union(
                         new[]

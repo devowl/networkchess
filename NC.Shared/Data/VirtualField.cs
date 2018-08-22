@@ -1,4 +1,6 @@
-﻿using NC.Shared.Contracts;
+﻿using System;
+
+using NC.Shared.Contracts;
 using NC.Shared.Exceptions;
 
 namespace NC.Shared.Data
@@ -63,7 +65,16 @@ namespace NC.Shared.Data
                 _sourceArray[x, y] = value;
             }
         }
-        
+
+        /// <summary>
+        /// Clone matrix field.
+        /// </summary>
+        /// <returns>Matrix field.</returns>
+        public ChessPiece[,] CloneMatrix()
+        {
+            return (ChessPiece[,])_sourceArray.Clone();
+        }
+
         private void CheckBounds(int x, int y)
         {
             if (0 <= x && x < Width && 0 <= y && y < Height)
