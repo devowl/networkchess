@@ -30,9 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.3.5.0\lib\net40\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,6 +47,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\ChessPiece.cs" />
+    <Compile Include="Contracts\IChessService.cs" />
+    <Compile Include="Contracts\IChessServiceCallback.cs" />
     <Compile Include="Data\VirtualField.cs" />
     <Compile Include="Data\VirtualFieldUtils.cs" />
     <Compile Include="Exceptions\InvalidMovementException.cs" />
@@ -53,10 +60,11 @@
     <Compile Include="PieceMasters\KnightMaster.cs" />
     <Compile Include="PieceMasters\QueenMaster.cs" />
     <Compile Include="PieceMasters\RookMaster.cs" />
-    <Compile Include="GameField\VirtualFieldMaster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

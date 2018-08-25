@@ -5,6 +5,7 @@ namespace NC.Shared.Exceptions
     /// <summary>
     /// Invalid unit movement.
     /// </summary>
+    [Serializable]
     public class InvalidMovementException : Exception
     {
         /// <summary>

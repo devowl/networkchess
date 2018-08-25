@@ -1,0 +1,3 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" 
+    Service="NC.ChessServer.Services.ChessService, NC.ChessServer"
+    Factory="NC.WebServer.Infrastructure.WebServerHostFactory" %>

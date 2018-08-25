@@ -1,10 +1,8 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media.Imaging;
+﻿using System.Windows.Controls;
 
 using NC.Shared.Contracts;
 
-namespace NC.ChessControls.Data
+namespace NC.ChessControls.Interfaces
 {
     /// <summary>
     /// Icons provider.

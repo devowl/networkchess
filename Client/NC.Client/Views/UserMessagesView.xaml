@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="NC.Client.Views.UserMessagesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NC.Client.Views"
+             xmlns:viewModels="clr-namespace:NC.Client.ViewModels"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance viewModels:UserMessagesViewModel}">
+    <Expander>
+        <Expander.Header>
+            <TextBlock Text="Server messages" />
+        </Expander.Header>
+        <ListBox ItemsSource="{Binding UserMessages}" MinHeight="50" />
+    </Expander>
+</UserControl>

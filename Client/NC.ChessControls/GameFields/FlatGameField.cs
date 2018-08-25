@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 
 using NC.ChessControls.Data;
+using NC.ChessControls.Interfaces;
 using NC.Shared.Contracts;
 using NC.Shared.Data;
 using NC.Shared.GameField;

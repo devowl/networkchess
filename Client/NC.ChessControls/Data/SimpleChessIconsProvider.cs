@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
+using NC.ChessControls.Interfaces;
 using NC.Shared.Contracts;
 
 namespace NC.ChessControls.Data
@@ -13,7 +14,7 @@ namespace NC.ChessControls.Data
     /// <summary>
     /// Icons provider for embedded simple icons.
     /// </summary>
-    public class SimpleChessIconsProvider : IIconsProvider
+    internal class SimpleChessIconsProvider : IIconsProvider
     {
         private const int ActualWidth = 2000;
 

@@ -8,16 +8,16 @@ namespace NC.Client.ViewModels
     /// <summary>
     /// Virtual chess field view model.
     /// </summary>
-    public class ChessFieldViewModel : NotificationObject
+    public class GameViewModel : NotificationObject
     {
         private VirtualField _gameField;
 
         private GameController _controller;
 
         /// <summary>
-        /// Constructor for <see cref="ChessFieldViewModel"/>.
+        /// Constructor for <see cref="GameViewModel"/>.
         /// </summary>
-        public ChessFieldViewModel()
+        public GameViewModel()
         {
             var chessDefaultField = VirtualChessFieldUtils.CreateDefaultField();
             _gameField = new VirtualField(chessDefaultField);

@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="NC.Client.Views.ConnectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NC.Client.Views"
+             xmlns:viewModels="clr-namespace:NC.Client.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance viewModels:ConnectionViewModel}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style TargetType="{x:Type StackPanel}" x:Key="Splitter">
+                <Setter Property="Margin" Value="5,5,5,10"/>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <StackPanel Width="200" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel Style="{StaticResource Splitter}">
+                <TextBlock Text="Server address:"/>
+                <TextBox Text="{Binding ServerIp}" x:Name="ServerIp" />
+                <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding ConnectionError}" Margin="0,5" MaxWidth="{Binding ElementName=ServerIp, Path=ActualWidth}"/>
+                <Button Content="Connect" Command="{Binding ConnectCommand}"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>
