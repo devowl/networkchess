@@ -18,7 +18,7 @@
         <StackPanel Width="200" HorizontalAlignment="Center" VerticalAlignment="Center">
             <StackPanel Style="{StaticResource Splitter}">
                 <TextBlock Text="Server address:"/>
-                <TextBox Text="{Binding ServerIp}" x:Name="ServerIp" />
+                <TextBox Text="{Binding ServerAddress}" />
                 <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding ConnectionError}" Margin="0,5" MaxWidth="{Binding ElementName=ServerIp, Path=ActualWidth}"/>
                 <Button Content="Connect" Command="{Binding ConnectCommand}"/>
             </StackPanel>

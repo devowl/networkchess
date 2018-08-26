@@ -12,7 +12,9 @@ namespace NC.Client.Wcf
     /// <typeparam name="TContract">Contract type.</typeparam>
     public class WcfClient<TContract> : IWcfClient<TContract>
     {
-        private readonly string _address;
+        private const int DefaultPort = 7007;
+
+        private readonly string _serviceName;
 
         private TContract _service;
 
@@ -21,10 +23,26 @@ namespace NC.Client.Wcf
         /// <summary>
         /// Constructor for <see cref="WcfClient{TContract}"/>.
         /// </summary>
-        public WcfClient(string address)
+        public WcfClient()
         {
-            _address = address;
+            _serviceName = typeof(TContract).Name;
+
+            if (_serviceName.StartsWith("I"))
+            {
+                _serviceName = _serviceName.Substring(1, _serviceName.Length - 1);
+            }
         }
+
+        /// <summary>
+        /// <see cref="IWcfClient{TContract}"/> factory.
+        /// </summary>
+        /// <returns><see cref="IWcfClient{TContract}"/> instance.</returns>
+        public delegate IWcfClient<TContract> Factory();
+
+        /// <summary>
+        /// End point information.
+        /// </summary>
+        public IEndpointInfo EndpointInfo { get; set; }
 
         /// <inheritdoc/>
         public TContract Service
@@ -43,8 +61,7 @@ namespace NC.Client.Wcf
         /// <inheritdoc/>
         public void Dispose()
         {
-            // Pattern http://msdn.microsoft.com/en-us/library/aa355056.aspx
-
+            // http://msdn.microsoft.com/en-us/library/aa355056.aspx
             if (_service == null || _closed)
             {
                 return;
@@ -71,24 +88,38 @@ namespace NC.Client.Wcf
                 throw;
             }
         }
-        
-        private TContract CreateService()
+
+        /// <summary>
+        /// Create service instance.
+        /// </summary>
+        /// <returns>Service instance.</returns>
+        protected virtual TContract CreateService()
         {
-            Binding binding = GetBinding();
-            EndpointAddress endpoint = GetEndpoint();
+            var binding = GetBinding();
+            var endpoint = GetEndpoint(binding, EndpointInfo.ServerAddress);
             return ChannelFactory<TContract>.CreateChannel(binding, endpoint);
         }
 
-        private EndpointAddress GetEndpoint()
+        /// <summary>
+        /// Get service endpoint.
+        /// </summary>
+        /// <param name="binding">Service binding.</param>
+        /// <param name="serviceAddress">Service address.</param>
+        /// <returns>Service endpoint.</returns>
+        protected EndpointAddress GetEndpoint(Binding binding, string serviceAddress)
         {
-            var serviceName = typeof(TContract).Name;
-            var address = $"{_address}/WebServices/";
-            return null;
+            var scheme = binding.Scheme;
+            var address = $"{scheme}://{serviceAddress}:{DefaultPort}/WebServices/{_serviceName}.svc";
+            return new EndpointAddress(address);
         }
-
-        private Binding GetBinding()
+        
+        /// <summary>
+        /// Get service binding.
+        /// </summary>
+        /// <returns>Service binding.</returns>
+        protected Binding GetBinding()
         {
-            throw new System.NotImplementedException();
+            return WcfClientUtils.ResolveBinding(_serviceName);
         }
     }
 }

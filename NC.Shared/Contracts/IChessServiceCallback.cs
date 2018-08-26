@@ -11,6 +11,7 @@ namespace NC.Shared.Contracts
     /// </summary>
     public interface IChessServiceCallback
     {
-        
+        [OperationContract]
+        void Test();
     }
 }

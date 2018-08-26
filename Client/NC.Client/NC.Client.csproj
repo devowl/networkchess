@@ -63,6 +63,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -106,6 +107,8 @@
     <Compile Include="Interfaces\IMainWindow.cs" />
     <Compile Include="Interfaces\IUserMessage.cs" />
     <Compile Include="Interfaces\IWcfClient.cs" />
+    <Compile Include="Interfaces\IWcfClientFactory.cs" />
+    <Compile Include="Models\ChessServiceCallback.cs" />
     <Compile Include="Shell\LocalNavigator.cs" />
     <Compile Include="ViewModels\ConnectionViewModel.cs" />
     <Compile Include="ViewModels\GameViewModel.cs" />
@@ -119,7 +122,12 @@
     <Compile Include="Views\UserMessagesView.xaml.cs">
       <DependentUpon>UserMessagesView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IEndpointInfo.cs" />
     <Compile Include="Wcf\WcfClient.cs" />
+    <Compile Include="Wcf\WcfClientFactoryExtentions.cs" />
+    <Compile Include="Wcf\WcfClientFactory.cs" />
+    <Compile Include="Wcf\WcfClientUtils.cs" />
+    <Compile Include="Wcf\WcfDuplexClient.cs" />
     <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -143,7 +151,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

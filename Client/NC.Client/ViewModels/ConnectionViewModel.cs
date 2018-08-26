@@ -1,42 +1,36 @@
 ﻿using NC.ChessControls.Prism;
+using NC.Client.Interfaces;
+using NC.Client.Models;
+using NC.Client.Wcf;
+using NC.Shared.Contracts;
 
 namespace NC.Client.ViewModels
 {
     /// <summary>
     /// Server connection view model.
     /// </summary>
-    public class ConnectionViewModel : NotificationObject
+    public class ConnectionViewModel : NotificationObject, IEndpointInfo
     {
-        private string _serverIp;
+        private readonly IWcfClientFactory<IChessService> _chessService;
 
-        private string _serverIpError;
+        private string _connectionError;
+
+        private string _serverAddress;
+
+        private IChessServiceCallback _serviceCallback;
+
+        private IWcfClient<IChessService> _serviceClient;
 
         /// <summary>
         /// Constructor for <see cref="ConnectionViewModel"/>.
         /// </summary>
-        public ConnectionViewModel()
+        public ConnectionViewModel(IWcfClientFactory<IChessService> chessService)
         {
-            _serverIp = "127.0.0.1";
+            _chessService = chessService;
+            _serverAddress = "localhost";
             ConnectCommand = new DelegateCommand(OnConnect);
         }
-
-        /// <summary>
-        /// Server IP address.
-        /// </summary>
-        public string ServerIp
-        {
-            get
-            {
-                return _serverIp;
-            }
-
-            set
-            {
-                _serverIp = value;
-                RaisePropertyChanged(() => ServerIp);
-            }
-        }
-
+        
         /// <summary>
         /// Connection error.
         /// </summary>
@@ -44,11 +38,11 @@ namespace NC.Client.ViewModels
         {
             get
             {
-                return _serverIpError;
+                return _connectionError;
             }
             set
             {
-                _serverIpError = value;
+                _connectionError = value;
                 RaisePropertyChanged(() => ConnectionError);
             }
         }
@@ -57,6 +51,24 @@ namespace NC.Client.ViewModels
 
         private void OnConnect(object o)
         {
+            _serviceCallback = new ChessServiceCallback();
+            _serviceClient = _chessService.Create(_serviceCallback);
+
+            var r = _serviceClient.Service.Login("abcd");
+        }
+
+        public string ServerAddress
+        {
+            get
+            {
+                return _serverAddress;
+            }
+
+            set
+            {
+                _serverAddress = value;
+                RaisePropertyChanged(() => ServerAddress);
+            }
         }
     }
 }
