@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -63,6 +64,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Prism.4.1.0.0\lib\NET40\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
@@ -103,6 +105,7 @@
     <Compile Include="Bootstrapper\Startup.cs" />
     <Compile Include="Interfaces\IMainWindow.cs" />
     <Compile Include="Interfaces\IUserMessage.cs" />
+    <Compile Include="Interfaces\IWcfClient.cs" />
     <Compile Include="Shell\LocalNavigator.cs" />
     <Compile Include="ViewModels\ConnectionViewModel.cs" />
     <Compile Include="ViewModels\GameViewModel.cs" />
@@ -116,6 +119,7 @@
     <Compile Include="Views\UserMessagesView.xaml.cs">
       <DependentUpon>UserMessagesView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Wcf\WcfClient.cs" />
     <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using NC.ChessControls.Prism;
+﻿using NC.ChessControls.Prism;
 
 namespace NC.Client.ViewModels
 {
@@ -12,6 +7,10 @@ namespace NC.Client.ViewModels
     /// </summary>
     public class ConnectionViewModel : NotificationObject
     {
+        private string _serverIp;
+
+        private string _serverIpError;
+
         /// <summary>
         /// Constructor for <see cref="ConnectionViewModel"/>.
         /// </summary>
@@ -20,10 +19,6 @@ namespace NC.Client.ViewModels
             _serverIp = "127.0.0.1";
             ConnectCommand = new DelegateCommand(OnConnect);
         }
-
-        private string _serverIp;
-
-        private string _serverIpError;
 
         /// <summary>
         /// Server IP address.
@@ -60,9 +55,8 @@ namespace NC.Client.ViewModels
 
         public DelegateCommand ConnectCommand { get; }
 
-        private void OnConnect(object o) 
+        private void OnConnect(object o)
         {
-            
         }
     }
 }
