@@ -46,12 +46,16 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Contracts\ChessPiece.cs" />
+    <Compile Include="Contracts\Constants.cs" />
+    <Compile Include="Contracts\WcfGameInfo.cs" />
+    <Compile Include="Data\ChessPiece.cs" />
     <Compile Include="Contracts\IChessService.cs" />
     <Compile Include="Contracts\IChessServiceCallback.cs" />
+    <Compile Include="Contracts\IUserService.cs" />
     <Compile Include="Data\VirtualField.cs" />
     <Compile Include="Data\VirtualFieldUtils.cs" />
     <Compile Include="Exceptions\InvalidMovementException.cs" />
+    <Compile Include="Exceptions\SessionNotFoundedException.cs" />
     <Compile Include="GameField\PieceMasterFactory.cs" />
     <Compile Include="PieceMasters\KingMaster.cs" />
     <Compile Include="PieceMasters\PawnMaster.cs" />

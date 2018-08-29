@@ -9,17 +9,22 @@
              d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance viewModels:ConnectionViewModel}">
     <UserControl.Resources>
         <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <Style TargetType="{x:Type StackPanel}" x:Key="Splitter">
                 <Setter Property="Margin" Value="5,5,5,10"/>
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <local:WaitView Visibility="{Binding Waiting, Converter={StaticResource BooleanToVisibilityConverter}}" DataContext="{Binding WaitViewModel}"/>
         <StackPanel Width="200" HorizontalAlignment="Center" VerticalAlignment="Center">
             <StackPanel Style="{StaticResource Splitter}">
                 <TextBlock Text="Server address:"/>
                 <TextBox Text="{Binding ServerAddress}" />
-                <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding ConnectionError}" Margin="0,5" MaxWidth="{Binding ElementName=ServerIp, Path=ActualWidth}"/>
+                <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding ConnectionError}" Margin="0,5" MaxWidth="{Binding ElementName=ServerIp, Path=ActualWidth}" Foreground="Red"/>
                 <Button Content="Connect" Command="{Binding ConnectCommand}"/>
             </StackPanel>
         </StackPanel>

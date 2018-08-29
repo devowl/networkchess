@@ -9,5 +9,10 @@
         /// Remote server address.
         /// </summary>
         string ServerAddress { get; }
+
+        /// <summary>
+        /// Player session Id.
+        /// </summary>
+        string SessionId { get; }
     }
 }

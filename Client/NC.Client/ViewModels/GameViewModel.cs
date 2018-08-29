@@ -19,7 +19,7 @@ namespace NC.Client.ViewModels
         /// </summary>
         public GameViewModel()
         {
-            var chessDefaultField = VirtualChessFieldUtils.CreateDefaultField();
+            var chessDefaultField = VirtualFieldUtils.CreateDefaultField();
             _gameField = new VirtualField(chessDefaultField);
             _controller = new GameController();
             _controller.Movement += OnChessPieceMovement;

@@ -17,7 +17,7 @@ namespace NC.Shared.Data
         /// </summary>
         public VirtualField()
         {
-            _sourceArray = VirtualChessFieldUtils.CreateEmptyField();
+            _sourceArray = VirtualFieldUtils.CreateEmptyField();
         }
          
         /// <summary>

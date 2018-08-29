@@ -1,5 +1,6 @@
 ﻿using Autofac;
 
+using NC.ChessServer.GamePack;
 using NC.ChessServer.Services;
 
 namespace NC.ChessServer
@@ -12,7 +13,10 @@ namespace NC.ChessServer
         /// <inheritdoc/>
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<Administrator>().AsImplementedInterfaces().AutoActivate();
+            builder.RegisterType<Game>();
             builder.RegisterType<ChessService>();
+            builder.RegisterType<UserService>();
         }
     }
 }

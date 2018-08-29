@@ -40,14 +40,14 @@ namespace NC.Shared.PieceMasters
 
             Vector[] movementsVectors;
             Vector[] attackMovementsVectors;
-            string enemy;
+            string opponent;
 
             // 1. Ходит тока в перёд
             // 2. В бок может тока есть
             // 3. Если на исходной позиции тогда может прыгнуть на 2
-            if (SideName == WhiteName)
+            if (SideName == Constants.WhiteName)
             {
-                enemy = BlackName;
+                opponent = Constants.BlackName;
                 attackMovementsVectors = new[]
                 {
                     new Vector(-1, -1),
@@ -71,7 +71,7 @@ namespace NC.Shared.PieceMasters
             }
             else
             {
-                enemy = WhiteName;
+                opponent = Constants.WhiteName;
                 attackMovementsVectors = new[]
                 {
                     new Vector(-1, 1),
@@ -100,7 +100,7 @@ namespace NC.Shared.PieceMasters
                     .Union(
                         attackMovementsVectors.Select(vector => Point.Add(Position, vector))
                             .Where(CanMove)
-                            .Where(point => CheckPrefix(Field[(int)point.Y, (int)point.Y], enemy)));
+                            .Where(point => CheckPrefix(Field[(int)point.Y, (int)point.Y], opponent)));
         }
     }
 }

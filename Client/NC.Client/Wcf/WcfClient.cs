@@ -96,6 +96,11 @@ namespace NC.Client.Wcf
         protected virtual TContract CreateService()
         {
             var binding = GetBinding();
+            if (binding == null)
+            {
+                throw new ArgumentNullException($"Binding not founded for service {_serviceName}");
+            }
+
             var endpoint = GetEndpoint(binding, EndpointInfo.ServerAddress);
             return ChannelFactory<TContract>.CreateChannel(binding, endpoint);
         }

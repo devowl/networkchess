@@ -7,7 +7,7 @@ using NC.Shared.Exceptions;
 namespace ChessTests.Field
 {
     [TestClass]
-    public class GameField
+    public class GameFieldTests
     {
         private const int FieldSize = 8;
 
@@ -22,7 +22,7 @@ namespace ChessTests.Field
         [TestMethod]
         public void CheckRooks()
         {
-            var defaultField = VirtualChessFieldUtils.CreateDefaultField();
+            var defaultField = VirtualFieldUtils.CreateDefaultField();
             var field = new VirtualField(defaultField);
 
             // First line
@@ -37,7 +37,7 @@ namespace ChessTests.Field
         [TestMethod]
         public void CheckQueens()
         {
-            var defaultField = VirtualChessFieldUtils.CreateDefaultField();
+            var defaultField = VirtualFieldUtils.CreateDefaultField();
             var field = new VirtualField(defaultField);
 
             // First line

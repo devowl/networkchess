@@ -1,6 +1,7 @@
 ﻿using Autofac;
 
 using NC.Client.Interfaces;
+using NC.Client.Models;
 using NC.Client.Shell;
 using NC.Client.ViewModels;
 using NC.Client.Views;
@@ -41,6 +42,10 @@ namespace NC.Client
                 .As(typeof(IWcfClientFactory<>))
                 .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
                 .SingleInstance();
+
+            builder.RegisterType<ChessServiceCallback>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<ChessCallback>().SingleInstance();
+            builder.RegisterType<WaitViewModel>(); 
         }
     }
 }

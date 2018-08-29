@@ -95,6 +95,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\WaitView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -110,9 +114,12 @@
     <Compile Include="Interfaces\IWcfClientFactory.cs" />
     <Compile Include="Models\ChessServiceCallback.cs" />
     <Compile Include="Shell\LocalNavigator.cs" />
+    <Compile Include="Shell\Operation.cs" />
+    <Compile Include="ViewModels\ChessCallback.cs" />
     <Compile Include="ViewModels\ConnectionViewModel.cs" />
     <Compile Include="ViewModels\GameViewModel.cs" />
     <Compile Include="ViewModels\UserMessagesViewModel.cs" />
+    <Compile Include="ViewModels\WaitViewModel.cs" />
     <Compile Include="Views\ConnectionView.xaml.cs">
       <DependentUpon>ConnectionView.xaml</DependentUpon>
     </Compile>
@@ -123,6 +130,9 @@
       <DependentUpon>UserMessagesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IEndpointInfo.cs" />
+    <Compile Include="Views\WaitView.xaml.cs">
+      <DependentUpon>WaitView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Wcf\WcfClient.cs" />
     <Compile Include="Wcf\WcfClientFactoryExtentions.cs" />
     <Compile Include="Wcf\WcfClientFactory.cs" />

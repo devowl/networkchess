@@ -13,34 +13,6 @@ namespace NC.Shared.GameField
     /// </summary>
     public abstract class PieceMasterBase
     {
-        protected const string BlackName = "Black";
-
-        protected const string WhiteName = "White";
-
-        /// <summary>
-        /// White chess pieces.
-        /// </summary>
-        protected readonly ChessPiece[] White = {
-            ChessPiece.WhiteQueen,
-            ChessPiece.WhiteBishop,
-            ChessPiece.WhiteKing,
-            ChessPiece.WhitePawn,
-            ChessPiece.WhiteKnight,
-            ChessPiece.WhiteRook,
-        };
-
-        /// <summary>
-        /// Black chess pieces.
-        /// </summary>
-        protected readonly ChessPiece[] Black = {
-            ChessPiece.BlackQueen,
-            ChessPiece.BlackBishop,
-            ChessPiece.BlackKing,
-            ChessPiece.BlackPawn,
-            ChessPiece.BlackKnight,
-            ChessPiece.BlackRook,
-        };
-
         private string _sideName;
 
         /// <summary>
@@ -82,7 +54,10 @@ namespace NC.Shared.GameField
         /// <summary>
         /// Prefix name.
         /// </summary>
-        protected string SideName => _sideName ?? (_sideName = CheckPrefix(Piece, BlackName) ? BlackName : WhiteName);
+        protected string SideName
+            =>
+                _sideName ??
+                (_sideName = CheckPrefix(Piece, Constants.BlackName) ? Constants.BlackName : Constants.WhiteName);
 
         private IEnumerable<Point> _movements;
 
@@ -109,14 +84,14 @@ namespace NC.Shared.GameField
         protected IEnumerable<Point> GetVectorPathPoints(Vector vector)
         {
             var currentPos = Position;
-            bool enemy = false;
-            while (CanMove(currentPos = Point.Add(currentPos, vector)) && !enemy)
+            bool opponent = false;
+            while (CanMove(currentPos = Point.Add(currentPos, vector)) && !opponent)
             {
                 yield return currentPos;
 
                 var targetPlace = Field[(int)currentPos.X, (int)currentPos.Y];
-                var targetName = GetSideName(targetPlace);
-                enemy = !string.IsNullOrEmpty(targetName) && SideName != GetSideName(targetPlace);
+                var targetName = VirtualFieldUtils.GetSideName(targetPlace);
+                opponent = !string.IsNullOrEmpty(targetName) && SideName != VirtualFieldUtils.GetSideName(targetPlace);
             }
         }
 
@@ -138,7 +113,7 @@ namespace NC.Shared.GameField
                     return true;
                 }
 
-                var sideName = GetSideName(targetPlace);
+                var sideName = VirtualFieldUtils.GetSideName(targetPlace);
                 return SideName != sideName;
             }
 
@@ -150,19 +125,6 @@ namespace NC.Shared.GameField
             return piece.ToString().StartsWith(prefix);
         }
 
-        private string GetSideName(ChessPiece piece)
-        {
-            if (White.Contains(piece))
-            {
-                return WhiteName;
-            }
-
-            if (Black.Contains(piece))
-            {
-                return BlackName;
-            }
-
-            return string.Empty;
-        }
+        
     }
 }

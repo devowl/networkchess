@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
 
 using NC.Shared.Contracts;
+using NC.Shared.Data;
 
 namespace NC.ChessControls.Interfaces
 {

@@ -86,6 +86,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Web.config" />
+    <Content Include="WebServices\UserService.svc" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Infrastructure\WebServiceHostFactory.cs" />

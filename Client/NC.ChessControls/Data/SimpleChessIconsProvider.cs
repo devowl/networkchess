@@ -8,6 +8,7 @@ using System.Windows.Media.Imaging;
 
 using NC.ChessControls.Interfaces;
 using NC.Shared.Contracts;
+using NC.Shared.Data;
 
 namespace NC.ChessControls.Data
 {
@@ -36,21 +37,18 @@ namespace NC.ChessControls.Data
         /// <inheritdoc/>
         public Image GetIcon(ChessPiece chessPiece)
         {
-            const string BlackName = "Black";
-            const string WhiteName = "White";
-
             var fullName = chessPiece.ToString();
-            var isBlack = fullName.StartsWith(BlackName);
-            var isWhite = fullName.StartsWith(WhiteName);
+            var isBlack = fullName.StartsWith(Constants.BlackName);
+            var isWhite = fullName.StartsWith(Constants.WhiteName);
             
             string name;
             if (isWhite)
             {
-                name = fullName.Substring(WhiteName.Length);
+                name = fullName.Substring(Constants.WhiteName.Length);
             }
             else if (isBlack)
             {
-                name = fullName.Substring(BlackName.Length);
+                name = fullName.Substring(Constants.BlackName.Length);
             }
             else
             {
