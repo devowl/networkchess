@@ -15,6 +15,8 @@ namespace NC.Client.Models
     {
         private readonly IUserMessage _userMessage;
 
+        public event EventHandler<EventArgs> GameStarted;
+
         /// <summary>
         /// Constructor for <see cref="ChessServiceCallback"/>.
         /// </summary>
@@ -34,10 +36,11 @@ namespace NC.Client.Models
         { 
             throw new NotImplementedException();
         }
-        
+
+        /// <inheritdoc/>
         public void GameHasStarted(WcfGameInfo gameInfo)
         {
-            throw new NotImplementedException();
+            GameStarted?.Invoke(this, EventArgs.Empty);
         }
     }
 }

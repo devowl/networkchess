@@ -35,5 +35,10 @@ namespace NC.Client.Shell
             _regionManager.Regions[RegionNames.MainRegion].Add(typeof(ConnectionView));
             _regionManager.Regions[RegionNames.UserMessages].Add(typeof(UserMessagesView));
         }
+
+        public void Goto(string game, object[] objects)
+        {
+            
+        }
     }
 }

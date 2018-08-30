@@ -12,11 +12,10 @@ namespace NC.ChessServer.GamePack
         /// <summary>
         /// Constructor for <see cref="Player"/>.
         /// </summary>
-        public Player(string sessionId, string playerName, IChessServiceCallback callback)
+        public Player(string sessionId, string playerName)
         {
             SessionId = sessionId;
             PlayerName = playerName;
-            Callback = callback;
         }
 
         /// <summary>
@@ -56,8 +55,8 @@ namespace NC.ChessServer.GamePack
         /// Set last activity time.
         /// </summary>
         /// <param name="player"><see cref="Player"/> instance.</param>
-        internal static void Active(Player player)
-        {
+        internal static void SetActive(Player player)
+        { 
             player.LastActivity = DateTime.Now;
         }
 

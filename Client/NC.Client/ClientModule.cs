@@ -43,7 +43,7 @@ namespace NC.Client
                 .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
                 .SingleInstance();
             
-            builder.RegisterType<ChessServiceCallback>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<ChessServiceCallback>().AsImplementedInterfaces().AsSelf().SingleInstance();
             builder.RegisterType<WaitViewModel>(); 
         }
     }

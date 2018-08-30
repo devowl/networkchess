@@ -8,25 +8,26 @@
              mc:Ignorable="d"
              x:Name="UserControl">
     <Grid>
-        <Canvas Panel.ZIndex="1" Width="{Binding ElementName=UserControl, Path=ActualWidth}" Height="{Binding ElementName=UserControl, Path=ActualHeight}">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <ProgressBar Height="10" IsIndeterminate="True" />
-                    <TextBox Grid.Row="1"
+        <Canvas Panel.ZIndex="1">
+            <Rectangle  Fill="White" Opacity="0.8" Width="{Binding ElementName=UserControl, Path=ActualWidth}" Height="{Binding ElementName=UserControl, Path=ActualHeight}" />
+        </Canvas>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" ZIndex="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <ProgressBar Height="10" IsIndeterminate="True" />
+                <Label Grid.Row="1"
                              Margin="0,5"
-                             Text="{Binding ActionText}" />
-                    <Button Grid.Row="2"
+                             Content="{Binding ActionText}" />
+                <Button Grid.Row="2"
                             Margin="0,5"
                             IsEnabled="{Binding CanCancel}"
                             Command="{Binding CancelCommand}"
                             Content="Cancel" />
-                </Grid>
-            </StackPanel>
-        </Canvas>
+            </Grid>
+        </StackPanel>
     </Grid>
 </UserControl>

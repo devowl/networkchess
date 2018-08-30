@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using NC.ChessControls.Prism;
+using NC.Client.Constants;
 using NC.Client.Interfaces;
 using NC.Client.Models;
 using NC.Client.Shell;
@@ -21,7 +22,7 @@ namespace NC.Client.ViewModels
 
         private string _serverAddress;
 
-        private readonly IChessServiceCallback _serviceCallback;
+        private readonly ChessServiceCallback _serviceCallback;
 
         private readonly LocalNavigator _navigator;
         
@@ -41,7 +42,7 @@ namespace NC.Client.ViewModels
         public ConnectionViewModel(
             IWcfClientFactory<IUserService> userService,
             IWcfClientFactory<IChessService> chessService,
-            IChessServiceCallback serviceCallback,
+            ChessServiceCallback serviceCallback,
             WaitViewModel.Factory waitFactory,
             LocalNavigator navigator)
         {
@@ -53,11 +54,13 @@ namespace NC.Client.ViewModels
             _waitViewModel = _waitConnect = waitFactory("Connecting to server...");
             _serverAddress = "localhost";
             ConnectCommand = new DelegateCommand(OnConnect);
+            _serviceCallback.GameStarted += OnGameStarted;
         }
 
         private void CancelCallback()
         {
-            
+            _userService.Use(service => service.Logout(SessionId));
+            _waitViewModel.Waiting = false;
         }
 
         /// <summary>
@@ -109,6 +112,9 @@ namespace NC.Client.ViewModels
                                 SessionId = sessionId;
                                 _chessClient = _chessService.Create(_serviceCallback);
                                 _chessClient.Service.Ready(sessionId);
+
+                                OpponentView();
+                                
                             }
                             else
                             {
@@ -120,6 +126,17 @@ namespace NC.Client.ViewModels
                     {
                         ConnectionError = ex.Message;
                     }
+                });
+        }
+        
+        private void OnGameStarted(object sender, EventArgs eventArgs)
+        {
+            _navigator.Goto(
+                RegionNames.Game,
+                new object[]
+                {
+                    _serviceCallback,
+                    _chessClient
                 });
         }
 

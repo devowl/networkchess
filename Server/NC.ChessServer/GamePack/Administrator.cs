@@ -142,6 +142,7 @@ namespace NC.ChessServer.GamePack
                 }
 
                 Player.SetCallback(player, callback);
+                Player.SetActive(player);
                 Player.SetIsReady(player);
             }
         }

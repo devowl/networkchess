@@ -16,10 +16,6 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <local:WaitView Visibility="{Binding Waiting, Converter={StaticResource BooleanToVisibilityConverter}}" DataContext="{Binding WaitViewModel}"/>
         <StackPanel Width="200" HorizontalAlignment="Center" VerticalAlignment="Center">
             <StackPanel Style="{StaticResource Splitter}">
                 <TextBlock Text="Server address:"/>
@@ -28,5 +24,6 @@
                 <Button Content="Connect" Command="{Binding ConnectCommand}"/>
             </StackPanel>
         </StackPanel>
+        <local:WaitView Visibility="{Binding Waiting, Converter={StaticResource BooleanToVisibilityConverter}}" DataContext="{Binding WaitViewModel}"/>
     </Grid>
 </UserControl>
