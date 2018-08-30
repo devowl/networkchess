@@ -42,9 +42,8 @@ namespace NC.Client
                 .As(typeof(IWcfClientFactory<>))
                 .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
                 .SingleInstance();
-
+            
             builder.RegisterType<ChessServiceCallback>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<ChessCallback>().SingleInstance();
             builder.RegisterType<WaitViewModel>(); 
         }
     }

@@ -17,7 +17,7 @@ namespace NC.Shared.Contracts
         {
             SideColor = sideColor;
             OpponentName = opponentName;
-            DefaultField = defaultField;
+            DefaultField = defaultField.ToJaggedArray();
         }
 
         /// <summary>
@@ -36,6 +36,6 @@ namespace NC.Shared.Contracts
         /// Default game field.
         /// </summary>
         [DataMember]
-        public ChessPiece[,] DefaultField { get; set; }
+        public ChessPiece[][] DefaultField { get; set; }
     }
 }

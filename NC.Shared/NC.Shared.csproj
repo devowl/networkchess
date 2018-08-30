@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Contracts\Constants.cs" />
     <Compile Include="Contracts\WcfGameInfo.cs" />
+    <Compile Include="Data\ArrayExtensions.cs" />
     <Compile Include="Data\ChessPiece.cs" />
     <Compile Include="Contracts\IChessService.cs" />
     <Compile Include="Contracts\IChessServiceCallback.cs" />

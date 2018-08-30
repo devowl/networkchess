@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Autofac;
 
 using NC.ChessServer.Interfaces;
+using NC.Shared.Contracts;
 using NC.Shared.Exceptions;
 
 namespace NC.ChessServer.GamePack
@@ -93,6 +94,7 @@ namespace NC.ChessServer.GamePack
             while (!_cancelationToken.IsCancellationRequested)
             {
                 // _inactivityTimeout
+                Thread.Sleep(TimeSpan.FromSeconds(SecondsTimeout));
             }
         }
 
@@ -129,7 +131,7 @@ namespace NC.ChessServer.GamePack
             }
         }
 
-        public void Ready(string sessionId)
+        public void Ready(string sessionId, IChessServiceCallback callback)
         {
             lock (_queueSyncObj)
             {
@@ -139,6 +141,7 @@ namespace NC.ChessServer.GamePack
                     throw new SessionNotFoundedException();
                 }
 
+                Player.SetCallback(player, callback);
                 Player.SetIsReady(player);
             }
         }

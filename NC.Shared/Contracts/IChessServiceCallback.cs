@@ -24,8 +24,8 @@ namespace NC.Shared.Contracts
         /// <param name="toX">To coordinate.</param>
         /// <param name="toY">To coordinate.</param>
         /// <param name="virtualField">Game virtual field.</param>
-        [OperationContract(IsOneWay = true)]
-        void Move(int fromX, int fromY, int toX, int toY, ChessPiece[,] virtualField);
+        [OperationContract(IsOneWay = true)] 
+        void OpponentMove(int fromX, int fromY, int toX, int toY, ChessPiece[][] virtualField);
 
         /// <summary>
         /// Game has started event.

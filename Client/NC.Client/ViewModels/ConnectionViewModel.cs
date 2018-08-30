@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 using NC.ChessControls.Prism;
 using NC.Client.Interfaces;
@@ -23,14 +24,12 @@ namespace NC.Client.ViewModels
         private readonly IChessServiceCallback _serviceCallback;
 
         private readonly LocalNavigator _navigator;
-
-        private readonly ChessCallback _chessCallback;
-
+        
         private readonly WaitViewModel _waitOpponent;
 
         private readonly WaitViewModel _waitConnect;
 
-        private IWcfClientFactory<IChessService> _chessService;
+        private readonly IWcfClientFactory<IChessService> _chessService;
 
         private WaitViewModel _waitViewModel;
 
@@ -44,14 +43,12 @@ namespace NC.Client.ViewModels
             IWcfClientFactory<IChessService> chessService,
             IChessServiceCallback serviceCallback,
             WaitViewModel.Factory waitFactory,
-            LocalNavigator navigator,
-            ChessCallback chessCallback)
+            LocalNavigator navigator)
         {
             _chessService = chessService;
             _userService = userService;
             _serviceCallback = serviceCallback;
             _navigator = navigator;
-            _chessCallback = chessCallback;
             _waitOpponent = waitFactory("Awaiting new opponent...", true, CancelCallback);
             _waitViewModel = _waitConnect = waitFactory("Connecting to server...");
             _serverAddress = "localhost";
@@ -98,29 +95,32 @@ namespace NC.Client.ViewModels
 
         public DelegateCommand ConnectCommand { get; }
         
-        private void OnConnect(object o)
+        private async void OnConnect(object o)
         {
-            try
-            {
-                using (ConnectionView())
+            await Task.Factory.StartNew(() =>
                 {
-                    string sessionId = null;
-                    if (_userService.Use(service => service.Login(Guid.NewGuid().ToString(), out sessionId)))
+                    try
                     {
-                        SessionId = sessionId;
-                        _chessClient = _chessService.Create(_chessCallback);
-                        _chessClient.Service.Ready(sessionId);
+                        using (ConnectionView())
+                        {
+                            string sessionId = null;
+                            if (_userService.Use(service => service.Login(Guid.NewGuid().ToString(), out sessionId)))
+                            {
+                                SessionId = sessionId;
+                                _chessClient = _chessService.Create(_serviceCallback);
+                                _chessClient.Service.Ready(sessionId);
+                            }
+                            else
+                            {
+                                ConnectionError = "Login failed";
+                            }
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        ConnectionError = "Login failed";
+                        ConnectionError = ex.Message;
                     }
-                }
-            }
-            catch (Exception ex)
-            {
-                ConnectionError = ex.Message;
-            }
+                });
         }
 
         private WaitOperation ConnectionView()

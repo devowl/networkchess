@@ -54,6 +54,7 @@
     <Compile Include="Interfaces\IGameManager.cs" />
     <Compile Include="Interfaces\IPlayerManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\ChessService.cs" />
     <Compile Include="Services\UserService.cs" />
   </ItemGroup>

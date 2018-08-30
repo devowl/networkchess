@@ -9,8 +9,7 @@ namespace NC.ChessServer.Services
     /// <summary>
     /// Chess service.
     /// </summary>
-    [ServiceBehavior]
-    public class ChessService : IChessService
+    public class ChessService : BaseService, IChessService
     {
         private readonly IPlayerManager _playerManager;
 
@@ -29,7 +28,8 @@ namespace NC.ChessServer.Services
         public void Ready(string sessionId)
         {
             CheckSession(sessionId);
-            _playerManager.Ready(sessionId);
+            var callback = OperationContext.Current.GetCallbackChannel<IChessServiceCallback>();
+            _playerManager.Ready(sessionId, callback);
         }
 
         /// <inheritdoc/>

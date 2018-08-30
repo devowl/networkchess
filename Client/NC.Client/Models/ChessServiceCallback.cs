@@ -30,8 +30,8 @@ namespace NC.Client.Models
         }
 
         /// <inheritdoc/>
-        public void Move(int fromX, int fromY, int toX, int toY, ChessPiece[,] virtualField)
-        {
+        public void OpponentMove(int fromX, int fromY, int toX, int toY, ChessPiece[][] virtualField)
+        { 
             throw new NotImplementedException();
         }
         

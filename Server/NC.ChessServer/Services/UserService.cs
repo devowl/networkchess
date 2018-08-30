@@ -10,8 +10,7 @@ namespace NC.ChessServer.Services
     /// <summary>
     /// User service.
     /// </summary>
-    [ServiceBehavior]
-    public class UserService : IUserService
+    public class UserService :  IUserService
     {
         private readonly IPlayerManager _playerManager;
 

@@ -13,8 +13,9 @@ namespace NC.ChessServer
         /// <inheritdoc/>
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<Administrator>().AsImplementedInterfaces().AutoActivate();
+            builder.RegisterType<Administrator>().SingleInstance().AsImplementedInterfaces().AutoActivate();
             builder.RegisterType<Game>();
+            builder.RegisterType<Player>();
             builder.RegisterType<ChessService>();
             builder.RegisterType<UserService>();
         }

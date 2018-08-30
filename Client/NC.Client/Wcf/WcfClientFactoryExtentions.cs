@@ -23,7 +23,7 @@ namespace NC.Client.Wcf
                 {
                     action(wcfClient.Service);
                 }
-                catch (Exception)
+                catch (Exception exception)
                 {
                     // handle
                     throw;
@@ -47,7 +47,7 @@ namespace NC.Client.Wcf
                 {
                     return action(wcfClient.Service);
                 }
-                catch (Exception)
+                catch (Exception exception)
                 {
                     // handle
                     throw;

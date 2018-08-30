@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 
@@ -69,7 +70,7 @@ namespace NC.Client.Wcf
 
             _closed = true;
 
-            var client = Service as ICommunicationObject;
+            var client = _service as ICommunicationObject;
             try
             {
                 client.Close();
@@ -102,6 +103,9 @@ namespace NC.Client.Wcf
             }
 
             var endpoint = GetEndpoint(binding, EndpointInfo.ServerAddress);
+
+            Debug.WriteLine(endpoint.Uri);
+
             return ChannelFactory<TContract>.CreateChannel(binding, endpoint);
         }
 

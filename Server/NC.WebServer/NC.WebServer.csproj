@@ -85,7 +85,9 @@
     <Content Include="WebServices\ChessService.svc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="WebServices\UserService.svc" />
   </ItemGroup>
   <ItemGroup>
