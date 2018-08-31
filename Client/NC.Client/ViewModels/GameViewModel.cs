@@ -1,4 +1,6 @@
-﻿using NC.ChessControls.Data;
+﻿using Microsoft.Practices.Prism.Regions;
+
+using NC.ChessControls.Data;
 using NC.ChessControls.Prism;
 using NC.Shared.Contracts;
 using NC.Shared.Data;
@@ -8,7 +10,7 @@ namespace NC.Client.ViewModels
     /// <summary>
     /// Virtual chess field view model.
     /// </summary>
-    public class GameViewModel : NotificationObject
+    public class GameViewModel : NotificationObject, INavigationAware
     {
         private VirtualField _gameField;
 
@@ -65,6 +67,21 @@ namespace NC.Client.ViewModels
             _gameField[(int)args.From.X, (int)args.From.Y] = ChessPiece.Empty;
 
             GameField = new VirtualField(_gameField.CloneMatrix());
+        }
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

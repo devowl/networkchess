@@ -1,4 +1,6 @@
-﻿namespace NC.Client.Constants
+﻿using NC.Client.Views;
+
+namespace NC.Client.Constants
 {
     /// <summary>
     /// Prism region names.
@@ -13,7 +15,7 @@
         /// <summary>
         /// Game has started.
         /// </summary>
-        public const string Game = "Game";
+        public const string Game = nameof(GameView);
 
         /// <summary>
         /// Main region.
@@ -23,6 +25,6 @@
         /// <summary>
         /// User messages region.
         /// </summary>
-        public const string UserMessages = "UserMessages";
+        public const string UserMessages = nameof(UserMessagesView);
     }
 }

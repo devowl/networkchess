@@ -100,6 +100,15 @@ namespace NC.Client.ViewModels
         
         private async void OnConnect(object o)
         {
+            _navigator.Goto(
+                RegionNames.Game,
+                new object[]
+                {
+                    _serviceCallback,
+                    _chessClient
+                });
+
+            return;
             await Task.Factory.StartNew(() =>
                 {
                     try

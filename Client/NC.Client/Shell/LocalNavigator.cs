@@ -14,7 +14,9 @@ namespace NC.Client.Shell
     public class LocalNavigator
     {
         private readonly IRegionManager _regionManager;
-        
+
+        private bool _isRegistred;
+
         /// <summary>
         /// Constructor for <see cref="LocalNavigator"/>.
         /// </summary>
@@ -24,21 +26,34 @@ namespace NC.Client.Shell
             _regionManager = regionManager;
         }
 
+        private void RegionsRegistration()
+        {
+            if (_isRegistred)
+            {
+                return;
+            }
+
+            _regionManager.RegisterViewWithRegion(RegionNames.MainRegion, typeof(ConnectionView));
+            _regionManager.RegisterViewWithRegion(RegionNames.MainRegion, typeof(GameView));
+            _regionManager.RegisterViewWithRegion(RegionNames.UserMessages, typeof(UserMessagesView));
+
+            _isRegistred = true;
+        }
+
         /// <summary>
         /// Set default view.
         /// </summary>
         public void DefaultView()
         {
-            _regionManager.RegisterViewWithRegion(RegionNames.MainRegion, typeof(ConnectionView));
-            _regionManager.RegisterViewWithRegion(RegionNames.UserMessages, typeof(UserMessagesView));
-
-            _regionManager.Regions[RegionNames.MainRegion].Add(typeof(ConnectionView));
-            _regionManager.Regions[RegionNames.UserMessages].Add(typeof(UserMessagesView));
+            RegionsRegistration();
+            
         }
 
         public void Goto(string game, object[] objects)
         {
-            
+            var region = _regionManager.Regions[RegionNames.MainRegion];
+            //region.RequestNavigate(game,);
+            //_regionManager.RequestNavigate("", "", new object());
         }
     }
 }
