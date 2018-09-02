@@ -66,7 +66,7 @@ namespace NC.ChessServer.GamePack
 
             var randomIndex = DateTime.Now.Millisecond % 2 == 0 ? 1 : 0;
             _player1Color = colors[randomIndex];
-            _player2Color = colors.Single();
+            _player2Color = colors.Single(c => c != _player1Color);
 
             var chessGameField = VirtualFieldUtils.CreateDefaultField();
 

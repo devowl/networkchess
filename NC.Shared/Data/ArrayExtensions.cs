@@ -1,4 +1,6 @@
-﻿namespace NC.Shared.Data
+﻿using System.Linq;
+
+namespace NC.Shared.Data
 {
     /// <summary>
     /// Array extensions.
@@ -32,6 +34,27 @@
                 }
             }
             return jaggedArray;
+        }
+
+        /// <summary>
+        /// Convert jagged to multi-dimensional.
+        /// </summary>
+        /// <typeparam name="T">Array type.</typeparam>
+        /// <param name="jaggedArray">Jagged array.</param>
+        /// <returns>Multi-dimensional array.</returns> 
+        public static T[,] ToMultiDimensionalArray<T>(this T[][] jaggedArray)
+        {
+            T[,] result = new T[jaggedArray.Length, jaggedArray[0].Length];
+
+            for (int i = 0; i < jaggedArray.Length; i++)
+            {
+                for (int k = 0; k < jaggedArray[0].Length; k++)
+                {
+                    result[i, k] = jaggedArray[i][k];
+                }
+            }
+
+            return result;
         }
     }
 }

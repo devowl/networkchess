@@ -33,7 +33,7 @@ namespace NC.ChessServer.GamePack
 
         private CancellationToken _cancelationToken;
 
-        private readonly Queue<Player> _playersQueue = new Queue<Player>();
+        private readonly SpecialQueue<Player> _playersQueue = new SpecialQueue<Player>();
 
         private readonly object _queueSyncObj = new object();
 
@@ -73,14 +73,17 @@ namespace NC.ChessServer.GamePack
             {
                 lock (_queueSyncObj)
                 {
-                    var onlinePlayersQueue = new Queue<Player>(_playersQueue.Where(player => player.IsReady));
-                    while (onlinePlayersQueue.Count >= 2)
+                    var tempQueue = new Queue<Player>(_playersQueue.Where(player => player.IsReady));
+                    while (tempQueue.Count >= 2)
                     {
-                        var player1 = onlinePlayersQueue.Dequeue();
-                        var player2 = onlinePlayersQueue.Dequeue();
+                        var player1 = tempQueue.Dequeue();
+                        var player2 = tempQueue.Dequeue();
 
+                        _playersQueue.Remove(player1);
+                        _playersQueue.Remove(player2);
                         var game = _gameFactory(player1, player2);
 
+                        
                         AddGame(game);
                     }
                 }
@@ -119,10 +122,7 @@ namespace NC.ChessServer.GamePack
             }
         }
 
-        /// <summary>
-        /// Add player to service queue.
-        /// </summary>
-        /// <param name="player">Player data.</param>
+        /// <inheritdoc/>
         public void AddToQueue(Player player)
         {
             lock (_queueSyncObj)
@@ -131,6 +131,20 @@ namespace NC.ChessServer.GamePack
             }
         }
 
+        /// <inheritdoc/>
+        public void RemoveFromQueue(string sessionId)
+        {
+            lock (_queueSyncObj)
+            {
+                var player = _playersQueue.FirstOrDefault(p => p.SessionId == sessionId);
+                if (player != null)
+                {
+                    _playersQueue.Remove(player);
+                }
+            }
+        }
+
+        /// <inheritdoc/>
         public void Ready(string sessionId, IChessServiceCallback callback)
         {
             lock (_queueSyncObj)
@@ -147,6 +161,7 @@ namespace NC.ChessServer.GamePack
             }
         }
 
+        /// <inheritdoc/>
         public bool HasSession(string sessionId)
         {
             lock (_queueSyncObj)
@@ -163,6 +178,7 @@ namespace NC.ChessServer.GamePack
             _playerActivityMonitor.Dispose();
         }
 
+        /// <inheritdoc/>
         public void Move(string sessionId, int x1, int y1, int x2, int y2)
         {
             lock (_playingGamesSyncObj)

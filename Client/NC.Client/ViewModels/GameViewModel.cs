@@ -2,6 +2,7 @@
 
 using NC.ChessControls.Data;
 using NC.ChessControls.Prism;
+using NC.Client.Interfaces;
 using NC.Shared.Contracts;
 using NC.Shared.Data;
 
@@ -12,6 +13,8 @@ namespace NC.Client.ViewModels
     /// </summary>
     public class GameViewModel : NotificationObject, INavigationAware
     {
+        private readonly IGameServiceProvider _gameServiceProvider;
+
         private VirtualField _gameField;
 
         private GameController _controller;
@@ -19,8 +22,9 @@ namespace NC.Client.ViewModels
         /// <summary>
         /// Constructor for <see cref="GameViewModel"/>.
         /// </summary>
-        public GameViewModel()
+        public GameViewModel(IGameServiceProvider gameServiceProvider)
         {
+            _gameServiceProvider = gameServiceProvider;
             var chessDefaultField = VirtualFieldUtils.CreateDefaultField();
             _gameField = new VirtualField(chessDefaultField);
             _controller = new GameController();
@@ -37,7 +41,7 @@ namespace NC.Client.ViewModels
                 return _gameField;
             }
 
-            private set
+            set
             {
                 _gameField = value;
                 RaisePropertyChanged(() => GameField);
@@ -71,17 +75,19 @@ namespace NC.Client.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            
+            var callback = _gameServiceProvider.ServiceCallback;
+            var field = callback.GameInfo.DefaultField;
+            GameField = new VirtualField(field.ToMultiDimensionalArray());
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            throw new System.NotImplementedException();
+            return true;
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            throw new System.NotImplementedException();
+            
         }
     }
 }

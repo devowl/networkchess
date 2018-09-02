@@ -15,8 +15,6 @@ namespace NC.Client.Models
     {
         private readonly IUserMessage _userMessage;
 
-        public event EventHandler<EventArgs> GameStarted;
-
         /// <summary>
         /// Constructor for <see cref="ChessServiceCallback"/>.
         /// </summary>
@@ -24,6 +22,13 @@ namespace NC.Client.Models
         {
             _userMessage = userMessage;
         }
+
+        public event EventHandler<EventArgs> GameStarted;
+
+        /// <summary>
+        /// Server game info.
+        /// </summary>
+        public WcfGameInfo GameInfo { get; private set; }
 
         /// <inheritdoc/>
         public void Message(string text)
@@ -33,13 +38,13 @@ namespace NC.Client.Models
 
         /// <inheritdoc/>
         public void OpponentMove(int fromX, int fromY, int toX, int toY, ChessPiece[][] virtualField)
-        { 
-            throw new NotImplementedException();
+        {
         }
 
         /// <inheritdoc/>
         public void GameHasStarted(WcfGameInfo gameInfo)
         {
+            GameInfo = gameInfo;
             GameStarted?.Invoke(this, EventArgs.Empty);
         }
     }

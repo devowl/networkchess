@@ -133,6 +133,7 @@
     <Compile Include="ClientModuleActivator.cs" />
     <Compile Include="Constants\RegionNames.cs" />
     <Compile Include="Bootstrapper\Startup.cs" />
+    <Compile Include="Interfaces\IGameServiceProvider.cs" />
     <Compile Include="Interfaces\IMainWindow.cs" />
     <Compile Include="Interfaces\IUserMessage.cs" />
     <Compile Include="Interfaces\IWcfClient.cs" />

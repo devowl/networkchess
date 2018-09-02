@@ -51,6 +51,7 @@
     <Compile Include="GamePack\Game.cs" />
     <Compile Include="GamePack\Administrator.cs" />
     <Compile Include="GamePack\Player.cs" />
+    <Compile Include="GamePack\SpecialQueue.cs" />
     <Compile Include="Interfaces\IGameManager.cs" />
     <Compile Include="Interfaces\IPlayerManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

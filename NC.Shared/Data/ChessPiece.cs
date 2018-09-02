@@ -5,7 +5,6 @@ namespace NC.Shared.Data
     /// <summary>
     /// Chess piece types.
     /// </summary>
-    [DataContract]
     public enum ChessPiece
     {
         Empty,

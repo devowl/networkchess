@@ -13,8 +13,8 @@
             <gameFields:FlatGameField Width="400"
                                       Height="400"
                                       BlackCellBrush="#D28D49"
-                                      Controller="{Binding ChessFieldViewModel.Controller}"
-                                      FieldFrame="{Binding ChessFieldViewModel.GameField,
+                                      Controller="{Binding Controller}"
+                                      FieldFrame="{Binding GameField,
                                                            Mode=TwoWay}"
                                       WhileCellBrush="#FFCE97" />
         </StackPanel>

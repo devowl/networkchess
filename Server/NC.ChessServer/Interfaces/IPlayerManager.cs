@@ -15,6 +15,12 @@ namespace NC.ChessServer.Interfaces
         void AddToQueue(Player player);
 
         /// <summary>
+        /// Remove player from queue.
+        /// </summary>
+        /// <param name="sessionId">Session id.</param>
+        void RemoveFromQueue(string sessionId);
+
+        /// <summary>
         /// Player ready to play.
         /// </summary>
         /// <param name="sessionId">Session id.</param>

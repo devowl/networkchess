@@ -19,24 +19,19 @@ namespace NC.Client
         /// <inheritdoc/>
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<MainWindow>().SingleInstance();
-            builder.RegisterType<MainWindow>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<MainWindow>().AsImplementedInterfaces().AsSelf().SingleInstance();
             builder.RegisterType<ConnectionView>();
-            builder.RegisterType<ConnectionViewModel>().SingleInstance();
-            builder.RegisterType<ConnectionViewModel>().As<IEndpointInfo>().SingleInstance();
+            builder.RegisterType<ConnectionViewModel>().AsImplementedInterfaces().AsSelf().SingleInstance();
             builder.RegisterType<GameView>();
-            builder.RegisterType<GameViewModel>();
+            builder.RegisterType<GameViewModel>().AsSelf().SingleInstance();
             builder.RegisterType<ClientModuleActivator>().AutoActivate().SingleInstance();
             builder.RegisterType<LocalNavigator>().SingleInstance();
             builder.RegisterType<UserMessagesView>().SingleInstance();
-            builder.RegisterType<UserMessagesViewModel>().SingleInstance();
-            builder.RegisterType<UserMessagesViewModel>().As<IUserMessage>();
-            builder.RegisterType<UserMessagesViewModel>();
+            builder.RegisterType<UserMessagesViewModel>().As<IUserMessage>().AsSelf().SingleInstance();
 
             builder.RegisterGeneric(typeof(WcfClient<>))
                 .As(typeof(IWcfClient<>))
-                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
-                .SingleInstance();
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
             
             builder.RegisterGeneric(typeof(WcfClientFactory<>))
                 .As(typeof(IWcfClientFactory<>))

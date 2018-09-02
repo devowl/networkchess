@@ -1,4 +1,8 @@
-﻿using Autofac;
+﻿using System;
+using System.Windows;
+using System.Windows.Threading;
+
+using Autofac;
 
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.ServiceLocation;
@@ -46,14 +50,35 @@ namespace NC.Client.Shell
         public void DefaultView()
         {
             RegionsRegistration();
-            
         }
 
-        public void Goto(string game, object[] objects)
+        /// <summary>
+        /// Go to view.
+        /// </summary>
+        /// <param name="viewName">View name.</param>
+        public void Goto(string viewName)
+        {
+            var dispatcher = Application.Current.Dispatcher;
+
+            if (dispatcher.CheckAccess())
+            {
+                InternalGoto(viewName);
+            }
+            else
+            {
+                dispatcher.Invoke(
+                    new Action(
+                        () =>
+                        {
+                            InternalGoto(viewName);
+                        }));
+            }
+        }
+
+        private void InternalGoto(string viewName) 
         {
             var region = _regionManager.Regions[RegionNames.MainRegion];
-            //region.RequestNavigate(game,);
-            //_regionManager.RequestNavigate("", "", new object());
+            region.RequestNavigate(viewName);
         }
     }
 }

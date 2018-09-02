@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace NC.ChessControls.Prism
 {
@@ -54,9 +56,19 @@ namespace NC.ChessControls.Prism
         /// </summary>
         public void RaiseCanExecuteChanged()
         {
-            if (CanExecuteChanged != null)
+            var dispatcher = Application.Current.Dispatcher;
+            if (dispatcher.CheckAccess())
             {
-                CanExecuteChanged(this, EventArgs.Empty);
+                CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            }
+            else
+            {
+                dispatcher.BeginInvoke(
+                    new Action(
+                        () =>
+                        {
+                            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+                        }));
             }
         }
     }

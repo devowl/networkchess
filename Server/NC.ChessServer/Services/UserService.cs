@@ -37,7 +37,7 @@ namespace NC.ChessServer.Services
         /// <inheritdoc/>
         public void Logout(string sessionId)
         {
-            throw new System.NotImplementedException();
+            _playerManager.RemoveFromQueue(sessionId);
         }
     }
 }
