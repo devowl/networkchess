@@ -98,8 +98,10 @@ namespace NC.Client.ViewModels
             }
         }
 
+        /// <inheritdoc/>
         public DelegateCommand ConnectCommand { get; }
 
+        /// <inheritdoc/>
         public string ServerAddress
         {
             get

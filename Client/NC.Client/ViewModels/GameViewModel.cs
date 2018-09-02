@@ -3,7 +3,6 @@
 using NC.ChessControls.Data;
 using NC.ChessControls.Prism;
 using NC.Client.Interfaces;
-using NC.Shared.Contracts;
 using NC.Shared.Data;
 
 namespace NC.Client.ViewModels
@@ -64,15 +63,7 @@ namespace NC.Client.ViewModels
             }
         }
 
-        private void OnChessPieceMovement(object sender, MovementArgs args)
-        {
-            var piece = _gameField[(int)args.From.X, (int)args.From.Y];
-            _gameField[(int)args.To.X, (int)args.To.Y] = piece;
-            _gameField[(int)args.From.X, (int)args.From.Y] = ChessPiece.Empty;
-
-            GameField = new VirtualField(_gameField.CloneMatrix());
-        }
-
+        /// <inheritdoc/>
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             var callback = _gameServiceProvider.ServiceCallback;
@@ -80,14 +71,24 @@ namespace NC.Client.ViewModels
             GameField = new VirtualField(field.ToMultiDimensionalArray());
         }
 
+        /// <inheritdoc/>
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
             return true;
         }
 
+        /// <inheritdoc/>
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            
+        }
+
+        private void OnChessPieceMovement(object sender, MovementArgs args)
+        {
+            var piece = _gameField[(int)args.From.X, (int)args.From.Y];
+            _gameField[(int)args.To.X, (int)args.To.Y] = piece;
+            _gameField[(int)args.From.X, (int)args.From.Y] = ChessPiece.Empty;
+
+            GameField = new VirtualField(_gameField.CloneMatrix());
         }
     }
 }
