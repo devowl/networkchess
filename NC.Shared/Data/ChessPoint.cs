@@ -34,5 +34,23 @@
         {
             return new ChessPoint(point.X + vector.X, point.Y + vector.Y);
         }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            return X.GetHashCode() ^ Y.GetHashCode();
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            var point = obj as ChessPoint;
+            if (point == null)
+            {
+                return false;
+            }
+
+            return point.X.Equals(X) && point.Y.Equals(Y);
+        }
     }
 }
