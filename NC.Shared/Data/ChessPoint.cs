@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace NC.Shared.Data
+﻿namespace NC.Shared.Data
 {
     /// <summary>
     /// Chess point.
