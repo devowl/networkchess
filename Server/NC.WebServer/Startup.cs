@@ -19,7 +19,7 @@ namespace NC.WebServer
         /// Static container reference.
         /// </summary>
         internal IContainer Container { get; set; }
-        
+
         /// <summary>
         /// Owin configuration entry point.
         /// </summary>

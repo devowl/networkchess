@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 using NC.Shared.Contracts;
 
@@ -11,6 +10,30 @@ namespace NC.Shared.Data
     public static class VirtualFieldUtils
     {
         private const int FieldSize = 8;
+
+        /// <summary>
+        /// Whites chess pieces.
+        /// </summary>
+        private static readonly ChessPiece[] Whites = {
+            ChessPiece.WhiteQueen,
+            ChessPiece.WhiteBishop,
+            ChessPiece.WhiteKing,
+            ChessPiece.WhitePawn,
+            ChessPiece.WhiteKnight,
+            ChessPiece.WhiteRook,
+        };
+
+        /// <summary>
+        /// Blacks chess pieces.
+        /// </summary>
+        private static readonly ChessPiece[] Blacks = {
+            ChessPiece.BlackQueen,
+            ChessPiece.BlackBishop,
+            ChessPiece.BlackKing,
+            ChessPiece.BlackPawn,
+            ChessPiece.BlackKnight,
+            ChessPiece.BlackRook,
+        };
 
         /// <summary>
         /// Create default game field.
@@ -130,13 +153,13 @@ namespace NC.Shared.Data
         /// </summary>
         /// <param name="piece">Chess piece.</param>
         /// <returns>Chess color name.</returns>
-        public static PlayerColor? GetSideName(ChessPiece piece)
+        public static PlayerColor? GetPlayerColor(this ChessPiece piece)
         {
             if (Whites.Contains(piece))
             {
                 return PlayerColor.White;
             }
-            
+
             if (Blacks.Contains(piece))
             {
                 return PlayerColor.Black;
@@ -144,30 +167,5 @@ namespace NC.Shared.Data
 
             return null;
         }
-
-        /// <summary>
-        /// Whites chess pieces.
-        /// </summary>
-        private static readonly ChessPiece[] Whites = {
-            ChessPiece.WhiteQueen,
-            ChessPiece.WhiteBishop,
-            ChessPiece.WhiteKing,
-            ChessPiece.WhitePawn,
-            ChessPiece.WhiteKnight,
-            ChessPiece.WhiteRook,
-        };
-
-        /// <summary>
-        /// Blacks chess pieces.
-        /// </summary>
-        private static readonly ChessPiece[] Blacks = {
-            ChessPiece.BlackQueen,
-            ChessPiece.BlackBishop,
-            ChessPiece.BlackKing,
-            ChessPiece.BlackPawn,
-            ChessPiece.BlackKnight,
-            ChessPiece.BlackRook,
-        };
-
     }
 }

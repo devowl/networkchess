@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows;
 
 using NC.Shared.Contracts;
 using NC.Shared.Data;
@@ -11,6 +10,23 @@ namespace NC.Client.Constants
     /// </summary>
     public class FieldInfoArgs : EventArgs
     {
+        /// <summary>
+        /// Constructor for <see cref="FieldInfoArgs"/>.
+        /// </summary>
+        public FieldInfoArgs(
+            ChessPiece[][] virtualField,
+            PlayerColor turnColor,
+            ChessPoint fromPoint,
+            ChessPoint toPoint,
+            PlayerColor playerColor)
+        {
+            VirtualField = virtualField;
+            TurnColor = turnColor;
+            FromPoint = fromPoint;
+            ToPoint = toPoint;
+            PlayerColor = playerColor;
+        }
+
         /// <summary>
         /// Virtual game field.
         /// </summary>
@@ -24,22 +40,16 @@ namespace NC.Client.Constants
         /// <summary>
         /// Last one movement from.
         /// </summary>
-        public Point FromPoint { get; }
+        public ChessPoint FromPoint { get; }
 
         /// <summary>
         /// Last one movement to.
         /// </summary>
-        public Point ToPoint { get; }
+        public ChessPoint ToPoint { get; }
 
         /// <summary>
-        /// Constructor for <see cref="FieldInfoArgs"/>.
+        /// Player color.
         /// </summary>
-        public FieldInfoArgs(ChessPiece[][] virtualField, PlayerColor turnColor, Point fromPoint, Point toPoint)
-        {
-            VirtualField = virtualField;
-            TurnColor = turnColor;
-            FromPoint = fromPoint;
-            ToPoint = toPoint;
-        }
+        public PlayerColor PlayerColor { get; }
     }
 }

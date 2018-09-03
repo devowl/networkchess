@@ -6,8 +6,7 @@ using NC.Client.Shell;
 using NC.Client.ViewModels;
 using NC.Client.Views;
 using NC.Client.Wcf;
-
-using MainWindow = NC.Client.Windows.MainWindow;
+using NC.Client.Windows;
 
 namespace NC.Client
 {
@@ -32,14 +31,14 @@ namespace NC.Client
             builder.RegisterGeneric(typeof(WcfClient<>))
                 .As(typeof(IWcfClient<>))
                 .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
-            
+
             builder.RegisterGeneric(typeof(WcfClientFactory<>))
                 .As(typeof(IWcfClientFactory<>))
                 .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
                 .SingleInstance();
-            
+
             builder.RegisterType<ChessServiceCallback>().AsImplementedInterfaces().AsSelf().SingleInstance();
-            builder.RegisterType<WaitViewModel>(); 
+            builder.RegisterType<WaitViewModel>();
         }
     }
 }

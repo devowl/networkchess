@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ServiceModel;
-using System.ServiceModel.Activation;
 
 using Autofac.Integration.Wcf;
 

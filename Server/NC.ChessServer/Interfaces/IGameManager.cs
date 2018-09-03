@@ -1,5 +1,4 @@
-﻿using NC.ChessServer.GamePack;
-using NC.Shared.Data;
+﻿using NC.Shared.Data;
 
 namespace NC.ChessServer.Interfaces
 {

@@ -7,10 +7,10 @@ namespace NC.Client.Shell
     /// <summary>
     /// Operation executor.
     /// </summary>
-    public class WaitOperation : IDisposable 
+    public class WaitOperation : IDisposable
     {
         private readonly WaitViewModel _waitViewModel;
-        
+
         /// <summary>
         /// Constructor for <see cref="WaitOperation"/>.
         /// </summary>

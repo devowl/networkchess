@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ServiceModel;
 
 using NC.ChessServer.GamePack;
 using NC.ChessServer.Interfaces;
@@ -10,7 +9,7 @@ namespace NC.ChessServer.Services
     /// <summary>
     /// User service.
     /// </summary>
-    public class UserService :  IUserService
+    public class UserService : IUserService
     {
         private readonly IPlayerManager _playerManager;
 

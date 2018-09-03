@@ -28,11 +28,11 @@ namespace NC.Client.Wcf
         {
             return _clientsFactory();
         }
-        
+
         /// <inheritdoc/>
         public IWcfClient<TContract> Create<TCallback>(TCallback callback) where TCallback : class
         {
-            return new WcfDuplexClient<TContract,TCallback>(callback, EndpointInfo);
+            return new WcfDuplexClient<TContract, TCallback>(callback, EndpointInfo);
         }
     }
 }

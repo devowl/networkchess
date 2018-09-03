@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace NC.Shared.Data
+﻿namespace NC.Shared.Data
 {
     /// <summary>
     /// Chess piece types.

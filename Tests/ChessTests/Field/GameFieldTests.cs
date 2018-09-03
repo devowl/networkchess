@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using NC.Shared.Contracts;
 using NC.Shared.Data;
 using NC.Shared.Exceptions;
 
@@ -29,7 +28,7 @@ namespace ChessTests.Field
             // First line
             Assert.AreEqual(field[0, 0], ChessPiece.BlackRook);
             Assert.AreEqual(field[7, 0], ChessPiece.BlackRook);
-            
+
             // Last line
             Assert.AreEqual(field[0, 7], ChessPiece.WhiteRook);
             Assert.AreEqual(field[7, 7], ChessPiece.WhiteRook);

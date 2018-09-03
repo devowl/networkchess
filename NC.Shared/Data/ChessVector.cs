@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Diagnostics;
 
 namespace NC.Shared.Data
 {
     /// <summary>
     /// Chess vector size.
     /// </summary>
+    [DebuggerDisplay("[{X},{Y}]")]
     public class ChessVector
     {
         /// <summary>
@@ -22,12 +20,11 @@ namespace NC.Shared.Data
         /// <summary>
         /// X coordinate.
         /// </summary>
-        public int X { get; private set; }
+        public int X { get; }
 
         /// <summary>
         /// Y coordinate.
         /// </summary>
-        public int Y { get; private set; }
-
+        public int Y { get; }
     }
 }

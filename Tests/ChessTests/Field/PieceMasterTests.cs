@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -50,7 +48,7 @@ namespace ChessTests.Field
             PieceMasterBase rookMaster;
 
             bool hasRookMaster = factory.TryGetMaster(3, 3, out rookMaster);
-            
+
             Assert.AreEqual(hasRookMaster, true);
 
             var rookMovements = rookMaster.GetMovements();
@@ -64,12 +62,10 @@ namespace ChessTests.Field
                     new ChessPoint(3, 0),
                     new ChessPoint(3, 1),
                     new ChessPoint(3, 2),
-
                     new ChessPoint(3, 4),
                     new ChessPoint(3, 5),
                     new ChessPoint(3, 6),
                     new ChessPoint(3, 7),
-
                     new ChessPoint(0, 3),
                     new ChessPoint(1, 3),
                     new ChessPoint(2, 3),
@@ -89,7 +85,7 @@ namespace ChessTests.Field
 
             var factory = new PieceMasterFactory(field);
             PieceMasterBase knightMaster;
-            
+
             Assert.AreEqual(factory.TryGetMaster(0, 1, out knightMaster), true);
 
             var knightMovements = knightMaster.GetMovements();
@@ -225,7 +221,5 @@ namespace ChessTests.Field
         {
             return points.OrderBy(p => p.Y).ThenBy(p => p.X);
         }
-
-
     }
 }

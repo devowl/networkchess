@@ -94,12 +94,12 @@ namespace NC.Shared.PieceMasters
             }
 
             return
-                movementsVectors.Select(vector => ChessPoint.Add(Position, vector))
+                movementsVectors.Select(vector => ChessPoint.Add(Position, vector)).TakeWhile(point => Field[point] == ChessPiece.Empty)
                     .Where(CanMove)
                     .Union(
                         attackMovementsVectors.Select(vector => ChessPoint.Add(Position, vector))
                             .Where(CanMove)
-                            .Where(point => CheckPrefix(Field[(int)point.Y, (int)point.Y], opponent)));
+                            .Where(point => CheckPrefix(Field[point], opponent)));
         }
     }
 }

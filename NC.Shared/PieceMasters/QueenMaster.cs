@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using NC.Shared.Contracts;
 using NC.Shared.Data;
 using NC.Shared.GameField;
 

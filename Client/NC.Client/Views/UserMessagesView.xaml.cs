@@ -1,6 +1,4 @@
-﻿using System.Windows.Controls;
-
-using NC.Client.ViewModels;
+﻿using NC.Client.ViewModels;
 
 namespace NC.Client.Views
 {

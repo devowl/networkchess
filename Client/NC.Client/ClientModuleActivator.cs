@@ -1,9 +1,4 @@
-﻿using Autofac;
-
-using Microsoft.Practices.Prism.Regions;
-
-using NC.Client.Constants;
-using NC.Client.Views;
+﻿using Microsoft.Practices.Prism.Regions;
 
 namespace NC.Client
 {
@@ -17,7 +12,6 @@ namespace NC.Client
         /// </summary>
         public ClientModuleActivator(IRegionManager regionManager)
         {
-            
         }
     }
 }

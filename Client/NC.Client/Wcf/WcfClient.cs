@@ -121,7 +121,7 @@ namespace NC.Client.Wcf
             var address = $"{scheme}://{serviceAddress}:{DefaultPort}/WebServices/{_serviceName}.svc";
             return new EndpointAddress(address);
         }
-        
+
         /// <summary>
         /// Get service binding.
         /// </summary>

@@ -9,16 +9,6 @@ namespace NC.Shared.Exceptions
     public class InvalidMovementException : Exception
     {
         /// <summary>
-        /// X coordinate.
-        /// </summary>
-        public int X { get; private set; }
-
-        /// <summary>
-        /// Y coordinate.
-        /// </summary>
-        public int Y { get; private set; }
-
-        /// <summary>
         /// Constructor for <see cref="InvalidMovementException"/>.
         /// </summary>
         /// <param name="x">X coordinate.</param>
@@ -29,5 +19,15 @@ namespace NC.Shared.Exceptions
             X = x;
             Y = y;
         }
+
+        /// <summary>
+        /// X coordinate.
+        /// </summary>
+        public int X { get; private set; }
+
+        /// <summary>
+        /// Y coordinate.
+        /// </summary>
+        public int Y { get; private set; }
     }
 }

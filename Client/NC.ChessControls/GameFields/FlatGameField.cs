@@ -55,6 +55,11 @@ namespace NC.ChessControls.GameFields
         /// </summary>
         public static readonly DependencyProperty ControllerProperty;
 
+        /// <summary>
+        /// Dependency property for <see cref="TurnColor"/> property.
+        /// </summary>
+        public static readonly DependencyProperty TurnColorProperty;
+
         private static readonly ChessPoint DefaultCell = new ChessPoint(-1, -1);
 
         private readonly List<Rectangle> _selectedCells = new List<Rectangle>();
@@ -65,6 +70,12 @@ namespace NC.ChessControls.GameFields
 
         static FlatGameField()
         {
+            TurnColorProperty = DependencyProperty.Register(
+                nameof(TurnColor),
+                typeof(PlayerColor),
+                typeof(FlatGameField),
+                new PropertyMetadata(default(PlayerColor)));
+
             ControllerProperty = DependencyProperty.Register(
                 nameof(Controller),
                 typeof(GameController),
@@ -115,6 +126,21 @@ namespace NC.ChessControls.GameFields
         {
             CanvasRef = new Canvas();
             Children.Add(CanvasRef);
+        }
+
+        /// <summary>
+        /// Current player turn.
+        /// </summary>
+        public PlayerColor TurnColor
+        {
+            get
+            {
+                return (PlayerColor)GetValue(TurnColorProperty);
+            }
+            set
+            {
+                SetValue(TurnColorProperty, value);
+            }
         }
 
         /// <summary>
@@ -401,28 +427,42 @@ namespace NC.ChessControls.GameFields
             }
         }
 
+        private bool IsClickable(ChessPoint point)
+        {
+            if (!FieldFrame.PlayerColor.HasValue)
+            {
+                return true;
+            }
+
+            var clickedPointPlayerColor = FieldFrame[point].GetPlayerColor();
+            var selectedPoints = _selectedCells.Select(cell => (ChessPoint)cell.Tag);
+
+            return (clickedPointPlayerColor == TurnColor || selectedPoints.Contains(point)) && TurnColor == FieldFrame.PlayerColor.Value;
+        } 
+
         private void OnIconMouseDown(object sender, MouseButtonEventArgs args)
         {
-            var selectedImage = (ChessPoint)((Image)sender).Tag;
-            if (args.LeftButton == MouseButtonState.Pressed)
+            var pressedIconPoint = (ChessPoint)((Image)sender).Tag;
+
+            if (args.LeftButton == MouseButtonState.Pressed && IsClickable(pressedIconPoint))
             {
                 var selectedCellTemp = _selectedCell;
-                if (IsGreenSelectedPoint(selectedImage))
+                if (IsGreenSelectedPoint(pressedIconPoint))
                 {
-                    Controller?.RaiseMovementEvent(selectedCellTemp, selectedImage);
+                    Controller?.RaiseMovementEvent(selectedCellTemp, pressedIconPoint);
 
                     return;
                 }
 
                 ClearSelection();
 
-                if (selectedCellTemp != selectedImage)
+                if (selectedCellTemp != pressedIconPoint)
                 {
                     PieceMasterBase master;
-                    if (_masterFactory.TryGetMaster((int)selectedImage.X, (int)selectedImage.Y, out master))
+                    if (_masterFactory.TryGetMaster(pressedIconPoint.X, pressedIconPoint.Y, out master))
                     {
-                        SetSelection(selectedImage, master.GetMovements());
-                        _selectedCell = selectedImage;
+                        SetSelection(pressedIconPoint, master.GetMovements());
+                        _selectedCell = pressedIconPoint;
                     }
                 }
                 else
@@ -447,7 +487,7 @@ namespace NC.ChessControls.GameFields
 
             foreach (var markedCell in markedCells)
             {
-                var rectangle = DrawRectagle((int)markedCell.X, (int)markedCell.Y, MovableCellsBrush, 0);
+                var rectangle = DrawRectagle(markedCell.X, markedCell.Y, MovableCellsBrush, 0);
                 rectangle.MouseDown += OnSelectedCellMouseDown;
                 _selectedCells.Add(rectangle);
             }
@@ -464,7 +504,7 @@ namespace NC.ChessControls.GameFields
 
         private Rectangle DrawRectagle(int x, int y, Brush color, int zIndex)
         {
-            var rectangle = new Rectangle { Fill = color, Width = CellX, Height = CellY, Tag = new ChessPoint(x, y)};
+            var rectangle = new Rectangle { Fill = color, Width = CellX, Height = CellY, Tag = new ChessPoint(x, y) };
 
             CanvasRef.Children.Add(rectangle);
             Canvas.SetLeft(rectangle, x * CellX + NamedX);

@@ -50,7 +50,7 @@ namespace NC.ChessServer.GamePack
         /// Last player activity time.
         /// </summary>
         public DateTime LastActivity { get; private set; }
-        
+
         /// <summary>
         /// Player color.
         /// </summary>
@@ -61,7 +61,7 @@ namespace NC.ChessServer.GamePack
         /// </summary>
         /// <param name="player"><see cref="Player"/> instance.</param>
         internal static void SetActive(Player player)
-        { 
+        {
             player.LastActivity = DateTime.Now;
         }
 

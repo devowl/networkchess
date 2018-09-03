@@ -11,7 +11,7 @@
         /// </summary>
         /// <returns>Client instance.</returns>
         IWcfClient<TContract> Create();
-         
+
         /// <summary>
         /// Create duplex instance.
         /// </summary>

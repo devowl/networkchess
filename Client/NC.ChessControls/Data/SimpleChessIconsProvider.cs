@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -32,7 +29,9 @@ namespace NC.ChessControls.Data
                 _simpleChessIconsImageSource ??
                 (_simpleChessIconsImageSource =
                     new BitmapImage(
-                        new Uri("pack://application:,,,/NC.ChessControls;component/Icons/simple-chess-pieces.png", UriKind.RelativeOrAbsolute)));
+                        new Uri(
+                            "pack://application:,,,/NC.ChessControls;component/Icons/simple-chess-pieces.png",
+                            UriKind.RelativeOrAbsolute)));
 
         /// <inheritdoc/>
         public Image GetIcon(ChessPiece chessPiece)
@@ -40,7 +39,7 @@ namespace NC.ChessControls.Data
             var fullName = chessPiece.ToString();
             var isBlack = fullName.StartsWith((PlayerColor.Black).ToString());
             var isWhite = fullName.StartsWith((PlayerColor.White).ToString());
-            
+
             string name;
             if (isWhite)
             {
@@ -75,7 +74,7 @@ namespace NC.ChessControls.Data
 
             return null;
         }
-        
+
         private Image GetCroppedBitmap(int x, int offsetY)
         {
             var bitmap = new CroppedBitmap(
@@ -84,6 +83,5 @@ namespace NC.ChessControls.Data
 
             return new Image { Source = bitmap };
         }
-
     }
 }

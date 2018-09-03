@@ -1,6 +1,4 @@
-﻿using System.Windows.Controls;
-
-namespace NC.Client.Views
+﻿namespace NC.Client.Views
 {
     /// <summary>
     /// Interaction logic for WaitOppponentView.xaml

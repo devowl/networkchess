@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows;
 
 using NC.Shared.Data;
 
@@ -10,14 +9,19 @@ namespace NC.ChessControls.Data
     /// </summary>
     public class GameController
     {
+        /// <summary>
+        /// Piece movement.
+        /// </summary>
         public event EventHandler<MovementArgs> Movement;
 
         /// <summary>
         /// Raise movement event. 
         /// </summary>
-        internal void RaiseMovementEvent(ChessPoint frm, ChessPoint to)
+        /// <param name="from">Point from.</param>
+        /// <param name="to">Point to.</param>
+        internal void RaiseMovementEvent(ChessPoint from, ChessPoint to)
         {
-            Movement?.Invoke(this, new MovementArgs(frm, to));
+            Movement?.Invoke(this, new MovementArgs(from, to));
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace NC.Shared.Data
+﻿namespace NC.Shared.Data
 {
     /// <summary>
     /// Array extensions.

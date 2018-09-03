@@ -11,17 +11,17 @@ namespace NC.Client.ViewModels
     /// </summary>
     public class WaitViewModel : NotificationObject
     {
-        private string _actionText;
-
-        private bool _waiting;
-
-        private bool _isPressed;
-
         private readonly string _cancelText;
 
         private readonly bool _canCancel;
 
         private readonly Action _cancelCallback;
+
+        private string _actionText;
+
+        private bool _waiting;
+
+        private bool _isPressed;
 
         private string _defaultText;
 
@@ -39,18 +39,6 @@ namespace NC.Client.ViewModels
             CancelCommand = new DelegateCommand(CancelPressed, CanExecute);
         }
 
-        private async void CancelPressed(object obj)
-        {
-            await Task.Factory.StartNew(
-                () =>
-                {
-                    _isPressed = true;
-                    CancelCommand.RaiseCanExecuteChanged();
-                    ActionText = _cancelText;
-                    _cancelCallback?.Invoke();
-                });
-        }
-
         /// <summary>
         /// <see cref="WaitViewModel"/> factory.
         /// </summary>
@@ -59,7 +47,11 @@ namespace NC.Client.ViewModels
         /// <param name="canCancel">Can press cancel.</param>
         /// <param name="cancelCallback">Cancel button press callback.</param>
         /// <returns></returns>
-        public delegate WaitViewModel Factory(string defaultText, string cancelText = null, bool canCancel = false, Action cancelCallback = null);
+        public delegate WaitViewModel Factory(
+            string defaultText,
+            string cancelText = null,
+            bool canCancel = false,
+            Action cancelCallback = null);
 
         /// <summary>
         /// Waiting some operation.
@@ -99,7 +91,7 @@ namespace NC.Client.ViewModels
                 RaisePropertyChanged(() => ActionText);
             }
         }
-        
+
         /// <summary>
         /// Create wait operation.
         /// </summary>
@@ -109,6 +101,18 @@ namespace NC.Client.ViewModels
             _isPressed = false;
             ActionText = _defaultText;
             return new WaitOperation(this);
+        }
+
+        private async void CancelPressed(object obj)
+        {
+            await Task.Factory.StartNew(
+                () =>
+                {
+                    _isPressed = true;
+                    CancelCommand.RaiseCanExecuteChanged();
+                    ActionText = _cancelText;
+                    _cancelCallback?.Invoke();
+                });
         }
 
         private bool CanExecute(object obj)

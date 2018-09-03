@@ -1,9 +1,7 @@
 ﻿using System.ServiceModel;
 
-using NC.ChessServer.GamePack;
 using NC.ChessServer.Interfaces;
 using NC.Shared.Contracts;
-using NC.Shared.Data;
 using NC.Shared.Exceptions;
 
 namespace NC.ChessServer.Services
@@ -33,7 +31,7 @@ namespace NC.ChessServer.Services
             var callback = OperationContext.Current.GetCallbackChannel<IChessServiceCallback>();
             _playerManager.Ready(sessionId, callback);
         }
-        
+
         /// <inheritdoc/>
         public void Move(string sessionId, WcfChessPoint wcfFrom, WcfChessPoint wcfTo)
         {

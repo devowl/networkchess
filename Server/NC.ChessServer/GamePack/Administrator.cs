@@ -20,19 +20,9 @@ namespace NC.ChessServer.GamePack
     {
         private const int SecondsTimeout = 3;
 
-        private TimeSpan _inactivityTimeout = TimeSpan.FromMinutes(5);
-
         private readonly Game.Factory _gameFactory;
 
-        private Task _gameMakerMonitor;
-
-        private Task _playerActivityMonitor; 
-
         private readonly CancellationToken _shutdownToken = new CancellationToken();
-
-        private CancellationTokenSource _cancellationTokenSource;
-
-        private CancellationToken _cancelationToken;
 
         private readonly SpecialQueue<Player> _playersQueue = new SpecialQueue<Player>();
 
@@ -41,6 +31,16 @@ namespace NC.ChessServer.GamePack
         private readonly object _playingGamesSyncObj = new object();
 
         private readonly List<Game> _playingGames = new List<Game>();
+
+        private TimeSpan _inactivityTimeout = TimeSpan.FromMinutes(5);
+
+        private Task _gameMakerMonitor;
+
+        private Task _playerActivityMonitor;
+
+        private CancellationTokenSource _cancellationTokenSource;
+
+        private CancellationToken _cancelationToken;
 
         /// <summary>
         /// Constructor for <see cref="Administrator"/>.
@@ -66,61 +66,6 @@ namespace NC.ChessServer.GamePack
                 _shutdownToken,
                 TaskCreationOptions.LongRunning,
                 TaskScheduler.Current);
-        }
-
-        private void GameMonitorThread()
-        {
-            while (!_cancelationToken.IsCancellationRequested)
-            {
-                lock (_queueSyncObj)
-                {
-                    var tempQueue = new Queue<Player>(_playersQueue.Where(player => player.IsReady));
-                    while (tempQueue.Count >= 2)
-                    {
-                        var player1 = tempQueue.Dequeue();
-                        var player2 = tempQueue.Dequeue();
-
-                        _playersQueue.Remove(player1);
-                        _playersQueue.Remove(player2);
-                        var game = _gameFactory(player1, player2);
-
-                        
-                        AddGame(game);
-                    }
-                }
-
-                Thread.Sleep(TimeSpan.FromSeconds(SecondsTimeout));
-            }
-        }
-
-        private void ActivityMonitor()
-        {
-            while (!_cancelationToken.IsCancellationRequested)
-            {
-                // _inactivityTimeout
-                Thread.Sleep(TimeSpan.FromSeconds(SecondsTimeout));
-            }
-        }
-
-        private void AddGame(Game game)
-        {
-            lock (_playingGamesSyncObj)
-            {
-                _playingGames.Add(game);
-                game.GameEnded += OnGameEnded;
-                game.Initialize();
-                _playingGames.Add(game);
-            }
-        }
-
-        private void OnGameEnded(object sender, EventArgs eventArgs)
-        {
-            lock (_playingGamesSyncObj)
-            {
-                // some statistics
-                var game = (Game)sender;
-                _playingGames.Remove(game);
-            }
         }
 
         /// <inheritdoc/>
@@ -184,7 +129,7 @@ namespace NC.ChessServer.GamePack
         /// <inheritdoc/>
         public void Move(string sessionId, ChessPoint from, ChessPoint to)
         {
-            lock (_playingGamesSyncObj) 
+            lock (_playingGamesSyncObj)
             {
                 var game =
                     _playingGames.FirstOrDefault(
@@ -196,6 +141,59 @@ namespace NC.ChessServer.GamePack
                 }
 
                 game.Move(sessionId, from, to);
+            }
+        }
+
+        private void GameMonitorThread()
+        {
+            while (!_cancelationToken.IsCancellationRequested)
+            {
+                lock (_queueSyncObj)
+                {
+                    var tempQueue = new Queue<Player>(_playersQueue.Where(player => player.IsReady));
+                    while (tempQueue.Count >= 2)
+                    {
+                        var player1 = tempQueue.Dequeue();
+                        var player2 = tempQueue.Dequeue();
+
+                        _playersQueue.Remove(player1);
+                        _playersQueue.Remove(player2);
+                        var game = _gameFactory(player1, player2);
+
+                        AddGame(game);
+                    }
+                }
+
+                Thread.Sleep(TimeSpan.FromSeconds(SecondsTimeout));
+            }
+        }
+
+        private void ActivityMonitor()
+        {
+            while (!_cancelationToken.IsCancellationRequested)
+            {
+                // _inactivityTimeout
+                Thread.Sleep(TimeSpan.FromSeconds(SecondsTimeout));
+            }
+        }
+
+        private void AddGame(Game game)
+        {
+            lock (_playingGamesSyncObj)
+            {
+                _playingGames.Add(game);
+                game.Initialize();
+                _playingGames.Add(game);
+            }
+        }
+
+        private void OnGameEnded(object sender, EventArgs eventArgs)
+        {
+            lock (_playingGamesSyncObj)
+            {
+                // some statistics
+                var game = (Game)sender;
+                _playingGames.Remove(game);
             }
         }
     }

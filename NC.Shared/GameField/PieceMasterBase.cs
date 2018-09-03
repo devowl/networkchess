@@ -14,6 +14,8 @@ namespace NC.Shared.GameField
     {
         private PlayerColor? _sideName;
 
+        private IEnumerable<ChessPoint> _movements;
+
         /// <summary>
         /// Constructor for <see cref="PieceMasterBase"/>.
         /// </summary>
@@ -54,9 +56,10 @@ namespace NC.Shared.GameField
         /// Prefix name.
         /// </summary>
         protected PlayerColor SideName
-            => (PlayerColor)(_sideName ?? (_sideName = CheckPrefix(Piece, PlayerColor.Black) ? PlayerColor.Black : PlayerColor.White));
-
-        private IEnumerable<ChessPoint> _movements;
+            =>
+                (PlayerColor)
+                    (_sideName ??
+                     (_sideName = CheckPrefix(Piece, PlayerColor.Black) ? PlayerColor.Black : PlayerColor.White));
 
         /// <summary>
         /// Get available movements for piece.
@@ -65,6 +68,11 @@ namespace NC.Shared.GameField
         public IEnumerable<ChessPoint> GetMovements()
         {
             return _movements ?? (_movements = GetAvailableMovements() ?? Enumerable.Empty<ChessPoint>());
+        }
+
+        protected static bool CheckPrefix(ChessPiece piece, PlayerColor playerColor)
+        {
+            return piece.ToString().StartsWith(playerColor.ToString());
         }
 
         /// <summary>
@@ -87,7 +95,7 @@ namespace NC.Shared.GameField
                 yield return currentPos;
 
                 var targetPlace = Field[currentPos.X, currentPos.Y];
-                var targetSideName = VirtualFieldUtils.GetSideName(targetPlace);
+                var targetSideName = targetPlace.GetPlayerColor();
                 opponent = targetSideName.HasValue && SideName != targetSideName;
             }
         }
@@ -110,18 +118,11 @@ namespace NC.Shared.GameField
                     return true;
                 }
 
-                var sideName = VirtualFieldUtils.GetSideName(targetPlace);
+                var sideName = targetPlace.GetPlayerColor();
                 return SideName != sideName;
             }
 
             return false;
         }
-
-        protected static bool CheckPrefix(ChessPiece piece, PlayerColor playerColor)
-        {
-            return piece.ToString().StartsWith(playerColor.ToString());
-        }
-
-        
     }
 }

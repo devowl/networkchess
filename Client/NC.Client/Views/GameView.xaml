@@ -1,22 +1,31 @@
 ﻿<UserControl x:Class="NC.Client.Views.GameView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:NC.Client.Views"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:gameFields="clr-namespace:NC.ChessControls.GameFields;assembly=NC.ChessControls"
+             xmlns:local="clr-namespace:NC.Client.Views"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:NC.Client.ViewModels"
-             mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance viewModels:GameViewModel}">
+             d:DataContext="{d:DesignInstance viewModels:GameViewModel}"
+             mc:Ignorable="d">
     <Grid>
-        <StackPanel>
-            <gameFields:FlatGameField Width="400"
-                                      Height="400"
-                                      BlackCellBrush="#D28D49"
-                                      Controller="{Binding Controller}"
-                                      FieldFrame="{Binding GameField,
-                                                           Mode=TwoWay}"
-                                      WhileCellBrush="#FFCE97" />
-        </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock FontSize="20">
+            You're:<Run FontWeight="Bold" Text="{Binding YourColor, FallbackValue=White}" />. 
+            Turn color: <Run FontWeight="Bold" Text="{Binding TurnColor, FallbackValue=White}" />
+        </TextBlock>
+        <gameFields:FlatGameField Grid.Row="1"
+                                  Width="400"
+                                  Height="400"
+                                  BlackCellBrush="#D28D49"
+                                  Controller="{Binding Controller}"
+                                  FieldFrame="{Binding GameField,
+                                                       Mode=TwoWay}"
+                                  TurnColor="{Binding TurnColor}"
+                                  WhileCellBrush="#FFCE97" />
+
     </Grid>
 </UserControl>

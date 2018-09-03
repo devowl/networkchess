@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using NC.Shared.Contracts;
 using NC.Shared.Data;
 using NC.Shared.PieceMasters;
 

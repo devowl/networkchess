@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ServiceModel;
-using System.Windows;
 
 using NC.Client.Constants;
 using NC.Client.Interfaces;
@@ -42,19 +41,18 @@ namespace NC.Client.Models
         {
             _userMessage.PushInfo(text);
         }
-        
+
         /// <inheritdoc/>
         public void GameFieldUpdated(
             ChessPiece[][] virtualField,
             PlayerColor turnColor,
-            int fromX,
-            int fromY,
-            int toX,
-            int toY)
+            WcfChessPoint from,
+            WcfChessPoint to,
+            PlayerColor playerColor)
         {
             FieldUpdated?.Invoke(
                 this,
-                new FieldInfoArgs(virtualField, turnColor, new Point(fromX, fromY), new Point(toX, toY)));
+                new FieldInfoArgs(virtualField, turnColor, from.ToBusiness(), to.ToBusiness(), playerColor));
         }
 
         /// <inheritdoc/>
