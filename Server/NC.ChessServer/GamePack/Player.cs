@@ -52,12 +52,27 @@ namespace NC.ChessServer.GamePack
         public DateTime LastActivity { get; private set; }
         
         /// <summary>
+        /// Player color.
+        /// </summary>
+        public PlayerColor PlayerColor { get; private set; }
+
+        /// <summary>
         /// Set last activity time.
         /// </summary>
         /// <param name="player"><see cref="Player"/> instance.</param>
         internal static void SetActive(Player player)
         { 
             player.LastActivity = DateTime.Now;
+        }
+
+        /// <summary>
+        /// Set last activity time.
+        /// </summary>
+        /// <param name="player"><see cref="Player"/> instance.</param>
+        /// <param name="playerColor">Player color.</param>
+        internal static void SetColor(Player player, PlayerColor playerColor)
+        {
+            player.PlayerColor = playerColor;
         }
 
         /// <summary>

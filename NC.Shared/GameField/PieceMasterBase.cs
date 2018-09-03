@@ -13,7 +13,7 @@ namespace NC.Shared.GameField
     /// </summary>
     public abstract class PieceMasterBase
     {
-        private string _sideName;
+        private PlayerColor? _sideName;
 
         /// <summary>
         /// Constructor for <see cref="PieceMasterBase"/>.
@@ -33,7 +33,7 @@ namespace NC.Shared.GameField
                 throw new InvalidOperationException($"x={x} y={y} [{Piece}] isn't {string.Join(", ", pieces)}");
             }
 
-            Position = new Point(x, y);
+            Position = new ChessPoint(x, y);
         }
 
         /// <summary>
@@ -49,49 +49,47 @@ namespace NC.Shared.GameField
         /// <summary>
         /// Piece position.
         /// </summary>
-        public Point Position { get; }
+        public ChessPoint Position { get; }
 
         /// <summary>
         /// Prefix name.
         /// </summary>
-        protected string SideName
-            =>
-                _sideName ??
-                (_sideName = CheckPrefix(Piece, Constants.BlackName) ? Constants.BlackName : Constants.WhiteName);
+        protected PlayerColor SideName
+            => (PlayerColor)(_sideName ?? (_sideName = CheckPrefix(Piece, PlayerColor.Black) ? PlayerColor.Black : PlayerColor.White));
 
-        private IEnumerable<Point> _movements;
+        private IEnumerable<ChessPoint> _movements;
 
         /// <summary>
         /// Get available movements for piece.
         /// </summary>
         /// <returns>Available points.</returns>
-        public IEnumerable<Point> GetMovements()
+        public IEnumerable<ChessPoint> GetMovements()
         {
-            return _movements ?? (_movements = GetAvailableMovements() ?? Enumerable.Empty<Point>());
+            return _movements ?? (_movements = GetAvailableMovements() ?? Enumerable.Empty<ChessPoint>());
         }
 
         /// <summary>
         /// Get available movements for piece.
         /// </summary>
         /// <returns>Available points.</returns>
-        protected abstract IEnumerable<Point> GetAvailableMovements();
+        protected abstract IEnumerable<ChessPoint> GetAvailableMovements();
 
         /// <summary>
         /// Get vector path points.
         /// </summary>
         /// <param name="vector">Vector value.</param>
         /// <returns>Points on the path.</returns>
-        protected IEnumerable<Point> GetVectorPathPoints(Vector vector)
+        protected IEnumerable<ChessPoint> GetVectorPathPoints(ChessVector vector)
         {
             var currentPos = Position;
             bool opponent = false;
-            while (CanMove(currentPos = Point.Add(currentPos, vector)) && !opponent)
+            while (CanMove(currentPos = ChessPoint.Add(currentPos, vector)) && !opponent)
             {
                 yield return currentPos;
 
-                var targetPlace = Field[(int)currentPos.X, (int)currentPos.Y];
-                var targetName = VirtualFieldUtils.GetSideName(targetPlace);
-                opponent = !string.IsNullOrEmpty(targetName) && SideName != VirtualFieldUtils.GetSideName(targetPlace);
+                var targetPlace = Field[currentPos.X, currentPos.Y];
+                var targetSideName = VirtualFieldUtils.GetSideName(targetPlace);
+                opponent = targetSideName.HasValue && SideName != targetSideName;
             }
         }
 
@@ -100,10 +98,10 @@ namespace NC.Shared.GameField
         /// </summary>
         /// <param name="position">Check position.</param>
         /// <returns>Is not outside board.</returns> 
-        protected bool CanMove(Point position)
+        protected bool CanMove(ChessPoint position)
         {
-            int x = (int)position.X;
-            int y = (int)position.Y;
+            int x = position.X;
+            int y = position.Y;
 
             if (0 <= x && x < Field.Width && 0 <= y && y < Field.Height)
             {
@@ -120,9 +118,9 @@ namespace NC.Shared.GameField
             return false;
         }
 
-        protected static bool CheckPrefix(ChessPiece piece, string prefix)
+        protected static bool CheckPrefix(ChessPiece piece, PlayerColor playerColor)
         {
-            return piece.ToString().StartsWith(prefix);
+            return piece.ToString().StartsWith(playerColor.ToString());
         }
 
         

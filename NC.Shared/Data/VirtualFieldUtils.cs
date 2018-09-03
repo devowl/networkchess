@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using NC.Shared.Contracts;
 
@@ -18,89 +19,6 @@ namespace NC.Shared.Data
         public static ChessPiece[,] CreateDefaultField()
         {
             var field = new[,]
-            {
-                {
-                    ChessPiece.BlackRook,
-                    ChessPiece.BlackKnight,
-                    ChessPiece.BlackBishop,
-                    ChessPiece.BlackQueen,
-                    ChessPiece.BlackKing,
-                    ChessPiece.BlackBishop,
-                    ChessPiece.BlackKnight,
-                    ChessPiece.BlackRook
-                },
-                {
-                    ChessPiece.BlackPawn,
-                    ChessPiece.BlackPawn,
-                    ChessPiece.BlackPawn,
-                    ChessPiece.BlackPawn,
-                    ChessPiece.BlackPawn,
-                    ChessPiece.BlackPawn,
-                    ChessPiece.BlackPawn,
-                    ChessPiece.BlackPawn
-                },
-                {
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty
-                },
-                {
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty
-                },
-                {
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty
-                },
-                {
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty,
-                    ChessPiece.Empty
-                },
-                {
-                    ChessPiece.WhitePawn,
-                    ChessPiece.WhitePawn,
-                    ChessPiece.WhitePawn,
-                    ChessPiece.WhitePawn,
-                    ChessPiece.WhitePawn,
-                    ChessPiece.WhitePawn,
-                    ChessPiece.WhitePawn,
-                    ChessPiece.WhitePawn
-                },
-                {
-                    ChessPiece.WhiteRook,
-                    ChessPiece.WhiteKnight,
-                    ChessPiece.WhiteBishop,
-                    ChessPiece.WhiteQueen,
-                    ChessPiece.WhiteKing,
-                    ChessPiece.WhiteBishop,
-                    ChessPiece.WhiteKnight,
-                    ChessPiece.WhiteRook
-                },
-            };
-            var field1 = new[,]
             {
                 {
                     ChessPiece.BlackRook,
@@ -212,19 +130,19 @@ namespace NC.Shared.Data
         /// </summary>
         /// <param name="piece">Chess piece.</param>
         /// <returns>Chess color name.</returns>
-        public static string GetSideName(ChessPiece piece)
+        public static PlayerColor? GetSideName(ChessPiece piece)
         {
             if (Whites.Contains(piece))
             {
-                return Constants.WhiteName;
+                return PlayerColor.White;
             }
             
             if (Blacks.Contains(piece))
             {
-                return Constants.BlackName;
+                return PlayerColor.Black;
             }
 
-            return string.Empty;
+            return null;
         }
 
         /// <summary>

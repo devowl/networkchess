@@ -23,7 +23,8 @@ namespace NC.Shared.Exceptions
         /// </summary>
         /// <param name="x">X coordinate.</param>
         /// <param name="y">Y coordinate.</param>
-        public InvalidMovementException(int x, int y)
+        /// <param name="message">Message text.</param>
+        public InvalidMovementException(int x, int y, string message) : base(message)
         {
             X = x;
             Y = y;

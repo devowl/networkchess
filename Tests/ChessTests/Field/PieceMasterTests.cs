@@ -33,9 +33,9 @@ namespace ChessTests.Field
             var realBishopMovements = OrderPoints(
                 new[]
                 {
-                    new Point(1, 1),
-                    new Point(2, 2),
-                    new Point(3, 3),
+                    new ChessPoint(1, 1),
+                    new ChessPoint(2, 2),
+                    new ChessPoint(3, 3),
                 });
 
             Assert.IsTrue(bishopMovements.SequenceEqual(realBishopMovements));
@@ -61,22 +61,22 @@ namespace ChessTests.Field
             var realRookMovements = OrderPoints(
                 new[]
                 {
-                    new Point(3, 0),
-                    new Point(3, 1),
-                    new Point(3, 2),
+                    new ChessPoint(3, 0),
+                    new ChessPoint(3, 1),
+                    new ChessPoint(3, 2),
 
-                    new Point(3, 4),
-                    new Point(3, 5),
-                    new Point(3, 6),
-                    new Point(3, 7),
+                    new ChessPoint(3, 4),
+                    new ChessPoint(3, 5),
+                    new ChessPoint(3, 6),
+                    new ChessPoint(3, 7),
 
-                    new Point(0, 3),
-                    new Point(1, 3),
-                    new Point(2, 3),
-                    new Point(4, 3),
-                    new Point(5, 3),
-                    new Point(6, 3),
-                    new Point(7, 3),
+                    new ChessPoint(0, 3),
+                    new ChessPoint(1, 3),
+                    new ChessPoint(2, 3),
+                    new ChessPoint(4, 3),
+                    new ChessPoint(5, 3),
+                    new ChessPoint(6, 3),
+                    new ChessPoint(7, 3),
                 });
 
             Assert.IsTrue(realRookMovements.SequenceEqual(rookMovements));
@@ -100,9 +100,9 @@ namespace ChessTests.Field
             var realknightMovements = OrderPoints(
                 new[]
                 {
-                    new Point(2, 0),
-                    new Point(2, 2),
-                    new Point(1, 3),
+                    new ChessPoint(2, 0),
+                    new ChessPoint(2, 2),
+                    new ChessPoint(1, 3),
                 });
 
             Assert.IsTrue(realknightMovements.SequenceEqual(knightMovements));
@@ -126,7 +126,7 @@ namespace ChessTests.Field
             var realPawnMovements = OrderPoints(
                 new[]
                 {
-                    new Point(2, 1),
+                    new ChessPoint(2, 1),
                 });
 
             Assert.IsTrue(realPawnMovements.SequenceEqual(pawnMovements));
@@ -221,7 +221,7 @@ namespace ChessTests.Field
             return field;
         }
 
-        private IEnumerable<Point> OrderPoints(IEnumerable<Point> points)
+        private IEnumerable<ChessPoint> OrderPoints(IEnumerable<ChessPoint> points)
         {
             return points.OrderBy(p => p.Y).ThenBy(p => p.X);
         }

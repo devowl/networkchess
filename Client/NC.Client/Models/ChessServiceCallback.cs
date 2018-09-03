@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ServiceModel;
+using System.Windows;
 
+using NC.Client.Constants;
 using NC.Client.Interfaces;
 using NC.Shared.Contracts;
 using NC.Shared.Data;
@@ -26,6 +28,11 @@ namespace NC.Client.Models
         public event EventHandler<EventArgs> GameStarted;
 
         /// <summary>
+        /// Game field updated event.
+        /// </summary>
+        public event EventHandler<FieldInfoArgs> FieldUpdated;
+
+        /// <summary>
         /// Server game info.
         /// </summary>
         public WcfGameInfo GameInfo { get; private set; }
@@ -35,10 +42,19 @@ namespace NC.Client.Models
         {
             _userMessage.PushInfo(text);
         }
-
+        
         /// <inheritdoc/>
-        public void OpponentMove(int fromX, int fromY, int toX, int toY, ChessPiece[][] virtualField)
+        public void GameFieldUpdated(
+            ChessPiece[][] virtualField,
+            PlayerColor turnColor,
+            int fromX,
+            int fromY,
+            int toX,
+            int toY)
         {
+            FieldUpdated?.Invoke(
+                this,
+                new FieldInfoArgs(virtualField, turnColor, new Point(fromX, fromY), new Point(toX, toY)));
         }
 
         /// <inheritdoc/>

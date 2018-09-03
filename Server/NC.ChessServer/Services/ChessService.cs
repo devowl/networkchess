@@ -1,7 +1,9 @@
 ﻿using System.ServiceModel;
 
+using NC.ChessServer.GamePack;
 using NC.ChessServer.Interfaces;
 using NC.Shared.Contracts;
+using NC.Shared.Data;
 using NC.Shared.Exceptions;
 
 namespace NC.ChessServer.Services
@@ -31,12 +33,12 @@ namespace NC.ChessServer.Services
             var callback = OperationContext.Current.GetCallbackChannel<IChessServiceCallback>();
             _playerManager.Ready(sessionId, callback);
         }
-
+        
         /// <inheritdoc/>
-        public void Move(string sessionId, int x1, int y1, int x2, int y2)
+        public void Move(string sessionId, WcfChessPoint wcfFrom, WcfChessPoint wcfTo)
         {
             CheckSession(sessionId);
-            _gameManager.Move(sessionId, x1, y1, x2, y2);
+            _gameManager.Move(sessionId, wcfFrom.ToBusiness(), wcfTo.ToBusiness());
         }
 
         private void CheckSession(string sessionId)

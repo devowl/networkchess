@@ -22,7 +22,7 @@ namespace NC.Shared.PieceMasters
         }
 
         /// <inheritdoc/>
-        protected override IEnumerable<Point> GetAvailableMovements()
+        protected override IEnumerable<ChessPoint> GetAvailableMovements()
         {
             /*******************
              * (-1,-1)(0,-1)(1,-1)      
@@ -36,17 +36,17 @@ namespace NC.Shared.PieceMasters
             // Check cells around
             var movements = new[]
             {
-                new Vector(-1, -1),
-                new Vector(0, -1),
-                new Vector(1, -1),
-                new Vector(-1, 0),
-                new Vector(1, 0),
-                new Vector(-1, 1),
-                new Vector(0, 1),
-                new Vector(1, 1),
+                new ChessVector(-1, -1),
+                new ChessVector(0, -1),
+                new ChessVector(1, -1),
+                new ChessVector(-1, 0),
+                new ChessVector(1, 0),
+                new ChessVector(-1, 1),
+                new ChessVector(0, 1),
+                new ChessVector(1, 1),
             };
 
-            return movements.Select(vector => Point.Add(Position, vector)).Where(CanMove);
+            return movements.Select(vector => ChessPoint.Add(Position, vector)).Where(CanMove);
         }
     }
 }

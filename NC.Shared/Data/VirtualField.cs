@@ -1,6 +1,4 @@
-﻿using System;
-
-using NC.Shared.Contracts;
+﻿using NC.Shared.Contracts;
 using NC.Shared.Exceptions;
 
 namespace NC.Shared.Data
@@ -19,14 +17,20 @@ namespace NC.Shared.Data
         {
             _sourceArray = VirtualFieldUtils.CreateEmptyField();
         }
-         
+
         /// <summary>
         /// Constructor for <see cref="VirtualField"/>.
         /// </summary>
-        public VirtualField(ChessPiece[,] sourceArray)
+        public VirtualField(ChessPiece[,] sourceArray, PlayerColor? playerColor = null)
         {
+            PlayerColor = playerColor;
             _sourceArray = sourceArray;
         }
+
+        /// <summary>
+        /// Player color.
+        /// </summary>
+        public PlayerColor? PlayerColor { get; private set; }
 
         /// <summary>
         /// Grid width.
@@ -39,7 +43,25 @@ namespace NC.Shared.Data
         public int Height => _sourceArray.GetLength(1);
 
         /// <summary>
-        /// Get point black state.
+        /// Get piece.
+        /// </summary>
+        /// <param name="point">Field point.</param>
+        /// <returns>Is black point.</returns>
+        public ChessPiece this[ChessPoint point]
+        {
+            get
+            {
+                return this[point.X, point.Y];
+            }
+
+            set
+            {
+                this[point.X, point.Y] = value;
+            }
+        }
+
+        /// <summary>
+        /// Get piece.
         /// </summary>
         /// <param name="x">X coordinate.</param>
         /// <param name="y">Y coordinate.</param>
@@ -82,7 +104,7 @@ namespace NC.Shared.Data
                 return;
             }
 
-            throw new InvalidMovementException(x, y);
+            throw new InvalidMovementException(x, y, "Out of bounds");
         }
     }
 }

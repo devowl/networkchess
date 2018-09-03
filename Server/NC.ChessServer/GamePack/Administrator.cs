@@ -8,6 +8,7 @@ using Autofac;
 
 using NC.ChessServer.Interfaces;
 using NC.Shared.Contracts;
+using NC.Shared.Data;
 using NC.Shared.Exceptions;
 
 namespace NC.ChessServer.GamePack
@@ -166,7 +167,9 @@ namespace NC.ChessServer.GamePack
         {
             lock (_queueSyncObj)
             {
-                return _playersQueue.Any(p => p.SessionId == sessionId);
+                return _playersQueue.Any(p => p.SessionId == sessionId) ||
+                       _playingGames.Any(
+                           game => game.Player1.SessionId == sessionId || game.Player2.SessionId == sessionId);
             }
         }
 
@@ -179,9 +182,9 @@ namespace NC.ChessServer.GamePack
         }
 
         /// <inheritdoc/>
-        public void Move(string sessionId, int x1, int y1, int x2, int y2)
+        public void Move(string sessionId, ChessPoint from, ChessPoint to)
         {
-            lock (_playingGamesSyncObj)
+            lock (_playingGamesSyncObj) 
             {
                 var game =
                     _playingGames.FirstOrDefault(
@@ -192,7 +195,7 @@ namespace NC.ChessServer.GamePack
                     throw new SessionNotFoundedException();
                 }
 
-                game.Move(sessionId, x1, y1, x2, y2);
+                game.Move(sessionId, from, to);
             }
         }
     }

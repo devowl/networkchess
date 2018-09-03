@@ -15,17 +15,18 @@ namespace NC.Shared.Contracts
         /// <param name="text">Message text.</param>
         [OperationContract(IsOneWay = true)]
         void Message(string text);
-
+        
         /// <summary>
-        /// User movement. 
+        /// Game field has updated.
         /// </summary>
         /// <param name="fromX">From coordinate.</param>
         /// <param name="fromY">From coordinate.</param>
         /// <param name="toX">To coordinate.</param>
         /// <param name="toY">To coordinate.</param>
-        /// <param name="virtualField">Game virtual field.</param>
-        [OperationContract(IsOneWay = true)] 
-        void OpponentMove(int fromX, int fromY, int toX, int toY, ChessPiece[][] virtualField);
+        /// <param name="virtualField">Virtual field.</param>
+        /// <param name="turnColor">Color turn.</param> 
+        [OperationContract(IsOneWay = true)]
+        void GameFieldUpdated(ChessPiece[][] virtualField, PlayerColor turnColor, int fromX, int fromY, int toX, int toY);
 
         /// <summary>
         /// Game has started event.

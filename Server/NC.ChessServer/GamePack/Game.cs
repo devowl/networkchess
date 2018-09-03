@@ -3,6 +3,8 @@ using System.Linq;
 
 using NC.Shared.Contracts;
 using NC.Shared.Data;
+using NC.Shared.Exceptions;
+using NC.Shared.GameField;
 
 namespace NC.ChessServer.GamePack
 {
@@ -12,11 +14,7 @@ namespace NC.ChessServer.GamePack
     public class Game : IDisposable
     {
         private bool _isInitialized;
-
-        private string _player1Color;
-
-        private string _player2Color;
-
+        
         private VirtualField _virtualField;
 
         /// <summary>
@@ -60,20 +58,23 @@ namespace NC.ChessServer.GamePack
 
             var colors = new[]
             {
-                Constants.WhiteName,
-                Constants.BlackName
+                PlayerColor.White,
+                PlayerColor.Black
             };
 
             var randomIndex = DateTime.Now.Millisecond % 2 == 0 ? 1 : 0;
-            _player1Color = colors[randomIndex];
-            _player2Color = colors.Single(c => c != _player1Color);
+            var player1Color = colors[randomIndex];
+            var player2Color = colors.Single(c => c != player1Color);
+
+            Player.SetColor(Player1, player1Color);
+            Player.SetColor(Player2, player2Color);
 
             var chessGameField = VirtualFieldUtils.CreateDefaultField();
 
             _virtualField = new VirtualField(chessGameField);
 
-            var p1GameInfo = new WcfGameInfo(_player1Color, Player2.PlayerName, chessGameField);
-            var p2GameInfo = new WcfGameInfo(_player2Color, Player1.PlayerName, chessGameField);
+            var p1GameInfo = new WcfGameInfo(player1Color, Player2.PlayerName, chessGameField);
+            var p2GameInfo = new WcfGameInfo(player2Color, Player1.PlayerName, chessGameField);
 
             Player1.Callback.GameHasStarted(p1GameInfo);
             Player2.Callback.GameHasStarted(p2GameInfo);
@@ -81,7 +82,8 @@ namespace NC.ChessServer.GamePack
             _isInitialized = true;
         }
 
-        public void Move(string sessionId, int x1, int y1, int x2, int y2)
+        /// <inheritdoc/>
+        public void Move(string sessionId, ChessPoint from, ChessPoint to) 
         {
             if (!_isInitialized)
             {
@@ -94,8 +96,53 @@ namespace NC.ChessServer.GamePack
             // His opponent 
             var opponent = Player1 == iniciator ? Player2 : Player1;
 
-            var piece = _virtualField[x1, x2];
-            var sideName = VirtualFieldUtils.GetSideName(piece);
+             var piece = _virtualField[from.X, from.Y];
+            // var sideColor = VirtualFieldUtils.GetSideName(piece);
+
+            // Check for hacker movements
+            CheaterCheck(iniciator, from, to);
+
+            /***************************/
+            _virtualField[to.X, to.Y] = piece;
+            _virtualField[from.X, from.Y] = ChessPiece.Empty;
+            /**************************/
+
+            NotifyFieldChanged(iniciator, opponent, from, to);
+        }
+
+        private void CheaterCheck(Player iniciator, ChessPoint from, ChessPoint to)
+        {
+            var color = iniciator.PlayerColor;
+            var piece = _virtualField[from.X, from.Y];
+            var pieceColor = VirtualFieldUtils.GetSideName(piece);
+
+            if (!pieceColor.HasValue)
+            {
+                throw new InvalidMovementException(from.X, from.Y, "You trying move empty field");
+            }
+
+            if (color != pieceColor.Value)
+            {
+                throw new CheaterException("You trying to move your opponent piece");
+            }
+
+            var factory = new PieceMasterFactory(_virtualField);
+            PieceMasterBase master;
+
+            if (!factory.TryGetMaster(from.X, from.Y, out master))
+            {
+                throw new InvalidMovementException(from.X, from.Y, "You trying move unknown piece without master");
+            }
+
+            //if(master.GetMovements())
+        }
+
+        private void NotifyFieldChanged(Player iniciator, Player opponent, ChessPoint from, ChessPoint to)
+        {
+            var field = _virtualField.CloneMatrix().ToJaggedArray();
+
+            iniciator.Callback.GameFieldUpdated(field, opponent.PlayerColor, from.X, from.Y, to.X, to.Y);
+            opponent.Callback.GameFieldUpdated(field, opponent.PlayerColor, from.X, from.Y, to.X, to.Y);
         }
 
         private Player GetPlayer(string sessionId)

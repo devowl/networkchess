@@ -1,5 +1,6 @@
-﻿using System;
-using System.ServiceModel;
+﻿using System.ServiceModel;
+
+using NC.Shared.Exceptions;
 
 namespace NC.Shared.Contracts
 {
@@ -9,10 +10,22 @@ namespace NC.Shared.Contracts
     [ServiceContract(SessionMode = SessionMode.Required, CallbackContract = typeof(IChessServiceCallback))]
     public interface IChessService
     {
+        /// <summary>
+        /// Set your status to ready to play.
+        /// </summary>
+        /// <param name="sessionId">Session id.</param>
         [OperationContract(IsInitiating = true)]
         void Ready(string sessionId);
 
+        /// <summary>
+        /// Move your piece.
+        /// </summary>
+        /// <param name="sessionId">Session id.</param>
+        /// <param name="from">Point from.</param>
+        /// <param name="to">Point to.</param>
         [OperationContract]
-        void Move(string sessionId, int x1, int y1, int x2, int y2);
+        [FaultContract(typeof(CheaterException))]
+        [FaultContract(typeof(InvalidMovementException))]
+        void Move(string sessionId, WcfChessPoint from, WcfChessPoint to);
     }
 }

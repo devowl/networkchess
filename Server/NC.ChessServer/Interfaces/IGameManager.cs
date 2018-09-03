@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NC.ChessServer.GamePack;
+using NC.Shared.Data;
 
 namespace NC.ChessServer.Interfaces
 {
@@ -11,6 +8,12 @@ namespace NC.ChessServer.Interfaces
     /// </summary>
     public interface IGameManager
     {
-        void Move(string sessionId, int x1, int y1, int x2, int y2);
+        /// <summary>
+        /// Move piece.
+        /// </summary>
+        /// <param name="sessionId">Session id.</param>
+        /// <param name="from">Point from.</param>
+        /// <param name="to">Point to.</param>
+        void Move(string sessionId, ChessPoint from, ChessPoint to);
     }
 }

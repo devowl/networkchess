@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows;
 
+using NC.Shared.Data;
+
 namespace NC.ChessControls.Data
 {
     /// <summary>
@@ -13,7 +15,7 @@ namespace NC.ChessControls.Data
         /// <summary>
         /// Raise movement event. 
         /// </summary>
-        internal void RaiseMovementEvent(Point frm, Point to)
+        internal void RaiseMovementEvent(ChessPoint frm, ChessPoint to)
         {
             Movement?.Invoke(this, new MovementArgs(frm, to));
         }

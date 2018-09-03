@@ -46,13 +46,18 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Contracts\Constants.cs" />
+    <Compile Include="Contracts\CheaterException.cs" />
+    <Compile Include="Contracts\ObjectsConverter.cs" />
+    <Compile Include="Contracts\PlayerColor.cs" />
+    <Compile Include="Contracts\WcfChessPoint.cs" />
     <Compile Include="Contracts\WcfGameInfo.cs" />
     <Compile Include="Data\ArrayExtensions.cs" />
     <Compile Include="Data\ChessPiece.cs" />
     <Compile Include="Contracts\IChessService.cs" />
     <Compile Include="Contracts\IChessServiceCallback.cs" />
     <Compile Include="Contracts\IUserService.cs" />
+    <Compile Include="Data\ChessPoint.cs" />
+    <Compile Include="Data\ChessVector.cs" />
     <Compile Include="Data\VirtualField.cs" />
     <Compile Include="Data\VirtualFieldUtils.cs" />
     <Compile Include="Exceptions\InvalidMovementException.cs" />

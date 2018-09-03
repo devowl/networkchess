@@ -25,6 +25,7 @@ namespace ChessTests.Field
             var defaultField = VirtualFieldUtils.CreateDefaultField();
             var field = new VirtualField(defaultField);
 
+            // TODO Black on top, white on bottom logic everywhere
             // First line
             Assert.AreEqual(field[0, 0], ChessPiece.BlackRook);
             Assert.AreEqual(field[7, 0], ChessPiece.BlackRook);

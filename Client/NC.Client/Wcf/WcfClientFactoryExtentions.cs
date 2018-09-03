@@ -1,14 +1,22 @@
 ﻿using System;
 
+using Microsoft.Practices.Prism.Logging;
+using Microsoft.Practices.ServiceLocation;
+
 using NC.Client.Interfaces;
 
 namespace NC.Client.Wcf
 {
     /// <summary>
-    /// <see cref="WcfClientFactory{TContract}"/> extentions.
+    /// <see cref="WcfClientFactory{TContract}"/> extensions.
     /// </summary>
     public static class WcfClientFactoryExtentions
     {
+        private static ILoggerFacade _logger;
+
+        private static ILoggerFacade Logger
+            => _logger ?? (_logger = ServiceLocator.Current.GetInstance<ILoggerFacade>());
+
         /// <summary>
         /// Call <see cref="TContract"/> method.
         /// </summary>
@@ -25,7 +33,7 @@ namespace NC.Client.Wcf
                 }
                 catch (Exception exception)
                 {
-                    // handle
+                    LogException(exception);
                     throw;
                 }
             }
@@ -49,10 +57,15 @@ namespace NC.Client.Wcf
                 }
                 catch (Exception exception)
                 {
-                    // handle
+                    LogException(exception);
                     throw;
                 }
             }
+        }
+
+        private static void LogException(Exception exception)
+        {
+            Logger.Log(exception.ToString(), Category.Exception, Priority.High);
         }
     }
 }

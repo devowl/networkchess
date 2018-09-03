@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows;
 
+using NC.Shared.Data;
+
 namespace NC.ChessControls.Data
 {
     /// <summary>
@@ -11,7 +13,7 @@ namespace NC.ChessControls.Data
         /// <summary>
         /// Constructor for <see cref="MovementArgs"/>.
         /// </summary>
-        public MovementArgs(Point @from, Point to)
+        public MovementArgs(ChessPoint @from, ChessPoint to)
         {
             From = @from;
             To = to;
@@ -20,11 +22,11 @@ namespace NC.ChessControls.Data
         /// <summary>
         /// Movement from.
         /// </summary>
-        public Point From { get; private set; }
+        public ChessPoint From { get; private set; }
 
         /// <summary>
         /// Movement to.
         /// </summary>
-        public Point To { get; private set; }
+        public ChessPoint To { get; private set; }
     }
 }

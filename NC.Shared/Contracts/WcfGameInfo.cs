@@ -13,18 +13,18 @@ namespace NC.Shared.Contracts
         /// <summary>
         /// Constructor for <see cref="WcfGameInfo"/>.
         /// </summary>
-        public WcfGameInfo(string sideColor, string opponentName, ChessPiece[,] defaultField)
+        public WcfGameInfo(PlayerColor playerColor, string opponentName, ChessPiece[,] defaultField)
         {
-            SideColor = sideColor;
+            PlayerColor = playerColor;
             OpponentName = opponentName;
             DefaultField = defaultField.ToJaggedArray();
         }
 
         /// <summary>
-        /// Side color name.
+        /// Your side color name.
         /// </summary>
         [DataMember]
-        public string SideColor { get; set; }
+        public PlayerColor PlayerColor { get; set; } 
 
         /// <summary>
         /// Opponent player name.

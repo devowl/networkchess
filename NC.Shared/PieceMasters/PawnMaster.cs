@@ -24,7 +24,7 @@ namespace NC.Shared.PieceMasters
         }
 
         /// <inheritdoc/>
-        protected override IEnumerable<Point> GetAvailableMovements()
+        protected override IEnumerable<ChessPoint> GetAvailableMovements()
         {
             // Black (top)
             /*******************
@@ -38,25 +38,25 @@ namespace NC.Shared.PieceMasters
             *       (Pawn) 
             *******************/
 
-            Vector[] movementsVectors;
-            Vector[] attackMovementsVectors;
-            string opponent;
+            ChessVector[] movementsVectors;
+            ChessVector[] attackMovementsVectors;
+            PlayerColor opponent;
 
             // 1. Ходит тока в перёд
             // 2. В бок может тока есть
             // 3. Если на исходной позиции тогда может прыгнуть на 2
-            if (SideName == Constants.WhiteName)
+            if (SideName == PlayerColor.White)
             {
-                opponent = Constants.BlackName;
+                opponent = PlayerColor.Black;
                 attackMovementsVectors = new[]
                 {
-                    new Vector(-1, -1),
-                    new Vector(1, -1)
+                    new ChessVector(-1, -1),
+                    new ChessVector(1, -1)
                 };
 
                 movementsVectors = new[]
                 {
-                    new Vector(0, -1)
+                    new ChessVector(0, -1)
                 };
 
                 // If we do first one move as white
@@ -65,22 +65,22 @@ namespace NC.Shared.PieceMasters
                     movementsVectors = movementsVectors.Union(
                         new[]
                         {
-                            new Vector(0, -2)
+                            new ChessVector(0, -2)
                         }).ToArray();
                 }
             }
             else
             {
-                opponent = Constants.WhiteName;
+                opponent = PlayerColor.White;
                 attackMovementsVectors = new[]
                 {
-                    new Vector(-1, 1),
-                    new Vector(1, 1)
+                    new ChessVector(-1, 1),
+                    new ChessVector(1, 1)
                 };
 
                 movementsVectors = new[]
                 {
-                    new Vector(0, 1),
+                    new ChessVector(0, 1),
                 };
 
                 // If we do first one move as black
@@ -89,16 +89,16 @@ namespace NC.Shared.PieceMasters
                     movementsVectors = movementsVectors.Union(
                         new[]
                         {
-                            new Vector(0, 2)
+                            new ChessVector(0, 2)
                         }).ToArray();
                 }
             }
 
             return
-                movementsVectors.Select(vector => Point.Add(Position, vector))
+                movementsVectors.Select(vector => ChessPoint.Add(Position, vector))
                     .Where(CanMove)
                     .Union(
-                        attackMovementsVectors.Select(vector => Point.Add(Position, vector))
+                        attackMovementsVectors.Select(vector => ChessPoint.Add(Position, vector))
                             .Where(CanMove)
                             .Where(point => CheckPrefix(Field[(int)point.Y, (int)point.Y], opponent)));
         }

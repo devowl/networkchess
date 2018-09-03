@@ -38,17 +38,17 @@ namespace NC.ChessControls.Data
         public Image GetIcon(ChessPiece chessPiece)
         {
             var fullName = chessPiece.ToString();
-            var isBlack = fullName.StartsWith(Constants.BlackName);
-            var isWhite = fullName.StartsWith(Constants.WhiteName);
+            var isBlack = fullName.StartsWith((PlayerColor.Black).ToString());
+            var isWhite = fullName.StartsWith((PlayerColor.White).ToString());
             
             string name;
             if (isWhite)
             {
-                name = fullName.Substring(Constants.WhiteName.Length);
+                name = fullName.Substring((PlayerColor.White).ToString().Length);
             }
             else if (isBlack)
             {
-                name = fullName.Substring(Constants.BlackName.Length);
+                name = fullName.Substring((PlayerColor.Black).ToString().Length);
             }
             else
             {

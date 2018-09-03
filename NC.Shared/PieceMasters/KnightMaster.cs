@@ -22,21 +22,21 @@ namespace NC.Shared.PieceMasters
         }
 
         /// <inheritdoc/>
-        protected override IEnumerable<Point> GetAvailableMovements()
+        protected override IEnumerable<ChessPoint> GetAvailableMovements()
         {
             var movements = new[]
             {
-                new Vector(-2, -1),
-                new Vector(-1, -2),
-                new Vector(1, -2),
-                new Vector(2, -1),
-                new Vector(2, 1),
-                new Vector(1, 2),
-                new Vector(-1, 2),
-                new Vector(-2, 1),
+                new ChessVector(-2, -1),
+                new ChessVector(-1, -2),
+                new ChessVector(1, -2),
+                new ChessVector(2, -1),
+                new ChessVector(2, 1),
+                new ChessVector(1, 2),
+                new ChessVector(-1, 2),
+                new ChessVector(-2, 1),
             };
 
-            return movements.Select(vector => Point.Add(Position, vector)).Where(CanMove);
+            return movements.Select(vector => ChessPoint.Add(Position, vector)).Where(CanMove);
         }
     }
 }
