@@ -119,7 +119,7 @@ namespace NC.ChessServer.GamePack
 
                     if (IsCheckMate(iniciator, opponent))
                     {
-                        NotifyAboutCheckMate(iniciator, opponent, from, to);
+                        NotifyAboutCheckMate(iniciator, opponent);
                     }
                     else
                     {
@@ -130,26 +130,52 @@ namespace NC.ChessServer.GamePack
 
         private bool IsCheckMate(Player iniciator, Player opponent)
         {
+            var currentField = _virtualField;
+
+            // Check for check now
+            if (IsCheck(iniciator.PlayerColor, opponent.PlayerColor, currentField))
+            {
+                // Otherwise do all possible movements, in the case of no possiblity to prevent being attacked = iniciator wins
+                foreach (var opponmentPiecePoint in FindPieces(p => p.GetPlayerColor() == opponent.PlayerColor))
+                {
+                    PieceMasterBase master;
+                    if (_masterFactory.TryGetMaster(_virtualField, opponmentPiecePoint, out master))
+                    {
+                        foreach (var movement in master.GetMovements())
+                        {
+                            var fieldCopy = new VirtualField(_virtualField.CloneMatrix());
+                            var temp = fieldCopy[opponmentPiecePoint];
+                            fieldCopy[opponmentPiecePoint] = fieldCopy[movement];
+                            fieldCopy[movement] = temp;
+                            if (IsCheck(iniciator.PlayerColor, opponent.PlayerColor, fieldCopy))
+                            {
+                                return true;
+                            }
+                        }   
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private bool IsCheck(PlayerColor iniciatorColor, PlayerColor opponentColor, VirtualField field)
+        {
             var kingMapping = new Dictionary<PlayerColor, ChessPiece>()
             {
                 { PlayerColor.Black, ChessPiece.BlackKing },
                 { PlayerColor.White, ChessPiece.WhiteKing },
             };
-
-            ChessPoint iniciatorKingPoint = FindPieces(p => p == kingMapping[iniciator.PlayerColor]).FirstOrDefault() ?? ChessPoint.Empty;
-            ChessPoint opponentKingPoint = FindPieces(p => p == kingMapping[opponent.PlayerColor]).FirstOrDefault() ?? ChessPoint.Empty;
             
-            if (iniciatorKingPoint == ChessPoint.Empty || opponentKingPoint == ChessPoint.Empty)
+            ChessPoint opponentKingPoint = FindPieces(p => p == kingMapping[opponentColor]).FirstOrDefault();
+            
+            if (opponentKingPoint == null)
             {
                 return false;
             }
-
-            var fieldCopy = new VirtualField(_virtualField.CloneMatrix());
-            var iniciatorAttacked = UnderAttackPoints(iniciator.PlayerColor, fieldCopy).ToArray();
-            if (iniciatorAttacked.Any(point => point == opponentKingPoint))
-            {
-                
-            }
+            
+            var iniciatorAttacked = UnderAttackPoints(iniciatorColor, field);
+            return iniciatorAttacked.Any(point => point == opponentKingPoint);
         }
 
         private IEnumerable<ChessPoint> FindPieces(Func<ChessPiece, bool> checker)
@@ -181,7 +207,7 @@ namespace NC.ChessServer.GamePack
             }
         }
         
-        private void NotifyAboutCheckMate(Player iniciator, Player opponent, ChessPoint @from, ChessPoint to)
+        private void NotifyAboutCheckMate(Player iniciator, Player opponent)
         {
             var field = _virtualField.CloneMatrix();
             _turnColor = _turnColor.Invert();
