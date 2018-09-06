@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace NC.Shared.Data
 {
@@ -80,5 +81,20 @@ namespace NC.Shared.Data
             return !(point1 == point2);
         }
 
+        /// <summary>
+        /// Empty point.
+        /// </summary>
+        public static ChessPoint Empty = new ChessPoint(int.MinValue, int.MaxValue);
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            int x0 = Convert.ToInt32('a');
+            int y0 = Convert.ToInt32('8');
+            var x = (char)(x0 + X);
+            var y = (char)(y0 - Y);
+
+            return $"{x}{y}";
+        }
     }
 }

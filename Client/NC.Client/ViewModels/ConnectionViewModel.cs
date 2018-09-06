@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
 
 using NC.ChessControls.Prism;
 using NC.Client.Constants;
@@ -22,6 +24,8 @@ namespace NC.Client.ViewModels
 
         private readonly LocalNavigator _navigator;
 
+        private readonly IMainWindow _mainWindow;
+
         private readonly WaitViewModel _waitOpponent;
 
         private readonly WaitViewModel _waitConnect;
@@ -36,6 +40,8 @@ namespace NC.Client.ViewModels
 
         private IWcfClient<IChessService> _chessClient;
 
+        private string _playerName;
+
         /// <summary>
         /// Constructor for <see cref="ConnectionViewModel"/>.
         /// </summary>
@@ -44,15 +50,18 @@ namespace NC.Client.ViewModels
             IWcfClientFactory<IChessService> chessService,
             ChessServiceCallback serviceCallback,
             WaitViewModel.Factory waitFactory,
-            LocalNavigator navigator)
+            LocalNavigator navigator,
+            IMainWindow mainWindow)
         {
             _chessService = chessService;
             _userService = userService;
             _serviceCallback = serviceCallback;
             _navigator = navigator;
+            _mainWindow = mainWindow;
             _waitOpponent = waitFactory("Awaiting new opponent...", "Disconnecting...", true, CancelCallback);
             _waitViewModel = _waitConnect = waitFactory("Connecting to server...");
             _serverAddress = "localhost";
+            _playerName = NameGenerator.GetNext();
             ConnectCommand = new DelegateCommand(OnConnect);
 
             _serviceCallback.GameStarted -= OnGameStarted;
@@ -98,6 +107,22 @@ namespace NC.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Player name.
+        /// </summary>
+        public string PlayerName
+        {
+            get
+            {
+                return _playerName;
+            }
+            set
+            {
+                _playerName = value;
+                RaisePropertyChanged(() => PlayerName);
+            }
+        }
+
         /// <inheritdoc/>
         public DelegateCommand ConnectCommand { get; }
 
@@ -128,6 +153,12 @@ namespace NC.Client.ViewModels
 
         private async void OnConnect(object o)
         {
+            if (string.IsNullOrWhiteSpace(PlayerName))
+            {
+                ConnectionError = "You name is empty";
+                return;
+            }
+
             await Task.Factory.StartNew(
                 () =>
                 {
@@ -136,7 +167,7 @@ namespace NC.Client.ViewModels
                         using (ConnectionView())
                         {
                             string sessionId = null;
-                            if (_userService.Use(service => service.Login(Guid.NewGuid().ToString(), out sessionId)))
+                            if (_userService.Use(service => service.Login(_playerName, out sessionId)))
                             {
                                 SessionId = sessionId;
                                 _chessClient = _chessService.Create(_serviceCallback);
@@ -156,7 +187,7 @@ namespace NC.Client.ViewModels
                     }
                 });
         }
-
+        
         private void OnGameStarted(object sender, EventArgs eventArgs)
         {
             _navigator.Goto(RegionNames.Game);

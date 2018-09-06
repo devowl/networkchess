@@ -12,35 +12,41 @@ namespace NC.Shared.GameField
     /// </summary>
     public abstract class PieceMasterBase
     {
-        private PlayerColor? _sideName;
+        private PlayerColor? _playerColor; 
 
         private IEnumerable<ChessPoint> _movements;
 
         /// <summary>
         /// Constructor for <see cref="PieceMasterBase"/>.
         /// </summary>
-        protected PieceMasterBase(VirtualField field, int x, int y, params ChessPiece[] pieces)
+        protected PieceMasterBase(VirtualField field, ChessPoint point, params ChessPiece[] pieces)
         {
             Field = field;
-            Piece = Field[x, y];
+            Pieces = pieces;
+            Piece = Field[point];
 
             if (!pieces.Any())
             {
-                throw new InvalidOperationException("Need more then one piece");
+                throw new InvalidOperationException("Need more then one piece"); 
             }
 
             if (!pieces.Contains(Piece))
             {
-                throw new InvalidOperationException($"x={x} y={y} [{Piece}] isn't {string.Join(", ", pieces)}");
+                throw new InvalidOperationException($"x={point.X} y={point.Y} [{Piece}] isn't {string.Join(", ", pieces)}");
             }
 
-            Position = new ChessPoint(x, y);
+            Position = point;
         }
 
         /// <summary>
         /// Virtual field.
         /// </summary>
         public VirtualField Field { get; }
+
+        /// <summary>
+        /// Piece types.
+        /// </summary>
+        public ChessPiece[] Pieces { get; set; }
 
         /// <summary>
         /// Current piece.
@@ -58,8 +64,8 @@ namespace NC.Shared.GameField
         protected PlayerColor SideName
             =>
                 (PlayerColor)
-                    (_sideName ??
-                     (_sideName = CheckPrefix(Piece, PlayerColor.Black) ? PlayerColor.Black : PlayerColor.White));
+                    (_playerColor ??
+                     (_playerColor = CheckPrefix(Piece, PlayerColor.Black) ? PlayerColor.Black : PlayerColor.White));
 
         /// <summary>
         /// Get available movements for piece.

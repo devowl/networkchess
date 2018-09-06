@@ -16,10 +16,10 @@ namespace ChessTests.Field
         {
             var field = CreateBishopRookField();
 
-            var factory = new PieceMasterFactory(field);
+            var factory = new PieceMasterFactory();
             PieceMasterBase bishopMaster;
 
-            bool hasBishopMaster = factory.TryGetMaster(0, 0, out bishopMaster);
+            bool hasBishopMaster = factory.TryGetMaster(field, new ChessPoint(0, 0), out bishopMaster);
 
             Assert.AreEqual(hasBishopMaster, true);
 
@@ -44,10 +44,10 @@ namespace ChessTests.Field
         {
             var field = CreateBishopRookField();
 
-            var factory = new PieceMasterFactory(field);
+            var factory = new PieceMasterFactory();
             PieceMasterBase rookMaster;
 
-            bool hasRookMaster = factory.TryGetMaster(3, 3, out rookMaster);
+            bool hasRookMaster = factory.TryGetMaster(field, new ChessPoint(3, 3), out rookMaster);
 
             Assert.AreEqual(hasRookMaster, true);
 
@@ -83,10 +83,10 @@ namespace ChessTests.Field
         {
             var field = CreateKnightPawnField();
 
-            var factory = new PieceMasterFactory(field);
+            var factory = new PieceMasterFactory();
             PieceMasterBase knightMaster;
 
-            Assert.AreEqual(factory.TryGetMaster(0, 1, out knightMaster), true);
+            Assert.AreEqual(factory.TryGetMaster(field, new ChessPoint(0, 1), out knightMaster), true);
 
             var knightMovements = knightMaster.GetMovements();
 
@@ -109,10 +109,10 @@ namespace ChessTests.Field
         {
             var field = CreateKnightPawnField();
 
-            var factory = new PieceMasterFactory(field);
+            var factory = new PieceMasterFactory();
             PieceMasterBase pawnMaster;
 
-            Assert.AreEqual(factory.TryGetMaster(2, 2, out pawnMaster), true);
+            Assert.AreEqual(factory.TryGetMaster(field, new ChessPoint(2, 2), out pawnMaster), true);
 
             var pawnMovements = pawnMaster.GetMovements();
 
@@ -133,10 +133,10 @@ namespace ChessTests.Field
         {
             var field = CreateQueenKingField();
 
-            var factory = new PieceMasterFactory(field);
+            var factory = new PieceMasterFactory();
             PieceMasterBase queenMaster;
 
-            Assert.AreEqual(factory.TryGetMaster(1, 1, out queenMaster), true);
+            Assert.AreEqual(factory.TryGetMaster(field, new ChessPoint(1, 1), out queenMaster), true);
 
             var queenMovements = queenMaster.GetMovements();
 
@@ -148,10 +148,10 @@ namespace ChessTests.Field
         {
             var field = CreateQueenKingField();
 
-            var factory = new PieceMasterFactory(field);
+            var factory = new PieceMasterFactory();
             PieceMasterBase kingMaster;
 
-            Assert.AreEqual(factory.TryGetMaster(4, 2, out kingMaster), true);
+            Assert.AreEqual(factory.TryGetMaster(field, new ChessPoint(4, 2), out kingMaster), true);
 
             var kingMovements = kingMaster.GetMovements();
 

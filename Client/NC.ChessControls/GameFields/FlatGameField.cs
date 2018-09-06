@@ -65,11 +65,36 @@ namespace NC.ChessControls.GameFields
         private readonly List<Rectangle> _selectedCells = new List<Rectangle>();
 
         private ChessPoint _selectedCell = DefaultCell;
+        
+        /// <summary>
+        /// Dependency property for <see cref="MasterFactory"/> property.
+        /// </summary>
+        public static readonly DependencyProperty MasterFactoryProperty;
 
-        private PieceMasterFactory _masterFactory = new PieceMasterFactory(new VirtualField());
+        /// <summary>
+        /// Master factory instance.
+        /// </summary>
+        public IPieceMasterFactory MasterFactory
+        {
+            get
+            {
+                return (IPieceMasterFactory)GetValue(MasterFactoryProperty);
+            }
+
+            set
+            {
+                SetValue(MasterFactoryProperty, value);
+            }
+        }
 
         static FlatGameField()
         {
+            MasterFactoryProperty = DependencyProperty.Register(
+                nameof(MasterFactory),
+                typeof(IPieceMasterFactory),
+                typeof(FlatGameField),
+                new PropertyMetadata(default(IPieceMasterFactory)));
+
             TurnColorProperty = DependencyProperty.Register(
                 nameof(TurnColor),
                 typeof(PlayerColor),
@@ -320,8 +345,6 @@ namespace NC.ChessControls.GameFields
 
         private void DrawField(VirtualField field)
         {
-            _masterFactory = new PieceMasterFactory(field);
-
             // Clear old field frame
             ClearGrid();
 
@@ -442,6 +465,11 @@ namespace NC.ChessControls.GameFields
 
         private void OnIconMouseDown(object sender, MouseButtonEventArgs args)
         {
+            if (MasterFactory == null)
+            {
+                return;
+            }
+
             var pressedIconPoint = (ChessPoint)((Image)sender).Tag;
 
             if (args.LeftButton == MouseButtonState.Pressed && IsClickable(pressedIconPoint))
@@ -459,7 +487,7 @@ namespace NC.ChessControls.GameFields
                 if (selectedCellTemp != pressedIconPoint)
                 {
                     PieceMasterBase master;
-                    if (_masterFactory.TryGetMaster(pressedIconPoint.X, pressedIconPoint.Y, out master))
+                    if (MasterFactory.TryGetMaster(FieldFrame, pressedIconPoint, out master))
                     {
                         SetSelection(pressedIconPoint, master.GetMovements());
                         _selectedCell = pressedIconPoint;

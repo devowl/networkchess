@@ -14,8 +14,8 @@ namespace NC.Shared.PieceMasters
         /// <summary>
         /// Constructor for <see cref="RookMaster"/>.
         /// </summary>
-        public RookMaster(VirtualField field, int x, int y)
-            : base(field, x, y, ChessPiece.BlackRook, ChessPiece.WhiteRook)
+        public RookMaster(VirtualField field, ChessPoint point)
+            : base(field, point, ChessPiece.BlackRook, ChessPiece.WhiteRook)
         {
         }
 

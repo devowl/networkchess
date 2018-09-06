@@ -61,5 +61,11 @@ namespace NC.Client.Models
             GameInfo = gameInfo;
             GameStarted?.Invoke(this, EventArgs.Empty);
         }
+
+        /// <inheritdoc/>
+        public void GameHasEnded(WcfGameInfo gameInfo)
+        {
+            
+        }
     }
 }

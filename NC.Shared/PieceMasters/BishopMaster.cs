@@ -14,11 +14,11 @@ namespace NC.Shared.PieceMasters
         /// <summary>
         /// Constructor for <see cref="BishopMaster"/>.
         /// </summary>
-        public BishopMaster(VirtualField field, int x, int y)
-            : base(field, x, y, ChessPiece.BlackBishop, ChessPiece.WhiteBishop)
+        public BishopMaster(VirtualField field, ChessPoint point)
+            : base(field, point, ChessPiece.BlackBishop, ChessPiece.WhiteBishop)
         {
         }
-
+        
         /// <inheritdoc/>
         protected override IEnumerable<ChessPoint> GetAvailableMovements()
         {

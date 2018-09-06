@@ -11,7 +11,7 @@
         xmlns:constants="clr-namespace:NC.Client.Constants"
         x:Name="Window"
         Title="NetworkChess"
-        Width="500"
+        Width="760"
         Height="500"
         mc:Ignorable="d">
     <Grid>

@@ -8,24 +8,34 @@
              xmlns:viewModels="clr-namespace:NC.Client.ViewModels"
              d:DataContext="{d:DesignInstance viewModels:GameViewModel}"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style TargetType="{x:Type TextBlock}" x:Key="InfoTextBlock">
+            <Setter Property="FontSize" Value="20"/>
+        </Style>
+    </UserControl.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <TextBlock FontSize="20">
-            You're:<Run FontWeight="Bold" Text="{Binding YourColor, FallbackValue=White}" />. 
-            Turn color: <Run FontWeight="Bold" Text="{Binding TurnColor, FallbackValue=White}" />
-        </TextBlock>
-        <gameFields:FlatGameField Grid.Row="1"
-                                  Width="400"
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <gameFields:FlatGameField Width="400"
                                   Height="400"
+                                  VerticalAlignment="Top"
                                   BlackCellBrush="#D28D49"
+                                  MasterFactory="{Binding MasterFactory}"
                                   Controller="{Binding Controller}"
                                   FieldFrame="{Binding GameField,
                                                        Mode=TwoWay}"
                                   TurnColor="{Binding TurnColor}"
                                   WhileCellBrush="#FFCE97" />
-
+        <StackPanel Grid.Column="1">
+            <TextBlock Style="{StaticResource InfoTextBlock}">
+                You're: <Run FontWeight="Bold" Text="{Binding YourColor, FallbackValue=White}" /><LineBreak />
+                Turn color: <Run FontWeight="Bold" Text="{Binding TurnColor, FallbackValue=White}" /> <LineBreak />
+                Opponent Name: <Run FontWeight="Bold" Text="{Binding OpponentName, FallbackValue=SomeName}" />
+            </TextBlock>
+            <TextBlock Text="Game log:" Style="{StaticResource InfoTextBlock}"/>
+            <TextBox Text="{Binding GameLog, FallbackValue=a2-a4; a7-a5}" AcceptsReturn="True" TextWrapping="Wrap" Height="100" Width="300" />
+        </StackPanel>
     </Grid>
 </UserControl>

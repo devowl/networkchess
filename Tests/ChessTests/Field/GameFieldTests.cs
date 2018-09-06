@@ -62,5 +62,13 @@ namespace ChessTests.Field
             var field = new VirtualField();
             field[-1, 8] = ChessPiece.BlackRook;
         }
+
+        [TestMethod]
+        public void FieldCoordination()
+        {
+            Assert.AreEqual(new ChessPoint(0, 0).ToString(), "a8");
+            Assert.AreEqual(new ChessPoint(7, 7).ToString(), "h1");
+            Assert.AreEqual(new ChessPoint(3,4).ToString(), "d4");
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 using Microsoft.Practices.Prism.Regions;
 
@@ -8,6 +9,7 @@ using NC.Client.Constants;
 using NC.Client.Interfaces;
 using NC.Shared.Contracts;
 using NC.Shared.Data;
+using NC.Shared.GameField;
 
 namespace NC.Client.ViewModels
 {
@@ -27,8 +29,14 @@ namespace NC.Client.ViewModels
         private GameController _controller;
 
         private PlayerColor _yourColor;
-
+        
         private PlayerColor _turnColor;
+
+        private string _opponentName;
+
+        private string _gameLog;
+
+        private IPieceMasterFactory _masterFactory; 
 
         /// <summary>
         /// Constructor for <see cref="GameViewModel"/>.
@@ -36,8 +44,10 @@ namespace NC.Client.ViewModels
         public GameViewModel(
             IGameServiceProvider gameServiceProvider,
             IEndpointInfo endpointInfo,
-            IUserMessage userMessage)
+            IUserMessage userMessage,
+            IPieceMasterFactory masterFactory)
         {
+            _masterFactory = masterFactory;
             _gameServiceProvider = gameServiceProvider;
             _endpointInfo = endpointInfo;
             _userMessage = userMessage;
@@ -50,7 +60,7 @@ namespace NC.Client.ViewModels
         /// <summary>
         /// Your pieces color.
         /// </summary>
-        public PlayerColor YourColor
+        public PlayerColor YourColor 
         {
             get
             {
@@ -63,7 +73,7 @@ namespace NC.Client.ViewModels
                 RaisePropertyChanged(() => YourColor);
             }
         }
-
+        
         /// <summary>
         /// Chess game field.
         /// </summary>
@@ -84,6 +94,23 @@ namespace NC.Client.ViewModels
         /// <summary>
         /// Game controller.
         /// </summary>
+        public IPieceMasterFactory MasterFactory
+        {
+            get
+            {
+                return _masterFactory;
+            }
+
+            private set
+            {
+                _masterFactory = value;
+                RaisePropertyChanged(() => MasterFactory);
+            }
+        }
+        
+        /// <summary>
+        /// Game controller.
+        /// </summary>
         public GameController Controller
         {
             get
@@ -94,6 +121,7 @@ namespace NC.Client.ViewModels
             private set
             {
                 _controller = value;
+                RaisePropertyChanged(() => Controller);
             }
         }
 
@@ -114,17 +142,52 @@ namespace NC.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Opponent name.
+        /// </summary>
+        public string OpponentName
+        {
+            get
+            {
+                return _opponentName;
+            }
+
+            set
+            {
+                _opponentName = value;
+                RaisePropertyChanged(() => OpponentName);
+            }
+        }
+
+        /// <summary>
+        /// Game log text.
+        /// </summary>
+        public string GameLog
+        {
+            get
+            {
+                return _gameLog;
+            }
+
+            set
+            {
+                _gameLog = value;
+                RaisePropertyChanged(() => GameLog);
+            }
+        }
+        
         /// <inheritdoc/>
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             var callback = _gameServiceProvider.ServiceCallback;
             var gameInfo = callback.GameInfo;
-            var field = callback.GameInfo.DefaultField;
+            var field = callback.GameInfo.GameField;
             var playerColor = callback.GameInfo.PlayerColor;
 
             TurnColor = gameInfo.TurnColor;
             YourColor = gameInfo.PlayerColor;
             GameField = new VirtualField(field.ToMultiDimensionalArray(), playerColor);
+            OpponentName = gameInfo.OpponentName;
             callback.FieldUpdated += OnFieldUpdated;
         }
 
@@ -150,6 +213,15 @@ namespace NC.Client.ViewModels
             var field = args.VirtualField.ToMultiDimensionalArray();
             GameField = new VirtualField(field, args.PlayerColor);
             TurnColor = args.TurnColor;
+
+            LogSteps(args);
+        }
+
+        private void LogSteps(FieldInfoArgs args)
+        {
+            var turnChar = args.TurnColor.Invert().ToString().First();
+            string step = $"{turnChar}: {args.FromPoint}-{args.ToPoint}";
+            GameLog = $"{GameLog}{step}; ";
         }
 
         private void OnChessPieceMovement(object sender, MovementArgs args)

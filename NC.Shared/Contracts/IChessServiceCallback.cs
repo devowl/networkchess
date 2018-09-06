@@ -38,5 +38,12 @@ namespace NC.Shared.Contracts
         /// <param name="gameInfo">Game information.</param>
         [OperationContract(IsOneWay = true)]
         void GameHasStarted(WcfGameInfo gameInfo);
+
+        /// <summary>
+        /// Game has ended event.
+        /// </summary>
+        /// <param name="gameInfo">Game information.</param>
+        [OperationContract(IsOneWay = true)]
+        void GameHasEnded(WcfGameInfo gameInfo);
     }
 }

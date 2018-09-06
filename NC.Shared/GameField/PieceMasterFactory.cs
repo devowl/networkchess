@@ -9,10 +9,8 @@ namespace NC.Shared.GameField
     /// <summary>
     /// Piece master factory.
     /// </summary>
-    public class PieceMasterFactory
+    internal class PieceMasterFactory : IPieceMasterFactory
     {
-        private readonly VirtualField _field;
-
         private readonly IDictionary<ChessPiece, Type> _objectsProvider = new Dictionary<ChessPiece, Type>
         {
             { ChessPiece.BlackBishop, typeof(BishopMaster) },
@@ -29,33 +27,19 @@ namespace NC.Shared.GameField
             { ChessPiece.WhiteRook, typeof(RookMaster) },
         };
 
-        /// <summary>
-        /// Constructor for <see cref="PieceMasterFactory"/>.
-        /// </summary>
-        public PieceMasterFactory(VirtualField field)
-        {
-            _field = field;
-        }
-
-        /// <summary>
-        /// Try get master for cell.
-        /// </summary>
-        /// <param name="x">Cell x coordinate.</param>
-        /// <param name="y">Cell x coordinate.</param>
-        /// <param name="master">Master reference.</param>
-        /// <returns>Has master for cell.</returns>
-        public bool TryGetMaster(int x, int y, out PieceMasterBase master)
+        /// <inheritdoc/>
+        public bool TryGetMaster(VirtualField field, ChessPoint point, out PieceMasterBase master)
         {
             master = null;
-            if (0 <= x && x < _field.Width && 0 <= y && y < _field.Height)
+            if (0 <= point.X && point.X < field.Width && 0 <= point.Y && point.Y < field.Height)
             {
-                var targetPlace = _field[x, y];
+                var targetPlace = field[point];
                 if (targetPlace == ChessPiece.Empty)
                 {
                     return false;
                 }
 
-                master = (PieceMasterBase)Activator.CreateInstance(_objectsProvider[targetPlace], _field, x, y);
+                master = (PieceMasterBase)Activator.CreateInstance(_objectsProvider[targetPlace], field, point);
                 return true;
             }
 

@@ -149,6 +149,16 @@ namespace NC.Shared.Data
         }
 
         /// <summary>
+        /// Invert player color.
+        /// </summary>
+        /// <param name="color">Player color.</param>
+        /// <returns>Inverted value.</returns>
+        public static PlayerColor Invert(this PlayerColor color)
+        {
+            return color == PlayerColor.White ? PlayerColor.Black : PlayerColor.White;
+        }
+
+        /// <summary>
         /// Get chess piece side.
         /// </summary>
         /// <param name="piece">Chess piece.</param>

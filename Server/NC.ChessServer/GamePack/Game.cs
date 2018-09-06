@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -15,6 +16,8 @@ namespace NC.ChessServer.GamePack
     /// </summary>
     public class Game : IDisposable
     {
+        private readonly IPieceMasterFactory _masterFactory;
+
         private bool _isInitialized;
 
         private VirtualField _virtualField;
@@ -24,8 +27,9 @@ namespace NC.ChessServer.GamePack
         /// <summary>
         /// Constructor for <see cref="Game"/>.
         /// </summary>
-        public Game(Player player1, Player player2)
+        public Game(IPieceMasterFactory masterFactory, Player player1, Player player2)
         {
+            _masterFactory = masterFactory;
             Player1 = player1;
             Player2 = player2;
         }
@@ -61,7 +65,7 @@ namespace NC.ChessServer.GamePack
 
             var randomColor = DateTime.Now.Millisecond % 2 == 0 ? PlayerColor.White : PlayerColor.Black;
             var player1Color = randomColor;
-            var player2Color = Invert(player1Color);
+            var player2Color = player1Color.Invert();
 
             Player.SetColor(Player1, player1Color);
             Player.SetColor(Player2, player2Color);
@@ -71,8 +75,17 @@ namespace NC.ChessServer.GamePack
             _turnColor = PlayerColor.White;
             _virtualField = new VirtualField(chessGameField);
 
-            var p1GameInfo = new WcfGameInfo(player1Color, Player2.PlayerName, chessGameField, _turnColor);
-            var p2GameInfo = new WcfGameInfo(player2Color, Player1.PlayerName, chessGameField, _turnColor);
+            var p1GameInfo = new WcfGameInfo(
+                player1Color,
+                Player2.PlayerName,
+                chessGameField.ToJaggedArray(),
+                _turnColor);
+
+            var p2GameInfo = new WcfGameInfo(
+                player2Color,
+                Player1.PlayerName,
+                chessGameField.ToJaggedArray(),
+                _turnColor);
 
             Player1.Callback.GameHasStarted(p1GameInfo);
             Player2.Callback.GameHasStarted(p2GameInfo);
@@ -103,18 +116,98 @@ namespace NC.ChessServer.GamePack
                 {
                     _virtualField[to.X, to.Y] = piece;
                     _virtualField[from.X, from.Y] = ChessPiece.Empty;
-                    NotifyFieldChanged(iniciator, opponent, from, to);
+
+                    if (IsCheckMate(iniciator, opponent))
+                    {
+                        NotifyAboutCheckMate(iniciator, opponent, from, to);
+                    }
+                    else
+                    {
+                        NotifyFieldChanged(iniciator, opponent, from, to);
+                    }
                 });
         }
 
+        private bool IsCheckMate(Player iniciator, Player opponent)
+        {
+            var kingMapping = new Dictionary<PlayerColor, ChessPiece>()
+            {
+                { PlayerColor.Black, ChessPiece.BlackKing },
+                { PlayerColor.White, ChessPiece.WhiteKing },
+            };
+
+            ChessPoint iniciatorKingPoint = FindPieces(p => p == kingMapping[iniciator.PlayerColor]).FirstOrDefault() ?? ChessPoint.Empty;
+            ChessPoint opponentKingPoint = FindPieces(p => p == kingMapping[opponent.PlayerColor]).FirstOrDefault() ?? ChessPoint.Empty;
+            
+            if (iniciatorKingPoint == ChessPoint.Empty || opponentKingPoint == ChessPoint.Empty)
+            {
+                return false;
+            }
+
+            var fieldCopy = new VirtualField(_virtualField.CloneMatrix());
+            var iniciatorAttacked = UnderAttackPoints(iniciator.PlayerColor, fieldCopy).ToArray();
+            if (iniciatorAttacked.Any(point => point == opponentKingPoint))
+            {
+                
+            }
+        }
+
+        private IEnumerable<ChessPoint> FindPieces(Func<ChessPiece, bool> checker)
+        {
+            for (int x = 0; x < _virtualField.Width; x++)
+            {
+                for (int y = 0; y < _virtualField.Height; y++)
+                {
+                    if (checker(_virtualField[x, y]))
+                    {
+                        yield return new ChessPoint(x, y);
+                    }
+                }
+            }
+        }
+
+        private IEnumerable<ChessPoint> UnderAttackPoints(PlayerColor iniciatorColor, VirtualField field)
+        {
+            foreach (var point in FindPieces(piece => piece.GetPlayerColor() == iniciatorColor))
+            {
+                PieceMasterBase master;
+                if (_masterFactory.TryGetMaster(field, point, out master))
+                {
+                    foreach (var movement in master.GetMovements())
+                    {
+                        yield return movement;
+                    }       
+                }
+            }
+        }
+        
+        private void NotifyAboutCheckMate(Player iniciator, Player opponent, ChessPoint @from, ChessPoint to)
+        {
+            var field = _virtualField.CloneMatrix();
+            _turnColor = _turnColor.Invert();
+            var winner = iniciator.PlayerColor;
+
+            var winnerGameInfo = new WcfGameInfo(
+                iniciator.PlayerColor,
+                opponent.PlayerName,
+                field.ToJaggedArray(),
+                _turnColor,
+                winner);
+
+            var loserGameInfo = new WcfGameInfo(
+                iniciator.PlayerColor,
+                opponent.PlayerName,
+                field.ToJaggedArray(),
+                _turnColor,
+                winner);
+
+            iniciator.Callback.GameHasEnded(winnerGameInfo);
+            opponent.Callback.GameHasEnded(loserGameInfo);
+        }
+        
         /// <inheritdoc/>
         public void Dispose()
         {
-        }
-
-        private static PlayerColor Invert(PlayerColor color)
-        {
-            return color == PlayerColor.White ? PlayerColor.Black : PlayerColor.White;
         }
 
         private void CheaterCheck(Player iniciator, ChessPoint from, ChessPoint to)
@@ -137,11 +230,10 @@ namespace NC.ChessServer.GamePack
             {
                 throw new CheaterException("You're trying to move your piece in opponent turn");
             }
-
-            var factory = new PieceMasterFactory(_virtualField);
+            
             PieceMasterBase master;
 
-            if (!factory.TryGetMaster(from.X, from.Y, out master))
+            if (!_masterFactory.TryGetMaster(_virtualField, from, out master))
             {
                 throw new InvalidMovementException(from.X, from.Y, "You're trying move unknown piece without master");
             }
@@ -158,7 +250,7 @@ namespace NC.ChessServer.GamePack
 
             var wcfFrom = from.FromBusiness();
             var wcfTo = to.FromBusiness();
-            _turnColor = Invert(_turnColor);
+            _turnColor = _turnColor.Invert();
 
             iniciator.Callback.GameFieldUpdated(field, _turnColor, wcfFrom, wcfTo, iniciator.PlayerColor);
             opponent.Callback.GameFieldUpdated(field, _turnColor, wcfFrom, wcfTo, opponent.PlayerColor);

@@ -16,13 +16,15 @@ namespace NC.Shared.Contracts
         public WcfGameInfo(
             PlayerColor playerColor,
             string opponentName,
-            ChessPiece[,] defaultField,
-            PlayerColor turnColor)
+            ChessPiece[][] defaultField,
+            PlayerColor turnColor,
+            PlayerColor? winnerColor = null)
         {
             PlayerColor = playerColor;
             OpponentName = opponentName;
             TurnColor = turnColor;
-            DefaultField = defaultField.ToJaggedArray();
+            WinnerColor = winnerColor;
+            GameField = defaultField;
         }
 
         /// <summary>
@@ -44,9 +46,14 @@ namespace NC.Shared.Contracts
         public PlayerColor TurnColor { get; set; }
 
         /// <summary>
+        /// Winner player color.
+        /// </summary>
+        public PlayerColor? WinnerColor { get; set; }
+
+        /// <summary>
         /// Default game field.
         /// </summary>
         [DataMember]
-        public ChessPiece[][] DefaultField { get; set; }
+        public ChessPiece[][] GameField { get; set; }
     }
 }

@@ -11,5 +11,10 @@ namespace NC.Client.Interfaces
         /// Main window closing.
         /// </summary>
         event CancelEventHandler Closing;
+
+        /// <summary>
+        /// Title text.
+        /// </summary>
+        string Title { get; set; }
     }
 }

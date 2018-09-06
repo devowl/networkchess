@@ -17,8 +17,8 @@ namespace NC.Shared.PieceMasters
         /// <summary>
         /// Constructor for <see cref="PawnMaster"/>.
         /// </summary>
-        public PawnMaster(VirtualField field, int x, int y)
-            : base(field, x, y, ChessPiece.BlackPawn, ChessPiece.WhitePawn)
+        public PawnMaster(VirtualField field, ChessPoint point)
+            : base(field, point, ChessPiece.BlackPawn, ChessPiece.WhitePawn)
         {
         }
 
