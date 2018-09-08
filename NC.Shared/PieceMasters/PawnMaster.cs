@@ -37,8 +37,8 @@ namespace NC.Shared.PieceMasters
             *       (Pawn) 
             *******************/
 
-            ChessVector[] movementsVectors;
-            ChessVector[] attackMovementsVectors;
+            IEnumerable<ChessVector> movementsVectors;
+            IEnumerable<ChessVector> attackMovementsVectors;
             PlayerColor opponent;
 
             // 1. Ходит тока в перёд
@@ -65,7 +65,7 @@ namespace NC.Shared.PieceMasters
                         new[]
                         {
                             new ChessVector(0, -2)
-                        }).ToArray();
+                        });
                 }
             }
             else
@@ -89,7 +89,7 @@ namespace NC.Shared.PieceMasters
                         new[]
                         {
                             new ChessVector(0, 2)
-                        }).ToArray();
+                        });
                 }
             }
 

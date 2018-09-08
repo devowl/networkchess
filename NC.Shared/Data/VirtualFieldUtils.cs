@@ -126,10 +126,10 @@ namespace NC.Shared.Data
             };
 
             //var field = CreateEmptyField();
-            //field[7,0] = ChessPiece.WhiteRook;
+            //field[7, 0] = ChessPiece.WhiteRook;
             //field[6, 4] = ChessPiece.WhiteRook;
             //field[1, 1] = ChessPiece.BlackKing;
-            //field[6,7] = ChessPiece.WhiteKing;
+            //field[6, 7] = ChessPiece.WhiteKing;
 
 
             // Rotate on 90 (because of beautiful input above ^ )

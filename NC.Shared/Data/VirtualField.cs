@@ -1,4 +1,7 @@
-﻿using NC.Shared.Contracts;
+﻿using System.Linq;
+using System.Text;
+
+using NC.Shared.Contracts;
 using NC.Shared.Exceptions;
 
 namespace NC.Shared.Data
@@ -105,6 +108,34 @@ namespace NC.Shared.Data
             }
 
             throw new InvalidMovementException(x, y, "Out of bounds");
+        }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            var buffer = new StringBuilder();
+            for (int x = 0; x < Width; x++)
+            {
+                for (int y = 0; y < Width; y++)
+                {
+                    var piece = this[x, y];
+                    if (piece == ChessPiece.Empty)
+                    {
+                        buffer.Append("__ ");
+                    }
+                    else
+                    {
+                        var playerColor = piece.GetPlayerColor().ToString();
+                        var pieceShortName = piece.ToString().Substring(playerColor.Length).First();
+                        var playerShortName = playerColor.First();
+                        buffer.Append($"{playerShortName}{pieceShortName} ");
+                    }
+                }
+
+                buffer.AppendLine();
+            }
+
+            return buffer.ToString();
         }
     }
 }

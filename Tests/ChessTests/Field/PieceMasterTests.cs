@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -215,6 +216,24 @@ namespace ChessTests.Field
 
             factory.TryGetMaster(field, new ChessPoint(4, 3), out master);
             Assert.AreEqual(master.GetMovements().Count(), 5);
+        }
+
+        [TestMethod]
+        public void KingMovementTest4()
+        { 
+            var field = new VirtualField(VirtualFieldUtils.CreateEmptyField());
+            var factory = new PieceMasterFactory();
+            PieceMasterBase master;
+
+            field[1, 2] = ChessPiece.BlackKing;
+            field[7, 6] = ChessPiece.WhiteKing;
+
+            field[2, 7] = ChessPiece.WhiteRook;
+            field[3, 6] = ChessPiece.WhiteRook;
+
+            Debug.WriteLine(field);
+            factory.TryGetMaster(field, new ChessPoint(1, 2), out master);
+            Assert.AreEqual(master.GetMovements().Count(), 3);
         }
 
         private VirtualField CreateQueenKingField()

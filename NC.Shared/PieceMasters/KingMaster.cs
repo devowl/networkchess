@@ -46,7 +46,7 @@ namespace NC.Shared.PieceMasters
 
             var avaliableMovements =
                 movements.Select(vector => ChessPoint.Add(Position, vector))
-                    .Where(CanMove)  .ToArray();
+                    .Where(CanMove);
 
             if (onlySteps)
             {
@@ -56,7 +56,11 @@ namespace NC.Shared.PieceMasters
             var piecePlayerColor = Field[Position].GetPlayerColor().Value;
             var opponentColorInitiator = piecePlayerColor.Invert();
             var underAttackPoints = CheckMateLogic.UnderAttackPoints(opponentColorInitiator, Field, new PieceMasterFactory());
-            return avaliableMovements.Where(point => !underAttackPoints.Contains(point)).ToArray();
+            var r =avaliableMovements.Where(point => !underAttackPoints.Contains(point));
+
+            var d = r.ToArray();
+
+            return d;
         }
     }
 }

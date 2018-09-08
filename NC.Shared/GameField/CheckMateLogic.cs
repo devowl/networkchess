@@ -80,6 +80,7 @@ namespace NC.Shared.GameField
             VirtualField field,
             IPieceMasterFactory masterFactory)
         {
+            var movements = new HashSet<ChessPoint>();
             foreach (var point in FindPieces(piece => piece.GetPlayerColor() == initiatorColor, field))
             {
                 PieceMasterBase master;
@@ -87,10 +88,12 @@ namespace NC.Shared.GameField
                 {
                     foreach (var movement in master.GetRealMovements())
                     {
-                        yield return movement;
+                        movements.Add(movement);
                     }
                 }
             }
+
+            return movements;
         }
 
         private static bool IsCheck(
