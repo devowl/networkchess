@@ -61,6 +61,7 @@
     <Compile Include="Data\VirtualFieldUtils.cs" />
     <Compile Include="Exceptions\InvalidMovementException.cs" />
     <Compile Include="Exceptions\SessionNotFoundedException.cs" />
+    <Compile Include="GameField\CheckMateLogic.cs" />
     <Compile Include="GameField\IPieceMasterFactory.cs" />
     <Compile Include="GameField\PieceMasterFactory.cs" />
     <Compile Include="PieceMasters\KingMaster.cs" />

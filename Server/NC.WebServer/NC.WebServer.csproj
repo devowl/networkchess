@@ -106,6 +106,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\NC.Shared\NC.Shared.csproj">
+      <Project>{91995041-EE8C-4077-85D2-7FD0895D7CEB}</Project>
+      <Name>NC.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NC.ChessServer\NC.ChessServer.csproj">
       <Project>{d657477e-19b1-4fb2-83ff-7cce69f97168}</Project>
       <Name>NC.ChessServer</Name>

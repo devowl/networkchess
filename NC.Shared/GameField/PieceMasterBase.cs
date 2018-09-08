@@ -76,6 +76,15 @@ namespace NC.Shared.GameField
             return _movements ?? (_movements = GetAvailableMovements() ?? Enumerable.Empty<ChessPoint>());
         }
 
+        /// <summary>
+        /// Get only real movements, ignore under-attack points.
+        /// </summary>
+        /// <returns>Available points.</returns>
+        internal IEnumerable<ChessPoint> GetRealMovements()
+        {
+            return GetAvailableMovements(true);
+        }
+
         protected static bool CheckPrefix(ChessPiece piece, PlayerColor playerColor)
         {
             return piece.ToString().StartsWith(playerColor.ToString());
@@ -84,8 +93,9 @@ namespace NC.Shared.GameField
         /// <summary>
         /// Get available movements for piece.
         /// </summary>
+        /// <param name="onlySteps">Только доступные перемещения фигур.</param>
         /// <returns>Available points.</returns>
-        protected abstract IEnumerable<ChessPoint> GetAvailableMovements();
+        protected abstract IEnumerable<ChessPoint> GetAvailableMovements(bool onlySteps = false);
 
         /// <summary>
         /// Get vector path points.

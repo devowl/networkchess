@@ -7,6 +7,7 @@ using Microsoft.Practices.Prism.Logging;
 
 using NC.ChessControls;
 using NC.Client.Windows;
+using NC.Shared;
 
 using Prism.AutofacExtension;
 
@@ -35,6 +36,7 @@ namespace NC.Client.Bootstrapper
             base.ConfigureContainer(builder);
             builder.RegisterModule<ClientModule>();
             builder.RegisterModule<ChessControlsModule>();
+            builder.RegisterModule<SharedModule>();
         }
 
         /// <inheritdoc/>

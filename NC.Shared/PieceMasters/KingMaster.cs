@@ -20,7 +20,7 @@ namespace NC.Shared.PieceMasters
         }
 
         /// <inheritdoc/>
-        protected override IEnumerable<ChessPoint> GetAvailableMovements()
+        protected override IEnumerable<ChessPoint> GetAvailableMovements(bool onlySteps = false)
         {
             /*******************
              * (-1,-1)(0,-1)(1,-1)      
@@ -44,7 +44,19 @@ namespace NC.Shared.PieceMasters
                 new ChessVector(1, 1),
             };
 
-            return movements.Select(vector => ChessPoint.Add(Position, vector)).Where(CanMove);
+            var avaliableMovements =
+                movements.Select(vector => ChessPoint.Add(Position, vector))
+                    .Where(CanMove)  .ToArray();
+
+            if (onlySteps)
+            {
+                return avaliableMovements;
+            }
+
+            var piecePlayerColor = Field[Position].GetPlayerColor().Value;
+            var opponentColorInitiator = piecePlayerColor.Invert();
+            var underAttackPoints = CheckMateLogic.UnderAttackPoints(opponentColorInitiator, Field, new PieceMasterFactory());
+            return avaliableMovements.Where(point => !underAttackPoints.Contains(point)).ToArray();
         }
     }
 }

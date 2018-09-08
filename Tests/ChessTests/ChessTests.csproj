@@ -56,6 +56,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Field\CheckMateTests.cs" />
     <Compile Include="Field\GameFieldTests.cs" />
     <Compile Include="Field\PieceMasterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

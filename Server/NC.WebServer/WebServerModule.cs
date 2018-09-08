@@ -1,6 +1,7 @@
 ﻿using Autofac;
 
 using NC.ChessServer;
+using NC.Shared;
 
 namespace NC.WebServer
 {
@@ -13,6 +14,7 @@ namespace NC.WebServer
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterModule<ChessServerModule>();
+            builder.RegisterModule<SharedModule>();
         }
     }
 }

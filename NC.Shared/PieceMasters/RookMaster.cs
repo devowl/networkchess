@@ -19,7 +19,7 @@ namespace NC.Shared.PieceMasters
         {
         }
 
-        protected override IEnumerable<ChessPoint> GetAvailableMovements()
+        protected override IEnumerable<ChessPoint> GetAvailableMovements(bool onlySteps = false)
         {
             /*******************
              *        (0,-1)    

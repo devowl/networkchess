@@ -23,7 +23,7 @@ namespace NC.Shared.PieceMasters
         }
 
         /// <inheritdoc/>
-        protected override IEnumerable<ChessPoint> GetAvailableMovements()
+        protected override IEnumerable<ChessPoint> GetAvailableMovements(bool onlySteps = false)
         {
             // Black (top)
             /*******************
@@ -94,8 +94,7 @@ namespace NC.Shared.PieceMasters
             }
 
             return
-                movementsVectors.Select(vector => ChessPoint.Add(Position, vector)).TakeWhile(point => Field[point] == ChessPiece.Empty)
-                    .Where(CanMove)
+                movementsVectors.Select(vector => ChessPoint.Add(Position, vector)).TakeWhile(point => CanMove(point) && Field[point] == ChessPiece.Empty)
                     .Union(
                         attackMovementsVectors.Select(vector => ChessPoint.Add(Position, vector))
                             .Where(CanMove)

@@ -158,6 +158,65 @@ namespace ChessTests.Field
             Assert.AreEqual(kingMovements.Count(), 6);
         }
 
+        [TestMethod]
+        public void KingMovementTest2()
+        {
+            // King cant move on attacked point
+            var defaultField = VirtualFieldUtils.CreateEmptyField();
+            var field = new VirtualField(defaultField);
+
+            field[1, 7] = ChessPiece.BlackRook;
+            field[0,0] = ChessPiece.WhiteKing;
+
+            var factory = new PieceMasterFactory();
+            PieceMasterBase kingMaster;
+
+            Assert.AreEqual(factory.TryGetMaster(field, new ChessPoint(0, 0), out kingMaster), true);
+
+            var kingMovements = kingMaster.GetMovements();
+
+            Assert.AreEqual(kingMovements.Count(), 1);
+        }
+
+        [TestMethod]
+        public void KnigtMovementTest2()
+        {
+            // King cant move on attacked point
+            var defaultField = VirtualFieldUtils.CreateEmptyField();
+            var field = new VirtualField(defaultField);
+
+            field[4,4] = ChessPiece.BlackKnight;
+
+            var factory = new PieceMasterFactory();
+            PieceMasterBase knigtMaster;
+
+            Assert.AreEqual(factory.TryGetMaster(field, new ChessPoint(4, 4), out knigtMaster), true);
+
+            var knigtMovements = knigtMaster.GetMovements();
+
+            Assert.AreEqual(knigtMovements.Count(), 8);
+        }
+
+        [TestMethod]
+        public void KingMovementTest3()
+        {
+            // King cant move on attacked point
+            var defaultField = VirtualFieldUtils.CreateEmptyField();
+            var field = new VirtualField(defaultField);
+
+            field[4, 1] = ChessPiece.BlackKing;
+            field[4, 3] = ChessPiece.WhiteKing;
+
+            var factory = new PieceMasterFactory();
+            PieceMasterBase master;
+
+            factory.TryGetMaster(field, new ChessPoint(4, 1), out master);
+            Assert.AreEqual(master.GetMovements().Count(), 5);
+
+            factory.TryGetMaster(field, new ChessPoint(4, 3), out master);
+            Assert.AreEqual(master.GetMovements().Count(), 5);
+        }
+
         private VirtualField CreateQueenKingField()
         {
             var defaultField = VirtualFieldUtils.CreateEmptyField();
@@ -198,7 +257,7 @@ namespace ChessTests.Field
 
             return field;
         }
-
+        
         private VirtualField CreateBishopRookField()
         {
             var defaultField = VirtualFieldUtils.CreateEmptyField();
