@@ -114,11 +114,11 @@ namespace NC.Shared.Data
         public override string ToString()
         {
             var buffer = new StringBuilder();
-            for (int x = 0; x < Width; x++)
+            for (int i = 0; i < Width; i++)
             {
-                for (int y = 0; y < Width; y++)
+                for (int j = 0; j < Height; j++)
                 {
-                    var piece = this[x, y];
+                    var piece = this[j, i];
                     if (piece == ChessPiece.Empty)
                     {
                         buffer.Append("__ ");

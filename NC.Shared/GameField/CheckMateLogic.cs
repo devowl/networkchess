@@ -96,11 +96,12 @@ namespace NC.Shared.GameField
             return movements;
         }
 
-        private static bool IsCheck(
-            PlayerColor initiatorColor,
-            PlayerColor opponentColor,
-            VirtualField field,
-            IPieceMasterFactory masterFactory)
+        /// <summary>
+        /// Map player color on king piece.
+        /// </summary>
+        /// <param name="color">Player color.</param>
+        /// <returns>Player piece name.</returns>
+        public static ChessPiece? MapKing(PlayerColor color)
         {
             var kingMapping = new Dictionary<PlayerColor, ChessPiece>()
             {
@@ -108,7 +109,21 @@ namespace NC.Shared.GameField
                 { PlayerColor.White, ChessPiece.WhiteKing },
             };
 
-            ChessPoint opponentKingPoint = FindPieces(p => p == kingMapping[opponentColor], field).FirstOrDefault();
+            if (kingMapping.ContainsKey(color))
+            {
+                return kingMapping[color];
+            }
+
+            return null;
+        }
+
+        private static bool IsCheck(
+            PlayerColor initiatorColor,
+            PlayerColor opponentColor,
+            VirtualField field,
+            IPieceMasterFactory masterFactory)
+        {
+            ChessPoint opponentKingPoint = FindPieces(p => p == MapKing(opponentColor), field).FirstOrDefault();
 
             if (opponentKingPoint == null)
             {

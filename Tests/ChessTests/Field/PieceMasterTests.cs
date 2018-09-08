@@ -134,6 +134,8 @@ namespace ChessTests.Field
         {
             var field = CreateQueenKingField();
 
+            Debug.WriteLine(field);
+
             var factory = new PieceMasterFactory();
             PieceMasterBase queenMaster;
 
@@ -230,8 +232,35 @@ namespace ChessTests.Field
 
             field[2, 7] = ChessPiece.WhiteRook;
             field[3, 6] = ChessPiece.WhiteRook;
+            
+            factory.TryGetMaster(field, new ChessPoint(1, 2), out master);
+            Assert.AreEqual(master.GetMovements().Count(), 5);
+        }
 
-            Debug.WriteLine(field);
+        [TestMethod]
+        public void KingMovementTest5()
+        {
+            var field = new VirtualField(VirtualFieldUtils.CreateEmptyField());
+            var factory = new PieceMasterFactory();
+            PieceMasterBase master;
+
+            field[1, 2] = ChessPiece.BlackKing;
+            field[7, 6] = ChessPiece.WhiteKing;
+
+            field[2, 7] = ChessPiece.WhiteRook;
+            field[1, 6] = ChessPiece.WhiteRook;
+
+            /*
+                __ __ __ __ __ __ __ __ 
+                __ __ __ __ __ __ __ __ 
+                __ BK __ __ __ __ __ __ 
+                __ __ __ __ __ __ __ __ 
+                __ __ __ __ __ __ __ __ 
+                __ __ __ __ __ __ __ __ 
+                __ WR __ __ __ __ __ WK 
+                __ __ WR __ __ __ __ __ 
+             */
+
             factory.TryGetMaster(field, new ChessPoint(1, 2), out master);
             Assert.AreEqual(master.GetMovements().Count(), 3);
         }

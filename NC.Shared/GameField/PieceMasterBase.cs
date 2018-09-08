@@ -16,6 +16,8 @@ namespace NC.Shared.GameField
 
         private IEnumerable<ChessPoint> _movements;
 
+        private object _syncObject = new object();
+
         /// <summary>
         /// Constructor for <see cref="PieceMasterBase"/>.
         /// </summary>
@@ -68,12 +70,20 @@ namespace NC.Shared.GameField
                      (_playerColor = CheckPrefix(Piece, PlayerColor.Black) ? PlayerColor.Black : PlayerColor.White));
 
         /// <summary>
+        /// Ignore enemy king piece.
+        /// </summary>
+        protected bool IgnoreEnemyKingFlag { get; set; }
+
+        /// <summary>
         /// Get available movements for piece.
         /// </summary>
         /// <returns>Available points.</returns>
         public IEnumerable<ChessPoint> GetMovements()
         {
-            return _movements ?? (_movements = GetAvailableMovements() ?? Enumerable.Empty<ChessPoint>());
+            lock (_syncObject)
+            {
+                return _movements ?? (_movements = GetAvailableMovements() ?? Enumerable.Empty<ChessPoint>());
+            }
         }
 
         /// <summary>
@@ -82,7 +92,13 @@ namespace NC.Shared.GameField
         /// <returns>Available points.</returns>
         internal IEnumerable<ChessPoint> GetRealMovements()
         {
-            return GetAvailableMovements(true);
+            lock (_syncObject)
+            {
+                IgnoreEnemyKingFlag = true;
+                var movements = GetAvailableMovements(true).ToArray();
+                IgnoreEnemyKingFlag = false;
+                return movements;
+            }
         }
 
         protected static bool CheckPrefix(ChessPiece piece, PlayerColor playerColor)
@@ -112,7 +128,7 @@ namespace NC.Shared.GameField
 
                 var targetPlace = Field[currentPos.X, currentPos.Y];
                 var targetSideName = targetPlace.GetPlayerColor();
-                opponent = targetSideName.HasValue && SideName != targetSideName;
+                opponent = targetSideName.HasValue && SideName != targetSideName && !IsIgnoreEnemyKing(targetPlace);
             }
         }
 
@@ -129,16 +145,37 @@ namespace NC.Shared.GameField
             if (0 <= x && x < Field.Width && 0 <= y && y < Field.Height)
             {
                 var targetPlace = Field[x, y];
+                var sideName = targetPlace.GetPlayerColor();
                 if (targetPlace == ChessPiece.Empty)
                 {
                     return true;
                 }
 
-                var sideName = targetPlace.GetPlayerColor();
+                
                 return SideName != sideName;
             }
 
             return false;
+        }
+
+        private bool IsIgnoreEnemyKing(ChessPiece targetPlace)
+        {
+            if (!IgnoreEnemyKingFlag)
+            {
+                return false;
+            }
+
+            var targetColor = targetPlace.GetPlayerColor();
+            if (targetColor == null)
+            {
+                return false;
+            }
+            var targetColorValue = targetColor.Value;
+
+            var isEnemyPiece = Piece.GetPlayerColor()?.Invert() == targetPlace.GetPlayerColor();
+            var isKingPiece = CheckMateLogic.MapKing(targetColorValue) == targetPlace;
+
+            return isEnemyPiece && isKingPiece;
         }
     }
 }

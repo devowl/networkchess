@@ -43,7 +43,9 @@ namespace NC.Shared.Contracts
         /// Game has ended event.
         /// </summary>
         /// <param name="gameInfo">Game information.</param>
+        /// <param name="from">Point from.</param>
+        /// <param name="to">Point to.</param>
         [OperationContract(IsOneWay = true)]
-        void GameHasEnded(WcfGameInfo gameInfo);
+        void GameHasEnded(WcfGameInfo gameInfo, WcfChessPoint from, WcfChessPoint to);
     }
 }

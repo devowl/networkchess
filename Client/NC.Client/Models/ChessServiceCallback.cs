@@ -63,9 +63,11 @@ namespace NC.Client.Models
         }
 
         /// <inheritdoc/>
-        public void GameHasEnded(WcfGameInfo gameInfo)
+        public void GameHasEnded(WcfGameInfo gameInfo, WcfChessPoint from, WcfChessPoint to)
         {
-            
+            FieldUpdated?.Invoke(
+                this,
+                new FieldInfoArgs(gameInfo.GameField, gameInfo.TurnColor, from.ToBusiness(), to.ToBusiness(), gameInfo.PlayerColor));
         }
     }
 }

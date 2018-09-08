@@ -119,7 +119,7 @@ namespace NC.ChessServer.GamePack
 
                     if (CheckMateLogic.IsCheckMate(initiator.PlayerColor, opponent.PlayerColor, _virtualField, _masterFactory))
                     {
-                        NotifyAboutCheckMate(initiator, opponent);
+                        NotifyAboutCheckMate(initiator, opponent, from, to);
                     }
                     else
                     {
@@ -128,7 +128,7 @@ namespace NC.ChessServer.GamePack
                 });
         }
 
-        private void NotifyAboutCheckMate(Player initiator, Player opponent)
+        private void NotifyAboutCheckMate(Player initiator, Player opponent, ChessPoint from, ChessPoint to)
         {
             var field = _virtualField.CloneMatrix();
             _turnColor = _turnColor.Invert();
@@ -148,8 +148,8 @@ namespace NC.ChessServer.GamePack
                 _turnColor,
                 winner);
 
-            initiator.Callback.GameHasEnded(winnerGameInfo);
-            opponent.Callback.GameHasEnded(loserGameInfo);
+            initiator.Callback.GameHasEnded(winnerGameInfo, from.FromBusiness(), to.FromBusiness());
+            opponent.Callback.GameHasEnded(loserGameInfo, from.FromBusiness(), to.FromBusiness());
         }
         
         /// <inheritdoc/>
