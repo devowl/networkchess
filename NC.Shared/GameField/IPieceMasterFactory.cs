@@ -1,4 +1,5 @@
-﻿using NC.Shared.Data;
+﻿using NC.Shared.Contracts;
+using NC.Shared.Data;
 
 namespace NC.Shared.GameField
 {
@@ -15,5 +16,10 @@ namespace NC.Shared.GameField
         /// <param name="master">Master reference.</param>
         /// <returns>Has master for cell.</returns>
         bool TryGetMaster(VirtualField field, ChessPoint point, out PieceMasterBase master);
+
+        /// <summary>
+        /// Checked chess player color.
+        /// </summary>
+        PlayerColor? CheckedPlayer { get; set; }
     }
 }

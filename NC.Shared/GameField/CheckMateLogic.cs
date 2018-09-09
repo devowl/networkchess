@@ -16,19 +16,24 @@ namespace NC.Shared.GameField
         /// Check for check mate.
         /// </summary>
         /// <param name="initiatorColor">Initiator color.</param>
-        /// <param name="opponentColor">Opponent color.</param>
         /// <param name="field">Game field.</param>
         /// <param name="masterFactory">Master factory implementation.</param>
-        /// <returns></returns>
+        /// <param name="isCheck">Is check on table.</param>
+        /// <returns>Checkmate flag.</returns>
         public static bool IsCheckMate(
             PlayerColor initiatorColor,
-            PlayerColor opponentColor,
             VirtualField field,
-            IPieceMasterFactory masterFactory)
+            IPieceMasterFactory masterFactory,
+            out bool isCheck)
         {
+            isCheck = false;
+
             // Check for check now
-            if (IsCheck(initiatorColor, opponentColor, field, masterFactory))
+            if (IsCheck(initiatorColor, field, masterFactory))
             {
+                isCheck = true;
+                var opponentColor = initiatorColor.Invert();
+
                 // Otherwise do all possible movements, in the case of no possibility to prevent being attacked = initiator wins
                 foreach (var opponmentPiecePoint in FindPieces(p => p.GetPlayerColor() == opponentColor, field))
                 {
@@ -53,16 +58,16 @@ namespace NC.Shared.GameField
                                 fieldCopy[opponmentPiecePoint] = ChessPiece.Empty;
                             }
 
-                            if (!IsCheck(initiatorColor, opponentColor, fieldCopy, masterFactory))
+                            if (!IsCheck(initiatorColor, fieldCopy, masterFactory))
                             {
                                 return false;
                             }
                         }
-
-                        // Passed all steps and no possibilities to prevent a check
-                        return true;
                     }
                 }
+
+                // Passed all steps and no possibilities to prevent a check
+                return true;
             }
 
             return false;
@@ -117,12 +122,19 @@ namespace NC.Shared.GameField
             return null;
         }
 
-        private static bool IsCheck(
+        /// <summary>
+        /// Is king in check status.
+        /// </summary>
+        /// <param name="initiatorColor">Initiator color.</param>
+        /// <param name="field">Game field.</param>
+        /// <param name="masterFactory">Master factory implementation.</param>
+        /// <returns>Check flag.</returns>
+        public static bool IsCheck(
             PlayerColor initiatorColor,
-            PlayerColor opponentColor,
             VirtualField field,
             IPieceMasterFactory masterFactory)
         {
+            var opponentColor = initiatorColor.Invert();
             ChessPoint opponentKingPoint = FindPieces(p => p == MapKing(opponentColor), field).FirstOrDefault();
 
             if (opponentKingPoint == null)
@@ -131,9 +143,7 @@ namespace NC.Shared.GameField
             }
 
             var initiatorAttacked = UnderAttackPoints(initiatorColor, field, masterFactory);
-            var @return = initiatorAttacked.Any(point => point == opponentKingPoint);
-
-            return @return;
+            return initiatorAttacked.Any(point => point == opponentKingPoint);
         }
 
         private static IEnumerable<ChessPoint> FindPieces(Func<ChessPiece, bool> checker, VirtualField field)

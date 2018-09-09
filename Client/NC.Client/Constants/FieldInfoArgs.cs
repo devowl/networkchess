@@ -18,13 +18,15 @@ namespace NC.Client.Constants
             PlayerColor turnColor,
             ChessPoint fromPoint,
             ChessPoint toPoint,
-            PlayerColor playerColor)
+            PlayerColor playerColor,
+            PlayerColor? checkedPlayer)
         {
             VirtualField = virtualField;
             TurnColor = turnColor;
             FromPoint = fromPoint;
             ToPoint = toPoint;
             PlayerColor = playerColor;
+            CheckedPlayer = checkedPlayer;
         }
 
         /// <summary>
@@ -51,5 +53,10 @@ namespace NC.Client.Constants
         /// Player color.
         /// </summary>
         public PlayerColor PlayerColor { get; }
+
+        /// <summary>
+        /// Player in check status.
+        /// </summary>
+        public PlayerColor? CheckedPlayer { get; set; }
     }
 }

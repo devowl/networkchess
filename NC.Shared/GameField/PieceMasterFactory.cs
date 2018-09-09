@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using NC.Shared.Contracts;
 using NC.Shared.Data;
 using NC.Shared.PieceMasters;
 
@@ -39,11 +40,14 @@ namespace NC.Shared.GameField
                     return false;
                 }
 
-                master = (PieceMasterBase)Activator.CreateInstance(_objectsProvider[targetPlace], field, point);
+                master = (PieceMasterBase)Activator.CreateInstance(_objectsProvider[targetPlace], field, point, this);
                 return true;
             }
 
             return false;
         }
+
+        /// <inheritdoc/>
+        public PlayerColor? CheckedPlayer { get; set; }
     }
 }

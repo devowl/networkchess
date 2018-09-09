@@ -21,7 +21,7 @@ namespace NC.Shared.GameField
         /// <summary>
         /// Constructor for <see cref="PieceMasterBase"/>.
         /// </summary>
-        protected PieceMasterBase(VirtualField field, ChessPoint point, params ChessPiece[] pieces)
+        protected PieceMasterBase(VirtualField field, ChessPoint point, IPieceMasterFactory master, params ChessPiece[] pieces)
         {
             Field = field;
             Pieces = pieces;
@@ -38,6 +38,7 @@ namespace NC.Shared.GameField
             }
 
             Position = point;
+            Master = master;
         }
 
         /// <summary>
@@ -59,6 +60,11 @@ namespace NC.Shared.GameField
         /// Piece position.
         /// </summary>
         public ChessPoint Position { get; }
+
+        /// <summary>
+        /// Master factory instance.
+        /// </summary>
+        protected IPieceMasterFactory Master { get; set; }
 
         /// <summary>
         /// Prefix name.
@@ -135,24 +141,43 @@ namespace NC.Shared.GameField
         /// <summary>
         /// Get move status.
         /// </summary>
-        /// <param name="position">Check position.</param>
+        /// <param name="newPosition">Check position.</param>
         /// <returns>Is not outside board.</returns> 
-        protected bool CanMove(ChessPoint position)
+        protected bool CanMove(ChessPoint newPosition)
         {
-            int x = position.X;
-            int y = position.Y;
+            int x = newPosition.X;
+            int y = newPosition.Y;
 
             if (0 <= x && x < Field.Width && 0 <= y && y < Field.Height)
             {
                 var targetPlace = Field[x, y];
                 var sideName = targetPlace.GetPlayerColor();
+
+                var result = false;
                 if (targetPlace == ChessPiece.Empty)
                 {
-                    return true;
+                    result = true;
+                }
+                else
+                {
+                    result = SideName != sideName;
                 }
 
-                
-                return SideName != sideName;
+                bool isYourKingIsUnderAttack = Master.CheckedPlayer.HasValue &&
+                                               Master.CheckedPlayer == Piece.GetPlayerColor();
+
+                if (result && isYourKingIsUnderAttack)
+                {
+                    // If king is under attack, you next step must prevent a check state
+                    var fieldCopy = new VirtualField(Field.CloneMatrix());
+                    fieldCopy[newPosition] = fieldCopy[Position];
+                    fieldCopy[Position] = ChessPiece.Empty;
+
+                    var pieceColor = Piece.GetPlayerColor().Value.Invert();
+                    return !CheckMateLogic.IsCheck(pieceColor, fieldCopy, Master);
+                }
+
+                return result;
             }
 
             return false;

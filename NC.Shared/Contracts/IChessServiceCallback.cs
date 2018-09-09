@@ -23,14 +23,16 @@ namespace NC.Shared.Contracts
         /// <param name="turnColor">Color turn.</param>
         /// <param name="from">Point from.</param>
         /// <param name="to">Point to.</param>
-        /// <param name="playerColor">Player color.</param> 
+        /// <param name="playerColor">Player color.</param>
+        /// <param name="checkedPlayer">Checked player color.</param>
         [OperationContract(IsOneWay = true)]
         void GameFieldUpdated(
             ChessPiece[][] virtualField,
             PlayerColor turnColor,
             WcfChessPoint from,
             WcfChessPoint to,
-            PlayerColor playerColor);
+            PlayerColor playerColor,
+            PlayerColor? checkedPlayer);
 
         /// <summary>
         /// Game has started event.

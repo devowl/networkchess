@@ -21,7 +21,9 @@ namespace ChessTests.Field
             field[7, 1] = ChessPiece.BlackRook;
             field[6, 0] = ChessPiece.BlackRook;
 
-            Assert.IsTrue(CheckMateLogic.IsCheckMate(PlayerColor.Black, PlayerColor.White, field, factory));
+            bool isCheck;
+            Assert.IsTrue(CheckMateLogic.IsCheckMate(PlayerColor.Black,field, factory, out isCheck));
+            Assert.IsTrue(isCheck);
         }
 
         [TestMethod]
@@ -36,7 +38,9 @@ namespace ChessTests.Field
             field[7, 2] = ChessPiece.BlackRook;
             field[6, 0] = ChessPiece.BlackRook;
 
-            Assert.IsFalse(CheckMateLogic.IsCheckMate(PlayerColor.Black, PlayerColor.White, field, factory));
+            bool isCheck;
+            Assert.IsFalse(CheckMateLogic.IsCheckMate(PlayerColor.Black, field, factory, out isCheck));
+            Assert.IsTrue(isCheck);
         }
 
         [TestMethod]
@@ -52,7 +56,9 @@ namespace ChessTests.Field
             field[2, 1] = ChessPiece.BlackRook;
             field[2, 2] = ChessPiece.BlackQueen;
 
-            Assert.IsTrue(CheckMateLogic.IsCheckMate(PlayerColor.Black, PlayerColor.White, field, factory));
+            bool isCheck;
+            Assert.IsTrue(CheckMateLogic.IsCheckMate(PlayerColor.Black, field, factory, out isCheck));
+            Assert.IsTrue(isCheck);
         }
 
         [TestMethod]
@@ -66,7 +72,9 @@ namespace ChessTests.Field
 
             field[7, 0] = ChessPiece.BlackQueen;
 
-            Assert.IsTrue(CheckMateLogic.IsCheckMate(PlayerColor.Black, PlayerColor.White, field, factory));
+            bool isCheck;
+            Assert.IsTrue(CheckMateLogic.IsCheckMate(PlayerColor.Black, field, factory, out isCheck));
+            Assert.IsTrue(isCheck);
         }
 
         [TestMethod]
@@ -84,7 +92,9 @@ namespace ChessTests.Field
             // Eat for no checkmate
             field[2, 2] = ChessPiece.BlackQueen;
 
-            Assert.IsFalse(CheckMateLogic.IsCheckMate(PlayerColor.Black, PlayerColor.White, field, factory));
+            bool isCheck;
+            Assert.IsFalse(CheckMateLogic.IsCheckMate(PlayerColor.Black, field, factory, out isCheck));
+            Assert.IsTrue(isCheck);
         }
 
         [TestMethod]
@@ -97,8 +107,10 @@ namespace ChessTests.Field
             field[6, 4] = ChessPiece.WhiteRook;
             field[1, 1] = ChessPiece.BlackKing;
             field[6, 7] = ChessPiece.WhiteKing;
-            
-            Assert.IsFalse(CheckMateLogic.IsCheckMate(PlayerColor.White, PlayerColor.Black, field, factory));
+
+            bool isCheck;
+            Assert.IsFalse(CheckMateLogic.IsCheckMate(PlayerColor.White, field, factory, out isCheck));
+            Assert.IsFalse(isCheck);
         }
     }
 }

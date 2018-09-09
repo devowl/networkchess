@@ -24,7 +24,15 @@ namespace NC.Client.Models
             _userMessage = userMessage;
         }
 
+        /// <summary>
+        /// Game started event.
+        /// </summary>
         public event EventHandler<EventArgs> GameStarted;
+
+        /// <summary>
+        /// Game ended event.
+        /// </summary>
+        public event EventHandler<EventArgs> GameEnded;
 
         /// <summary>
         /// Game field updated event.
@@ -48,11 +56,20 @@ namespace NC.Client.Models
             PlayerColor turnColor,
             WcfChessPoint from,
             WcfChessPoint to,
-            PlayerColor playerColor)
+            PlayerColor playerColor,
+            PlayerColor? checkedPlayer)
         {
+            var args = new FieldInfoArgs(
+                virtualField,
+                turnColor,
+                from.ToBusiness(),
+                to.ToBusiness(),
+                playerColor,
+                checkedPlayer);
+
             FieldUpdated?.Invoke(
                 this,
-                new FieldInfoArgs(virtualField, turnColor, from.ToBusiness(), to.ToBusiness(), playerColor));
+                args);
         }
 
         /// <inheritdoc/>
@@ -65,9 +82,16 @@ namespace NC.Client.Models
         /// <inheritdoc/>
         public void GameHasEnded(WcfGameInfo gameInfo, WcfChessPoint from, WcfChessPoint to)
         {
-            FieldUpdated?.Invoke(
-                this,
-                new FieldInfoArgs(gameInfo.GameField, gameInfo.TurnColor, from.ToBusiness(), to.ToBusiness(), gameInfo.PlayerColor));
+            var args = new FieldInfoArgs(
+                gameInfo.GameField,
+                gameInfo.TurnColor,
+                @from.ToBusiness(),
+                to.ToBusiness(),
+                gameInfo.PlayerColor,
+                null);
+
+            FieldUpdated?.Invoke(this, args);
+            GameEnded?.Invoke(this, EventArgs.Empty);
         }
     }
 }

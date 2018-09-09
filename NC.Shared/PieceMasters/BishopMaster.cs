@@ -14,8 +14,8 @@ namespace NC.Shared.PieceMasters
         /// <summary>
         /// Constructor for <see cref="BishopMaster"/>.
         /// </summary>
-        public BishopMaster(VirtualField field, ChessPoint point)
-            : base(field, point, ChessPiece.BlackBishop, ChessPiece.WhiteBishop)
+        public BishopMaster(VirtualField field, ChessPoint point, IPieceMasterFactory master)
+            : base(field, point, master, ChessPiece.BlackBishop, ChessPiece.WhiteBishop)
         {
         }
         
@@ -27,7 +27,7 @@ namespace NC.Shared.PieceMasters
              *       (Bishop)
              * (-1,1)        (1,1)
              *******************/
-
+            
             var vectors = new[]
             {
                 new ChessVector(-1, -1),

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.ServiceModel;
 using System.Threading;
 
 using NC.Shared.Contracts;
@@ -23,6 +24,8 @@ namespace NC.ChessServer.GamePack
         private VirtualField _virtualField;
 
         private PlayerColor _turnColor;
+
+        private PlayerColor? _checkedPlayer;
 
         /// <summary>
         /// Constructor for <see cref="Game"/>.
@@ -117,7 +120,16 @@ namespace NC.ChessServer.GamePack
                     _virtualField[to.X, to.Y] = piece;
                     _virtualField[from.X, from.Y] = ChessPiece.Empty;
 
-                    if (CheckMateLogic.IsCheckMate(initiator.PlayerColor, opponent.PlayerColor, _virtualField, _masterFactory))
+                    bool isCheck;
+                    var isCheckMate = CheckMateLogic.IsCheckMate(
+                        initiator.PlayerColor,
+                        _virtualField,
+                        _masterFactory,
+                        out isCheck);
+                    
+                    _checkedPlayer = isCheck ? opponent.PlayerColor : (PlayerColor?)null;
+
+                    if (isCheckMate)
                     {
                         NotifyAboutCheckMate(initiator, opponent, from, to);
                     }
@@ -165,29 +177,47 @@ namespace NC.ChessServer.GamePack
 
             if (!pieceColor.HasValue)
             {
-                throw new InvalidMovementException(from.X, from.Y, "You're trying move empty field");
+                throw new FaultException<InvalidMovementException>(
+                    new InvalidMovementException(from.X, from.Y, "You're trying move empty field"));
             }
 
             if (color != pieceColor.Value)
             {
-                throw new CheaterException("You're trying to move your opponent piece");
+                throw new FaultException<CheaterException>(
+                    new CheaterException("You're trying to move your opponent piece"));
             }
 
             if (color != _turnColor)
             {
-                throw new CheaterException("You're trying to move your piece in opponent turn");
+                throw new FaultException<CheaterException>(
+                    new CheaterException("You're trying to move your piece in opponent turn"));
             }
             
             PieceMasterBase master;
 
             if (!_masterFactory.TryGetMaster(_virtualField, from, out master))
             {
-                throw new InvalidMovementException(from.X, from.Y, "You're trying move unknown piece without master");
+                throw new FaultException<InvalidMovementException>(
+                    new InvalidMovementException(from.X, from.Y, "You're trying move unknown piece without master"));
             }
 
             if (master.GetMovements().All(step => !Equals(step, to)))
             {
-                throw new CheaterException("You're trying to move your piece to incorrect position");
+                throw new FaultException<CheaterException>(
+                    new CheaterException("You're trying to move your piece to incorrect position"));
+            }
+
+            var fieldCopy = new VirtualField(_virtualField.CloneMatrix())
+            {
+                [to.X, to.Y] = piece,
+                [from.X, from.Y] = ChessPiece.Empty
+            };
+
+            if (CheckMateLogic.IsCheck(initiator.PlayerColor, fieldCopy, _masterFactory) && _checkedPlayer.HasValue &&
+                _checkedPlayer.Value == initiator.PlayerColor)
+            {
+                throw new FaultException<InvalidMovementException>(
+                    new InvalidMovementException(from.X, from.Y, "Wrong step, you still have a check"));
             }
         }
 
@@ -199,8 +229,8 @@ namespace NC.ChessServer.GamePack
             var wcfTo = to.FromBusiness();
             _turnColor = _turnColor.Invert();
 
-            initiator.Callback.GameFieldUpdated(field, _turnColor, wcfFrom, wcfTo, initiator.PlayerColor);
-            opponent.Callback.GameFieldUpdated(field, _turnColor, wcfFrom, wcfTo, opponent.PlayerColor);
+            initiator.Callback.GameFieldUpdated(field, _turnColor, wcfFrom, wcfTo, initiator.PlayerColor, _checkedPlayer);
+            opponent.Callback.GameFieldUpdated(field, _turnColor, wcfFrom, wcfTo, opponent.PlayerColor, _checkedPlayer);
         }
 
         private Player GetPlayer(string sessionId)

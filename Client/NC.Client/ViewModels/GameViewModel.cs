@@ -29,14 +29,16 @@ namespace NC.Client.ViewModels
         private GameController _controller;
 
         private PlayerColor _yourColor;
-        
+
         private PlayerColor _turnColor;
 
         private string _opponentName;
 
         private string _gameLog;
 
-        private IPieceMasterFactory _masterFactory; 
+        private IPieceMasterFactory _masterFactory;
+
+        private bool _isGameEnded;
 
         /// <summary>
         /// Constructor for <see cref="GameViewModel"/>.
@@ -60,7 +62,7 @@ namespace NC.Client.ViewModels
         /// <summary>
         /// Your pieces color.
         /// </summary>
-        public PlayerColor YourColor 
+        public PlayerColor YourColor
         {
             get
             {
@@ -73,7 +75,7 @@ namespace NC.Client.ViewModels
                 RaisePropertyChanged(() => YourColor);
             }
         }
-        
+
         /// <summary>
         /// Chess game field.
         /// </summary>
@@ -107,7 +109,7 @@ namespace NC.Client.ViewModels
                 RaisePropertyChanged(() => MasterFactory);
             }
         }
-        
+
         /// <summary>
         /// Game controller.
         /// </summary>
@@ -175,7 +177,24 @@ namespace NC.Client.ViewModels
                 RaisePropertyChanged(() => GameLog);
             }
         }
-        
+
+        /// <summary>
+        /// Is game ended.
+        /// </summary>
+        public bool IsGameEnded
+        {
+            get
+            {
+                return _isGameEnded;
+            }
+
+            set
+            {
+                _isGameEnded = value;
+                RaisePropertyChanged(() => IsGameEnded);
+            }
+        }
+
         /// <inheritdoc/>
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
@@ -189,6 +208,7 @@ namespace NC.Client.ViewModels
             GameField = new VirtualField(field.ToMultiDimensionalArray(), playerColor);
             OpponentName = gameInfo.OpponentName;
             callback.FieldUpdated += OnFieldUpdated;
+            callback.GameEnded += OnGameEnded;
         }
 
         /// <inheritdoc/>
@@ -208,11 +228,17 @@ namespace NC.Client.ViewModels
             _controller.Movement -= OnChessPieceMovement;
         }
 
+        private void OnGameEnded(object sender, EventArgs e)
+        {
+            IsGameEnded = true;
+        }
+
         private void OnFieldUpdated(object sender, FieldInfoArgs args)
         {
             var field = args.VirtualField.ToMultiDimensionalArray();
             GameField = new VirtualField(field, args.PlayerColor);
             TurnColor = args.TurnColor;
+            MasterFactory.CheckedPlayer = args.CheckedPlayer;
 
             LogSteps(args);
         }

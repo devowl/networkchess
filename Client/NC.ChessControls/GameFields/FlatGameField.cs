@@ -60,32 +60,16 @@ namespace NC.ChessControls.GameFields
         /// </summary>
         public static readonly DependencyProperty TurnColorProperty;
 
+        /// <summary>
+        /// Dependency property for <see cref="MasterFactory"/> property.
+        /// </summary>
+        public static readonly DependencyProperty MasterFactoryProperty;
+        
         private static readonly ChessPoint DefaultCell = new ChessPoint(-1, -1);
 
         private readonly List<Rectangle> _selectedCells = new List<Rectangle>();
 
         private ChessPoint _selectedCell = DefaultCell;
-        
-        /// <summary>
-        /// Dependency property for <see cref="MasterFactory"/> property.
-        /// </summary>
-        public static readonly DependencyProperty MasterFactoryProperty;
-
-        /// <summary>
-        /// Master factory instance.
-        /// </summary>
-        public IPieceMasterFactory MasterFactory
-        {
-            get
-            {
-                return (IPieceMasterFactory)GetValue(MasterFactoryProperty);
-            }
-
-            set
-            {
-                SetValue(MasterFactoryProperty, value);
-            }
-        }
 
         static FlatGameField()
         {
@@ -153,6 +137,22 @@ namespace NC.ChessControls.GameFields
             Children.Add(CanvasRef);
         }
 
+        /// <summary>
+        /// Master factory instance.
+        /// </summary>
+        public IPieceMasterFactory MasterFactory
+        {
+            get
+            {
+                return (IPieceMasterFactory)GetValue(MasterFactoryProperty);
+            }
+
+            set
+            {
+                SetValue(MasterFactoryProperty, value);
+            }
+        }
+        
         /// <summary>
         /// Current player turn.
         /// </summary>
@@ -460,8 +460,9 @@ namespace NC.ChessControls.GameFields
             var clickedPointPlayerColor = FieldFrame[point].GetPlayerColor();
             var selectedPoints = _selectedCells.Select(cell => (ChessPoint)cell.Tag);
 
-            return (clickedPointPlayerColor == TurnColor || selectedPoints.Contains(point)) && TurnColor == FieldFrame.PlayerColor.Value;
-        } 
+            return (clickedPointPlayerColor == TurnColor || selectedPoints.Contains(point)) &&
+                   TurnColor == FieldFrame.PlayerColor.Value;
+        }
 
         private void OnIconMouseDown(object sender, MouseButtonEventArgs args)
         {

@@ -14,8 +14,8 @@ namespace NC.Shared.PieceMasters
         /// <summary>
         /// Constructor for <see cref="QueenMaster"/>.
         /// </summary>
-        public QueenMaster(VirtualField field, ChessPoint point)
-            : base(field, point, ChessPiece.BlackQueen, ChessPiece.WhiteQueen)
+        public QueenMaster(VirtualField field, ChessPoint point, IPieceMasterFactory master)
+            : base(field, point, master, ChessPiece.BlackQueen, ChessPiece.WhiteQueen)
         {
         }
 
