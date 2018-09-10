@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ServiceModel;
 
 using NC.Shared.Contracts;
 
@@ -7,7 +8,7 @@ namespace NC.ChessServer.GamePack
     /// <summary>
     /// Player object.
     /// </summary>
-    public class Player
+    public class Player : IDisposable
     {
         /// <summary>
         /// Constructor for <see cref="Player"/>.
@@ -16,6 +17,7 @@ namespace NC.ChessServer.GamePack
         {
             SessionId = sessionId;
             PlayerName = playerName;
+            LastActivity = DateTime.Now;
         }
 
         /// <summary>
@@ -93,6 +95,35 @@ namespace NC.ChessServer.GamePack
         internal static void SetCallback(Player player, IChessServiceCallback callback)
         {
             player.Callback = callback;
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            if (Callback == null)
+            {
+                return;
+            }
+
+            var client = Callback as ICommunicationObject;
+            try
+            {
+                client.Close();
+            }
+            catch (CommunicationException)
+            {
+                client.Abort();
+            }
+            catch (TimeoutException)
+            {
+                client.Abort();
+            }
+            catch (Exception)
+            {
+                client.Abort();
+            }
+
+            Callback = null;
         }
     }
 }

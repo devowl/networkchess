@@ -49,5 +49,11 @@ namespace NC.Shared.Contracts
         /// <param name="to">Point to.</param>
         [OperationContract(IsOneWay = true)]
         void GameHasEnded(WcfGameInfo gameInfo, WcfChessPoint from, WcfChessPoint to);
+
+        /// <summary>
+        /// Keep channel alive.
+        /// </summary>
+        [OperationContract(IsOneWay = true)]
+        void Alive();
     }
 }

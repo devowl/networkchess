@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ServiceModel;
 
+using NC.ChessControls.Data;
 using NC.Client.Constants;
 using NC.Client.Interfaces;
 using NC.Shared.Contracts;
@@ -32,7 +33,7 @@ namespace NC.Client.Models
         /// <summary>
         /// Game ended event.
         /// </summary>
-        public event EventHandler<EventArgs> GameEnded;
+        public event EventHandler<GameEndedArgs> GameEnded;
 
         /// <summary>
         /// Game field updated event.
@@ -91,7 +92,12 @@ namespace NC.Client.Models
                 null);
 
             FieldUpdated?.Invoke(this, args);
-            GameEnded?.Invoke(this, EventArgs.Empty);
+            GameEnded?.Invoke(this, new GameEndedArgs(gameInfo.WinnerColor));
+        }
+
+        /// <inheritdoc/>
+        public void Alive()
+        {
         }
     }
 }

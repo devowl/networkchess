@@ -7,6 +7,7 @@ using NC.ChessControls.Data;
 using NC.ChessControls.Prism;
 using NC.Client.Constants;
 using NC.Client.Interfaces;
+using NC.Client.Shell;
 using NC.Shared.Contracts;
 using NC.Shared.Data;
 using NC.Shared.GameField;
@@ -38,7 +39,13 @@ namespace NC.Client.ViewModels
 
         private IPieceMasterFactory _masterFactory;
 
+        private readonly LocalNavigator _navigator;
+
         private bool _isGameEnded;
+
+        private string _gameResultText;
+
+        private string _flowParameter = null;
 
         /// <summary>
         /// Constructor for <see cref="GameViewModel"/>.
@@ -47,9 +54,11 @@ namespace NC.Client.ViewModels
             IGameServiceProvider gameServiceProvider,
             IEndpointInfo endpointInfo,
             IUserMessage userMessage,
-            IPieceMasterFactory masterFactory)
+            IPieceMasterFactory masterFactory,
+            LocalNavigator navigator)
         {
             _masterFactory = masterFactory;
+            _navigator = navigator;
             _gameServiceProvider = gameServiceProvider;
             _endpointInfo = endpointInfo;
             _userMessage = userMessage;
@@ -57,7 +66,31 @@ namespace NC.Client.ViewModels
             _gameField = new VirtualField(chessDefaultField);
             _controller = new GameController();
             _controller.Movement += OnChessPieceMovement;
+            PlayMoreCommand = new DelegateCommand(PlayMoreHandler);
+            DisconnectCommand = new DelegateCommand(DisconnectHandler);
         }
+
+        private void DisconnectHandler(object obj)
+        {
+            _flowParameter = ApplicationWorkflow.LoginForm;
+            _navigator.Goto(RegionNames.Connection);
+        }
+
+        private void PlayMoreHandler(object obj)
+        {
+            _flowParameter = ApplicationWorkflow.WaitNext;
+            _navigator.Goto(RegionNames.Connection);
+        }
+
+        /// <summary>
+        /// Player wants play more.
+        /// </summary>
+        public DelegateCommand PlayMoreCommand { get; }
+
+        /// <summary>
+        /// Player wants disconnect.
+        /// </summary>
+        public DelegateCommand DisconnectCommand { get; }
 
         /// <summary>
         /// Your pieces color.
@@ -195,9 +228,30 @@ namespace NC.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Game result text.
+        /// </summary>
+        public string GameResultText
+        {
+            get
+            {
+                return _gameResultText;
+            }
+
+            set
+            {
+                _gameResultText = value;
+                RaisePropertyChanged(() => GameResultText); 
+            }
+        }
+
         /// <inheritdoc/>
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
+            IsGameEnded = false;
+            GameLog = string.Empty;
+            MasterFactory.CheckedPlayer = null;
+
             var callback = _gameServiceProvider.ServiceCallback;
             var gameInfo = callback.GameInfo;
             var field = callback.GameInfo.GameField;
@@ -207,6 +261,10 @@ namespace NC.Client.ViewModels
             YourColor = gameInfo.PlayerColor;
             GameField = new VirtualField(field.ToMultiDimensionalArray(), playerColor);
             OpponentName = gameInfo.OpponentName;
+
+            callback.FieldUpdated -= OnFieldUpdated;
+            callback.GameEnded -= OnGameEnded;
+
             callback.FieldUpdated += OnFieldUpdated;
             callback.GameEnded += OnGameEnded;
         }
@@ -220,6 +278,7 @@ namespace NC.Client.ViewModels
         /// <inheritdoc/>
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
+            navigationContext.Parameters.Add(nameof(ApplicationWorkflow), _flowParameter);
         }
 
         /// <inheritdoc/>
@@ -228,9 +287,10 @@ namespace NC.Client.ViewModels
             _controller.Movement -= OnChessPieceMovement;
         }
 
-        private void OnGameEnded(object sender, EventArgs e)
+        private void OnGameEnded(object sender, GameEndedArgs args)
         {
             IsGameEnded = true;
+            GameResultText = args.WinnerColor == _yourColor ? "Congratulations! You are winner!" : "You have lose.";
         }
 
         private void OnFieldUpdated(object sender, FieldInfoArgs args)

@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="ChessControlsModule.cs" />
     <Compile Include="Data\GameController.cs" />
+    <Compile Include="Data\GameEndedArgs.cs" />
     <Compile Include="Interfaces\IIconsProvider.cs" />
     <Compile Include="Data\MovementArgs.cs" />
     <Compile Include="Data\SimpleChessIconsProvider.cs" />

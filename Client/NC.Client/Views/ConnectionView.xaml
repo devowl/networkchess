@@ -19,7 +19,7 @@
         <StackPanel Width="200" HorizontalAlignment="Center" VerticalAlignment="Center">
             <StackPanel Style="{StaticResource Splitter}">
                 <TextBlock Text="Player name:"/>
-                <TextBox Text="{Binding PlayerName, FallbackValue=Smurf}" Margin="0,0,0,5" />
+                <TextBox Text="{Binding PlayerName, FallbackValue=Smurf}" MaxLength="100" Margin="0,0,0,5" />
                 <TextBlock Text="Server address:"/>
                 <TextBox Text="{Binding ServerAddress}" />
                 <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding ConnectionError}" Margin="0,5" Foreground="Red"/>

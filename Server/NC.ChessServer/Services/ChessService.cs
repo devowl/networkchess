@@ -1,4 +1,5 @@
-﻿using System.ServiceModel;
+﻿using System;
+using System.ServiceModel;
 
 using NC.ChessServer.Interfaces;
 using NC.Shared.Contracts;
@@ -9,11 +10,13 @@ namespace NC.ChessServer.Services
     /// <summary>
     /// Chess service.
     /// </summary>
-    public class ChessService : BaseService, IChessService
+    public class ChessService : BaseService, IChessService, IDisposable
     {
         private readonly IPlayerManager _playerManager;
 
         private readonly IGameManager _gameManager;
+
+        private string _sessionId;
 
         /// <summary>
         /// Constructor for <see cref="ChessService"/>.
@@ -28,6 +31,7 @@ namespace NC.ChessServer.Services
         public void Ready(string sessionId)
         {
             CheckSession(sessionId);
+            _sessionId = sessionId;
             var callback = OperationContext.Current.GetCallbackChannel<IChessServiceCallback>();
             _playerManager.Ready(sessionId, callback);
         }
@@ -45,6 +49,12 @@ namespace NC.ChessServer.Services
             {
                 throw new SessionNotFoundedException();
             }
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            _playerManager.RemoveFromQueue(_sessionId);
         }
     }
 }

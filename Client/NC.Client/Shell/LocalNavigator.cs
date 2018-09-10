@@ -63,6 +63,7 @@ namespace NC.Client.Shell
             _regionManager.RegisterViewWithRegion(RegionNames.MainRegion, typeof(ConnectionView));
             _regionManager.RegisterViewWithRegion(RegionNames.MainRegion, typeof(GameView));
             _regionManager.RegisterViewWithRegion(RegionNames.UserMessages, typeof(UserMessagesView));
+            _regionManager.RegisterViewWithRegion(RegionNames.Connection, typeof(ConnectionView));
 
             _isRegistred = true;
         }
@@ -70,7 +71,7 @@ namespace NC.Client.Shell
         private void InternalGoto(string viewName)
         {
             var region = _regionManager.Regions[RegionNames.MainRegion];
-            region.RequestNavigate(viewName);
+            region.RequestNavigate(new Uri(viewName, UriKind.Relative));
         }
     }
 }

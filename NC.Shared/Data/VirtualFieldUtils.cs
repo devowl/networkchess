@@ -125,12 +125,89 @@ namespace NC.Shared.Data
                 },
             };
 
-            //var field = CreateEmptyField();
-            //field[1, 2] = ChessPiece.BlackKing;
-            //field[7, 6] = ChessPiece.WhiteKing;
-
-            //field[2, 7] = ChessPiece.WhiteRook;
-            //field[1, 6] = ChessPiece.WhiteRook;
+            //var field = new[,]
+            //{
+            //    {
+            //        ChessPiece.BlackRook,
+            //        ChessPiece.BlackKnight,
+            //        ChessPiece.BlackBishop,
+            //        ChessPiece.BlackQueen,
+            //        ChessPiece.BlackKing,
+            //        ChessPiece.BlackBishop,
+            //        ChessPiece.BlackKnight,
+            //        ChessPiece.BlackRook
+            //    },
+            //    {
+            //        ChessPiece.BlackPawn,
+            //        ChessPiece.BlackPawn,
+            //        ChessPiece.BlackPawn,
+            //        ChessPiece.BlackPawn,
+            //        ChessPiece.Empty,
+            //        ChessPiece.BlackPawn,
+            //        ChessPiece.BlackPawn,
+            //        ChessPiece.BlackPawn
+            //    },
+            //    {
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty
+            //    },
+            //    {
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty,
+            //        ChessPiece.BlackPawn,
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty,
+            //        ChessPiece.WhiteQueen
+            //    },
+            //    {
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty,
+            //        ChessPiece.WhiteBishop,
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty
+            //    },
+            //    {
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty
+            //    },
+            //    {
+            //        ChessPiece.WhitePawn,
+            //        ChessPiece.WhitePawn,
+            //        ChessPiece.WhitePawn,
+            //        ChessPiece.WhitePawn,
+            //        ChessPiece.WhitePawn,
+            //        ChessPiece.WhitePawn,
+            //        ChessPiece.WhitePawn,
+            //        ChessPiece.WhitePawn
+            //    },
+            //    {
+            //        ChessPiece.WhiteRook,
+            //        ChessPiece.WhiteKnight,
+            //        ChessPiece.Empty,
+            //        ChessPiece.Empty,
+            //        ChessPiece.WhiteKing,
+            //        ChessPiece.WhiteBishop,
+            //        ChessPiece.WhiteKnight,
+            //        ChessPiece.WhiteRook
+            //    },
+            //};
 
 
             // Rotate on 90 (because of beautiful input above ^ )

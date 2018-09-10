@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,7 +33,7 @@ namespace NC.ChessServer.GamePack
 
         private readonly List<Game> _playingGames = new List<Game>();
 
-        private TimeSpan _inactivityTimeout = TimeSpan.FromMinutes(5);
+        private readonly TimeSpan _inactivityTimeout = TimeSpan.FromMinutes(5);
 
         private Task _gameMakerMonitor;
 
@@ -86,6 +87,7 @@ namespace NC.ChessServer.GamePack
                 if (player != null)
                 {
                     _playersQueue.Remove(player);
+                    player.Dispose();
                 }
             }
         }
@@ -98,7 +100,7 @@ namespace NC.ChessServer.GamePack
                 var player = _playersQueue.FirstOrDefault(p => p.SessionId == sessionId);
                 if (player == null)
                 {
-                    throw new SessionNotFoundedException();
+                    throw new FaultException<SessionNotFoundedException>(new SessionNotFoundedException());
                 }
 
                 Player.SetCallback(player, callback);
@@ -159,7 +161,7 @@ namespace NC.ChessServer.GamePack
                         _playersQueue.Remove(player1);
                         _playersQueue.Remove(player2);
                         var game = _gameFactory(player1, player2);
-
+                        game.GameEnded += OnGameEnded;
                         AddGame(game);
                     }
                 }
@@ -172,6 +174,23 @@ namespace NC.ChessServer.GamePack
         {
             while (!_cancelationToken.IsCancellationRequested)
             {
+                lock (_queueSyncObj) 
+                {
+                    foreach (var player in _playersQueue.ToArray())
+                    {
+                        if (DateTime.Now - player.LastActivity > _inactivityTimeout)
+                        {
+                            _playersQueue.Remove(player);
+                            player.Dispose();
+                        }
+                        else
+                        {
+                            player.Callback?.Alive();
+                            Player.SetActive(player);
+                        }
+                    }
+                }
+
                 // _inactivityTimeout
                 Thread.Sleep(TimeSpan.FromSeconds(SecondsTimeout));
             }
@@ -181,7 +200,6 @@ namespace NC.ChessServer.GamePack
         {
             lock (_playingGamesSyncObj)
             {
-                _playingGames.Add(game);
                 game.Initialize();
                 _playingGames.Add(game);
             }
@@ -191,8 +209,13 @@ namespace NC.ChessServer.GamePack
         {
             lock (_playingGamesSyncObj)
             {
-                // some statistics
                 var game = (Game)sender;
+                Player.SetIsReady(game.Player1, false);
+                Player.SetIsReady(game.Player2, false);
+
+                _playersQueue.Enqueue(game.Player1);
+                _playersQueue.Enqueue(game.Player2);
+
                 _playingGames.Remove(game);
             }
         }

@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
+using Microsoft.Practices.Prism.Regions;
+
 using NC.ChessControls.Prism;
 using NC.Client.Constants;
 using NC.Client.Interfaces;
@@ -16,7 +18,7 @@ namespace NC.Client.ViewModels
     /// <summary>
     /// Server connection view model.
     /// </summary>
-    public class ConnectionViewModel : NotificationObject, IEndpointInfo, IGameServiceProvider
+    public class ConnectionViewModel : NotificationObject, IEndpointInfo, IGameServiceProvider, INavigationAware
     {
         private readonly IWcfClientFactory<IUserService> _userService;
 
@@ -213,6 +215,35 @@ namespace NC.Client.ViewModels
 
             ConnectionError = null;
             return _waitOpponent.Operation();
+        }
+
+        /// <inheritdoc/>
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            var flow = navigationContext.Parameters[nameof(ApplicationWorkflow)];
+            if (flow == ApplicationWorkflow.LoginForm)
+            {
+                _userService.Use(service => service.Logout(SessionId));
+                _chessClient?.Dispose();
+                _waitViewModel.Waiting = false;
+            }
+            else if (flow == ApplicationWorkflow.WaitNext)
+            {
+                OpponentView();
+                _chessClient.Service.Ready(SessionId);
+            }
+        }
+
+        /// <inheritdoc/>
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        /// <inheritdoc/>
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            
         }
     }
 }

@@ -46,6 +46,11 @@ namespace NC.ChessServer.GamePack
         public delegate Game Factory(Player player1, Player player2);
 
         /// <summary>
+        /// Game ended event.
+        /// </summary>
+        public event EventHandler<EventArgs> GameEnded;
+
+        /// <summary>
         /// Player 1.
         /// </summary>
         public Player Player1 { get; }
@@ -162,6 +167,8 @@ namespace NC.ChessServer.GamePack
 
             initiator.Callback.GameHasEnded(winnerGameInfo, from.FromBusiness(), to.FromBusiness());
             opponent.Callback.GameHasEnded(loserGameInfo, from.FromBusiness(), to.FromBusiness());
+
+            GameEnded?.Invoke(this, EventArgs.Empty);
         }
         
         /// <inheritdoc/>

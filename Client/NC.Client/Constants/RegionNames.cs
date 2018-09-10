@@ -10,7 +10,7 @@ namespace NC.Client.Constants
         /// <summary>
         /// Connection dialog.
         /// </summary>
-        public const string Connection = "Connection";
+        public const string Connection = nameof(ConnectionView);
 
         /// <summary>
         /// Game has started.

@@ -1,5 +1,8 @@
-﻿using NC.ChessServer.GamePack;
+﻿using System.ServiceModel;
+
+using NC.ChessServer.GamePack;
 using NC.Shared.Contracts;
+using NC.Shared.Exceptions;
 
 namespace NC.ChessServer.Interfaces
 {
@@ -25,6 +28,7 @@ namespace NC.ChessServer.Interfaces
         /// </summary>
         /// <param name="sessionId">Session id.</param>
         /// <param name="callback">Client callback.</param>
+        [FaultContract(typeof(SessionNotFoundedException))]
         void Ready(string sessionId, IChessServiceCallback callback);
 
         /// <summary>

@@ -6,8 +6,8 @@
              xmlns:local="clr-namespace:NC.Client.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:NC.Client.ViewModels"
-             d:DataContext="{d:DesignInstance viewModels:GameViewModel}"
              x:Name="UserControl"
+             d:DataContext="{d:DesignInstance viewModels:GameViewModel}"
              mc:Ignorable="d">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
@@ -48,26 +48,38 @@
         </Grid>
         <Grid Visibility="{Binding IsGameEnded, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Canvas Panel.ZIndex="1">
-                <Rectangle  Fill="White" Opacity="0.8" Width="{Binding ElementName=UserControl, Path=ActualWidth}" Height="{Binding ElementName=UserControl, Path=ActualHeight}" />
+                <Rectangle Width="{Binding ElementName=UserControl,
+                                           Path=ActualWidth}"
+                           Height="{Binding ElementName=UserControl,
+                                            Path=ActualHeight}"
+                           Fill="White"
+                           Opacity="0.8" />
             </Canvas>
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" ZIndex="2">
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        ZIndex="2">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <Label Grid.Row="1"
-                             Margin="0,5"
-                             Content="{Binding GameResultText}" />
-                    <Button Grid.Row="2"
-                            Margin="0,5"
-                            Command="{Binding PlayMoreCommand}"
-                            Content="Play more" />
-                    <Button Grid.Row="2"
-                            Margin="0,5"
-                            Command="{Binding DisconnectCommand}"
-                            Content="Disconnect" />
+                    <Label Margin="0,5"
+                           HorizontalAlignment="Center"
+                           Content="{Binding GameResultText}"
+                           FontSize="20"
+                           FontWeight="Bold" />
+                    <StackPanel Grid.Row="1"
+                                HorizontalAlignment="Center"
+                                Orientation="Horizontal">
+                        <Button Width="100"
+                                Margin="5"
+                                Command="{Binding PlayMoreCommand}"
+                                Content="Play more" />
+                        <Button Width="100"
+                                Margin="5"
+                                Command="{Binding DisconnectCommand}"
+                                Content="Disconnect" />
+                    </StackPanel>
                 </Grid>
             </StackPanel>
         </Grid>

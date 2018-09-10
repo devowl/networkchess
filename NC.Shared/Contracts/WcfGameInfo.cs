@@ -48,6 +48,7 @@ namespace NC.Shared.Contracts
         /// <summary>
         /// Winner player color.
         /// </summary>
+        [DataMember]
         public PlayerColor? WinnerColor { get; set; }
 
         /// <summary>

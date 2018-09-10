@@ -131,6 +131,7 @@
     <Compile Include="Bootstrapper\ClientBootstrapper.cs" />
     <Compile Include="ClientModule.cs" />
     <Compile Include="ClientModuleActivator.cs" />
+    <Compile Include="Constants\ApplicationWorkflow.cs" />
     <Compile Include="Constants\FieldInfoArgs.cs" />
     <Compile Include="Constants\NameGenerator.cs" />
     <Compile Include="Constants\RegionNames.cs" />
