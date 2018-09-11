@@ -95,6 +95,7 @@ namespace NC.ChessServer.GamePack
                 chessGameField.ToJaggedArray(),
                 _turnColor);
 
+            // TODO Если теряется связь то надо отдавать победу
             Player1.Callback.GameHasStarted(p1GameInfo);
             Player2.Callback.GameHasStarted(p2GameInfo);
 

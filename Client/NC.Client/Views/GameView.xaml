@@ -33,13 +33,14 @@
                                       WhileCellBrush="#FFCE97" />
             <StackPanel Grid.Column="1">
                 <TextBlock Style="{StaticResource InfoTextBlock}">
-                    You're:<Run FontWeight="Bold" Text="{Binding YourColor, FallbackValue=White}" /><LineBreak />
-                    Turn color:<Run FontWeight="Bold" Text="{Binding TurnColor, FallbackValue=White}" /> <LineBreak />
-                    Opponent Name:<Run FontWeight="Bold" Text="{Binding OpponentName, FallbackValue=SomeName}" />
+                    Your side: <Run FontWeight="Bold" Text="{Binding YourColor, FallbackValue=White}" /><LineBreak />
+                    Turn color: <Run FontWeight="Bold" Text="{Binding TurnColor, FallbackValue=White}" /> <LineBreak />
+                    Opponent Name: <Run FontWeight="Bold" Text="{Binding OpponentName, FallbackValue=SomeName}" />
                 </TextBlock>
                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="Game log:" />
                 <TextBox Width="300"
                          Height="100"
+                         Margin="5"
                          AcceptsReturn="True"
                          Text="{Binding GameLog,
                                         FallbackValue=a2-a4; a7-a5}"
@@ -58,29 +59,34 @@
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         ZIndex="2">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Label Margin="0,5"
-                           HorizontalAlignment="Center"
-                           Content="{Binding GameResultText}"
-                           FontSize="20"
-                           FontWeight="Bold" />
-                    <StackPanel Grid.Row="1"
-                                HorizontalAlignment="Center"
-                                Orientation="Horizontal">
-                        <Button Width="100"
-                                Margin="5"
-                                Command="{Binding PlayMoreCommand}"
-                                Content="Play more" />
-                        <Button Width="100"
-                                Margin="5"
-                                Command="{Binding DisconnectCommand}"
-                                Content="Disconnect" />
-                    </StackPanel>
-                </Grid>
+                <Border Background="Moccasin"
+                        BorderBrush="Black"
+                        BorderThickness="1"
+                        Padding="5">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Label Margin="0,5"
+                               HorizontalAlignment="Center"
+                               Content="{Binding GameResultText}"
+                               FontSize="20"
+                               FontWeight="Bold" />
+                        <StackPanel Grid.Row="1"
+                                    HorizontalAlignment="Center"
+                                    Orientation="Horizontal">
+                            <Button Width="100"
+                                    Margin="5"
+                                    Command="{Binding PlayMoreCommand}"
+                                    Content="Play more" />
+                            <Button Width="100"
+                                    Margin="5"
+                                    Command="{Binding DisconnectCommand}"
+                                    Content="Disconnect" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
             </StackPanel>
         </Grid>
     </Grid>

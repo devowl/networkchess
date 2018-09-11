@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading;
@@ -185,7 +186,15 @@ namespace NC.ChessServer.GamePack
                         }
                         else
                         {
-                            player.Callback?.Alive();
+                            try
+                            {
+                                player.Callback?.Alive();
+                            }
+                            catch (CommunicationException exception)
+                            {
+                                Trace.WriteLine(exception);
+                            }
+                            
                             Player.SetActive(player);
                         }
                     }

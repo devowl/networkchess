@@ -4,30 +4,41 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:NC.Client.ViewModels"
+             x:Name="UserControl"
              d:DataContext="{d:DesignInstance viewModels:WaitViewModel}"
-             mc:Ignorable="d"
-             x:Name="UserControl">
+             mc:Ignorable="d">
     <Grid>
         <Canvas Panel.ZIndex="1">
-            <Rectangle  Fill="White" Opacity="0.8" Width="{Binding ElementName=UserControl, Path=ActualWidth}" Height="{Binding ElementName=UserControl, Path=ActualHeight}" />
+            <Rectangle Width="{Binding ElementName=UserControl,
+                                       Path=ActualWidth}"
+                       Height="{Binding ElementName=UserControl,
+                                        Path=ActualHeight}"
+                       Fill="White"
+                       Opacity="0.8" />
         </Canvas>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" ZIndex="2">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <ProgressBar Height="10" IsIndeterminate="True" />
-                <Label Grid.Row="1"
-                             Margin="0,5"
-                             Content="{Binding ActionText}" />
-                <Button Grid.Row="2"
+
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    ZIndex="2">
+            <Border Padding="5" Background="Moccasin" BorderThickness="1" BorderBrush="Black">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <ProgressBar Height="10" IsIndeterminate="True" />
+                    <Label Grid.Row="1"
+                           Margin="0,5"
+                           Content="{Binding ActionText}" />
+                    <Button Grid.Row="2"
                             Margin="0,5"
-                            IsEnabled="{Binding CanCancel}"
                             Command="{Binding CancelCommand}"
-                            Content="Cancel" />
-            </Grid>
+                            Content="Cancel"
+                            IsEnabled="{Binding CanCancel}" />
+                </Grid>
+            </Border>
         </StackPanel>
+
     </Grid>
 </UserControl>
