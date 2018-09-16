@@ -36,25 +36,15 @@ namespace NC.ChessControls.Data
         /// <inheritdoc/>
         public Image GetIcon(ChessPiece chessPiece)
         {
-            var fullName = chessPiece.ToString();
-            var isBlack = fullName.StartsWith((PlayerColor.Black).ToString());
-            var isWhite = fullName.StartsWith((PlayerColor.White).ToString());
-
-            string name;
-            if (isWhite)
+            var playerColor = chessPiece.GetPlayerColor();
+            if (!playerColor.HasValue)
             {
-                name = fullName.Substring((PlayerColor.White).ToString().Length);
-            }
-            else if (isBlack)
-            {
-                name = fullName.Substring((PlayerColor.Black).ToString().Length);
-            }
-            else
-            {
-                // Unknown piece
                 return null;
             }
-
+            
+            var isWhite = playerColor == PlayerColor.White;
+            var name = chessPiece.ToString().Substring(playerColor.ToString().Length);
+            
             var offset = isWhite ? 0 : 1;
             switch (name)
             {

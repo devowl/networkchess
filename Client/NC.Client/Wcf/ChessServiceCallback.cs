@@ -7,7 +7,7 @@ using NC.Client.Interfaces;
 using NC.Shared.Contracts;
 using NC.Shared.Data;
 
-namespace NC.Client.Models
+namespace NC.Client.Wcf
 {
     /// <summary>
     /// Chess service callback.

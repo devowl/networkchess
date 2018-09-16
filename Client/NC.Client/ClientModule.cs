@@ -1,7 +1,6 @@
 ﻿using Autofac;
 
 using NC.Client.Interfaces;
-using NC.Client.Models;
 using NC.Client.Shell;
 using NC.Client.ViewModels;
 using NC.Client.Views;

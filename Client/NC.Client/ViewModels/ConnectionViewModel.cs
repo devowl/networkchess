@@ -8,7 +8,6 @@ using Microsoft.Practices.Prism.Regions;
 using NC.ChessControls.Prism;
 using NC.Client.Constants;
 using NC.Client.Interfaces;
-using NC.Client.Models;
 using NC.Client.Shell;
 using NC.Client.Wcf;
 using NC.Shared.Contracts;

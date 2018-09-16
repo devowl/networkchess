@@ -141,7 +141,7 @@
     <Compile Include="Interfaces\IUserMessage.cs" />
     <Compile Include="Interfaces\IWcfClient.cs" />
     <Compile Include="Interfaces\IWcfClientFactory.cs" />
-    <Compile Include="Models\ChessServiceCallback.cs" />
+    <Compile Include="Wcf\ChessServiceCallback.cs" />
     <Compile Include="Shell\LocalNavigator.cs" />
     <Compile Include="Shell\Operation.cs" />
     <Compile Include="ViewModels\ConnectionViewModel.cs" />

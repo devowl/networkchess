@@ -1,4 +1,4 @@
-﻿using NC.Client.Models;
+﻿using NC.Client.Wcf;
 using NC.Shared.Contracts;
 
 namespace NC.Client.Interfaces
